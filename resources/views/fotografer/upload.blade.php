@@ -5,6 +5,10 @@
     <link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/quill/quill.core.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/quill/quill.snow.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
     <style>
         .harga-details {
             background-color: #f8f9fa;
@@ -29,6 +33,11 @@
             align-items: center;
             margin-top: 20px;
             margin-bottom: 20px;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
         }
     </style>
 @endpush
@@ -59,6 +68,8 @@
                             <div class="card-body">
                                 <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Foto</h5>
 
+                                <small id="ImageHelp" class="form-text text-muted"><span
+                                    class="text-danger">*</span>Pastikan event sudah tersedia sebelum mengupload gambar</small>
                                 <div class="dropzone" id="myAwesomeDropzone">
                                     <div class="fallback">
                                         <input name="file" type="file" multiple />
@@ -83,6 +94,19 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">Detail Foto</h5>
+
+                                <div class="mb-3">
+                                    <label for="event" class="form-label">Event <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-control select2" name="event_id" id="event">
+                                        <option>Select</option>
+                                        @foreach ($event as $eventItem)
+                                            <option value="{{ $eventItem->id }}">{{ $eventItem->event }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span>*event belum tersedia, masukkan nama event <a href="#"
+                                            data-bs-toggle="modal" data-bs-target="#login-modal">disini</a></span>
+                                </div>
 
                                 <div class="mb-3">
                                     <label for="harga" class="form-label">Harga Dasar <span
@@ -129,30 +153,18 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="event" class="form-label">Event <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-control select2" name="event_id" id="event">
-                                        <option>Select</option>
-                                        @foreach ($event as $eventItem)
-                                            <option value="{{ $eventItem->id }}">{{ $eventItem->event }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span>*event belum tersedia, masukkan nama event <a href="">disini</a></span>
-                                </div>
                                 <div>
                                     <label class="form-label">Deskripsi (Opsional)</label>
                                     <textarea class="form-control" name="deskripsi" rows="3" placeholder="Deskripsikan fotomu"></textarea>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="text-center mb-3">
-                            <a href="fotografer/profil" class="btn w-sm btn-light waves-effect">Cancel</a>
+                            <a href="#" id="cancel-button" class="btn btn-outline-danger waves-effect waves-light">Cancel</a>
                             <button type="button" class="btn w-sm btn-success waves-effect waves-light" id="save-button"
                                 disabled>Save</button>
                         </div>
@@ -188,6 +200,56 @@
                     </div>
                 </div>
             </div>
+            <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="text-center mt-2 mb-4">
+                                <div class="auth-brand">
+                                    <span class="logo-lg">Tambah Event
+                                    </span>
+                                </div>
+                            </div>
+
+                            <form action="{{ route('event.store') }}" class="px-3" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="event" class="form-label">Nama Event</label>
+                                    <input class="form-control" name="event" type="text" required=""
+                                        placeholder="Masukkan nama acara/event">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="tanggal" class="form-label">Date</label>
+                                    <input class="form-control" id="tanggal" name="tanggal" type="date"
+                                        name="date">
+                                </div>
+
+                                <div class="mb-3">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                        value="false" id="customradio-public" checked>
+                                    <label class="form-check-label" for="customradio-public"
+                                        style="margin-right: 10px;">Public</label>
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                        value="true" id="customradio-private">
+                                    <label class="form-check-label" for="customradio-private"
+                                        style="margin-right: 10px;">Private</label>
+                                </div>
+
+                                <div id="map"></div>
+                                <input type="hidden" name="lokasi" id="lokasi">
+
+                                <br>
+                                <div class="mb-2 text-center">
+                                    <button class="btn rounded-pill btn-primary" type="submit">Tambah Event</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -198,6 +260,86 @@
     <script src="{{ asset('libs/quill/quill.min.js') }}"></script>
     <script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
     <script src="{{ asset('js/pages/add-product.init.js') }}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        let map;
+        let userMarker;
+
+        function initMap() {
+            map = L.map('map').setView([51.505, -0.09], 13);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            locateUser();
+            addSearchControl();
+
+            // Add click event listener to the map
+            map.on('click', function(e) {
+                const {
+                    lat,
+                    lng
+                } = e.latlng;
+                if (userMarker) {
+                    userMarker.setLatLng(e.latlng).openPopup();
+                } else {
+                    userMarker = L.marker([lat, lng], {
+                            draggable: true
+                        }).addTo(map)
+                        .bindPopup(`You are here: ${lat}, ${lng}`).openPopup();
+                }
+                document.getElementById('lokasi').value = `${lat},${lng}`;
+            });
+        }
+
+        function locateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    userMarker = L.marker([lat, lng], {
+                            draggable: true
+                        }).addTo(map)
+                        .bindPopup(`You are here: ${lat}, ${lng}`).openPopup();
+                    map.setView([lat, lng], 13);
+
+                    document.getElementById('lokasi').value = `${lat},${lng}`;
+
+                    userMarker.on('dragend', function() {
+                        const newLatLng = userMarker.getLatLng();
+                        document.getElementById('lokasi').value = `${newLatLng.lat},${newLatLng.lng}`;
+                    });
+                }, () => {
+                    alert('Geolocation failed or permission denied.');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function addSearchControl() {
+            if (L.Control.Geocoder) {
+                L.Control.geocoder({
+                    query: '',
+                    placeholder: 'Search here...',
+                    defaultMarkGeocode: false
+                }).on('markgeocode', function(e) {
+                    const latlng = e.geocode.center;
+                    map.setView(latlng, 13);
+                }).addTo(map);
+            } else {
+                alert('Geocoder plugin is not loaded.');
+            }
+        }
+
+        document.getElementById('login-modal').addEventListener('shown.bs.modal', function() {
+            initMap();
+        });
+    </script>
     <script>
         Dropzone.autoDiscover = false;
 
@@ -239,7 +381,11 @@
                     progressBar.style.display = "none";
                     successMessage.classList.remove("d-none");
 
-                    tempFiles.push(response.tempPath); // Tambahkan path file sementara
+                    // Tambahkan path file sementara dan ukuran file
+                    tempFiles.push({
+                        tempPath: response.tempPath,
+                        size: file.size // Mengirim ukuran file
+                    });
                 });
 
                 this.on("error", function(file, response) {
@@ -371,8 +517,11 @@
                         harga: document.getElementById('harga-hidden').value,
                         event_id: document.getElementById('event').value,
                         deskripsi: document.querySelector('[name="deskripsi"]').value,
-                        file_paths: tempFiles // Kirim path file sementara
+                        file_paths: tempFiles.map(file => file.tempPath), // Hanya kirim path file
+                        file_sizes: tempFiles.map(file => file.size) // Kirim ukuran file
                     };
+
+                    console.log('Form Data:', formData);
 
                     fetch("/fotografer/foto/store", {
                         method: "POST",
@@ -408,7 +557,7 @@
 
                         Swal.fire({
                             title: 'Error',
-                            text: 'Terjadi kesalahan saat menyimpan data.',
+                            text: 'Terjadi kesalahan saat menyimpan data: ' + error.message,
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
@@ -416,7 +565,6 @@
                 }
             }
         });
-
 
         document.getElementById('harga').addEventListener('input', function() {
             let nilaiAsli = this.value.replace(/\D/g, '');
@@ -461,5 +609,25 @@
             document.getElementById('biaya-layanan').textContent = formatRupiah(biayaLayanan.toFixed(0));
             document.getElementById('harga-jual').textContent = formatRupiah(hargaJual.toFixed(0));
         }
+    </script>
+     <script>
+        document.getElementById('cancel-button').addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data Anda tidak akan tersimpan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, tinggalkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('foto.profil') }}";
+                }
+            });
+        });
     </script>
 @endpush

@@ -14,6 +14,7 @@ class Event extends Model
     protected $fillable = [
         'event',
         'lokasi',
+        'tanggal',
         'is_private',
         'password',
     ];

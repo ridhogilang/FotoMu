@@ -17,5 +17,7 @@ class Foto extends Model
         'foto',
         'harga',
         'deskripsi',
+        'file_size',
+        'resolusi',
     ];
 }

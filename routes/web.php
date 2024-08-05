@@ -43,5 +43,6 @@ Route::prefix('fotografer')->group(function () {
     Route::get('/upload', [FotograferController::class, 'upload'])->name('foto.upload');
     Route::post('/foto/upload', [FotograferController::class, 'upload_foto'])->name('photos.upload');
     Route::post('/foto/store', [FotograferController::class, 'store'])->name('photos.store');
+    Route::post('/event/store', [FotograferController::class, 'event_tambah'])->name('event.store');
     // });
 });
