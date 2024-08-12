@@ -18,9 +18,12 @@ class FotograferController extends Controller
     {
         $user = Auth::user();
 
+        $foto = Foto::where('user_id', $user->id)->get();
+
         return view('fotografer.profil', [
             "title" => "Profil",
             "user" => $user,
+            "foto" => $foto,
         ]);
     }
 

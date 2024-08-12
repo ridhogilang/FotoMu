@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Foto\FotograferController;
+use App\Http\Controllers\User\ProdukController;
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,5 +46,14 @@ Route::prefix('fotografer')->group(function () {
     Route::post('/foto/upload', [FotograferController::class, 'upload_foto'])->name('photos.upload');
     Route::post('/foto/store', [FotograferController::class, 'store'])->name('photos.store');
     Route::post('/event/store', [FotograferController::class, 'event_tambah'])->name('event.store');
+    // });
+});
+
+Route::prefix('pelanggan')->group(function () {
+    // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
+    Route::get('/foto', [ProdukController::class, 'produk'])->name('user.produk');
+    Route::get('/form-fotodepan', [UserController::class, 'formfoto'])->name('user.formfoto');
+    Route::post('/form-fotodepan', [UserController::class, 'upload_fotodepan'])->name('user.fotodepan');
+    Route::get('/form-fotokiri', [UserController::class, 'formfoto'])->name('user.formfoto');
     // });
 });

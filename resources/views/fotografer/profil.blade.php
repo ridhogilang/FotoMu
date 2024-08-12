@@ -1,6 +1,20 @@
 @extends('layout.foto')
 
 @push('header')
+<style>
+    .photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.photo-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+</style>
 @endpush
 
 @section('main')
@@ -164,13 +178,13 @@
                         <div class="card-body">
                             <ul class="nav nav-pills nav-fill navtab-bg">
                                 <li class="nav-item">
-                                    <a href="#aboutme" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                    <a href="#aboutme" data-bs-toggle="tab" aria-expanded="true" class="nav-link active">
                                         About Me
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#timeline" data-bs-toggle="tab" aria-expanded="true"
-                                        class="nav-link active">
+                                    <a href="#timeline" data-bs-toggle="tab" aria-expanded="false"
+                                        class="nav-link">
                                         Timeline
                                     </a>
                                 </li>
@@ -181,46 +195,18 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane" id="aboutme">
+                                <div class="tab-pane show active" id="aboutme">
 
                                     <h5 class="mb-4 text-uppercase"><i class="mdi mdi-briefcase me-1"></i>
-                                        Experience</h5>
+                                        Foto Unggahanmu</h5>
 
-                                    <ul class="list-unstyled timeline-sm">
-                                        <li class="timeline-sm-item">
-                                            <span class="timeline-sm-date">2015 - 18</span>
-                                            <h5 class="mt-0 mb-1">Lead designer / Developer</h5>
-                                            <p>websitename.com</p>
-                                            <p class="text-muted mt-2">Everyone realizes why a new common
-                                                language
-                                                would be desirable: one could refuse to pay expensive
-                                                translators.
-                                                To achieve this, it would be necessary to have uniform grammar,
-                                                pronunciation and more common words.</p>
-
-                                        </li>
-                                        <li class="timeline-sm-item">
-                                            <span class="timeline-sm-date">2012 - 15</span>
-                                            <h5 class="mt-0 mb-1">Senior Graphic Designer</h5>
-                                            <p>Software Inc.</p>
-                                            <p class="text-muted mt-2">If several languages coalesce, the
-                                                grammar
-                                                of the resulting language is more simple and regular than that
-                                                of
-                                                the individual languages. The new common language will be more
-                                                simple and regular than the existing European languages.</p>
-                                        </li>
-                                        <li class="timeline-sm-item">
-                                            <span class="timeline-sm-date">2010 - 12</span>
-                                            <h5 class="mt-0 mb-1">Graphic Designer</h5>
-                                            <p>Coderthemes LLP</p>
-                                            <p class="text-muted mt-2 mb-0">The European languages are members
-                                                of
-                                                the same family. Their separate existence is a myth. For science
-                                                music sport etc, Europe uses the same vocabulary. The languages
-                                                only differ in their grammar their pronunciation.</p>
-                                        </li>
-                                    </ul>
+                                        <div class="photo-gallery">
+                                            @foreach ($foto as $fotoItem)
+                                            <img src="{{ Storage::url($fotoItem->foto) }}" alt="Image 1">
+                                                
+                                            @endforeach
+                                           
+                                        </div>                                 
 
                                     <h5 class="mb-3 mt-4 text-uppercase"><i class="mdi mdi-cards-variant me-1"></i>
                                         Projects</h5>
@@ -284,10 +270,9 @@
                                         </table>
                                     </div>
 
-                                </div> <!-- end tab-pane -->
-                                <!-- end about me section content -->
+                                </div> 
 
-                                <div class="tab-pane show active" id="timeline">
+                                <div class="tab-pane" id="timeline">
 
                                     <!-- comment box -->
                                     <form action="#" class="comment-area-box mt-2 mb-3">
