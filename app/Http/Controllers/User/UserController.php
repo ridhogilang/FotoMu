@@ -9,27 +9,38 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function formfoto()
+    public function formfoto_depan()
     {
-        return view('user.formfoto', [
+        return view('user.formfoto_depan', [
             "title" => "Form Foto Depan",
+        ]);
+    }
+
+    public function formfoto_kiri()
+    {
+        return view('user.formfoto_kiri', [
+            "title" => "Form Foto Kiri",
+        ]);
+    }
+
+    public function formfoto_kanan()
+    {
+        return view('user.formfoto_kanan', [
+            "title" => "Form Foto Kanan",
         ]);
     }
 
     public function upload_fotodepan(Request $request)
     {
-        // Validasi file yang diupload
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif'
         ]);
 
-        // Periksa apakah ada file yang diupload
         if ($request->hasFile('file')) {
             $file = $request->file('file');
 
-            // Ambil nama pengguna yang sedang login
             $user = auth()->user();
-            $username = $user->name; // Ganti dengan nama kolom yang sesuai di tabel pengguna
+            $username = $user->name; 
 
             if ($user->foto_depan) {
                 $oldFilePath = str_replace('/storage/', 'public/', $user->foto_depan);
@@ -38,24 +49,95 @@ class UserController extends Controller
                 }
             }
 
-            // Buat nama file dengan format username_fotodepan.ext
             $fileName = $username . '_fotodepan.' . $file->getClientOriginalExtension();
 
-            // Simpan file ke direktori public/foto_user
             $path = $file->storeAs('public/foto_user', $fileName);
 
-            // Ambil URL file
             $fileUrl = Storage::url($path);
 
-            // Simpan URL file ke database
             $user->foto_depan = $fileUrl;
             $user->save();
 
-            // Redirect ke halaman profil atau halaman lain
             return response()->json([
                 'success' => true,
                 'file_url' => $fileUrl,
-                'redirect_url' => route('user.produk') // URL redirect setelah upload
+                'redirect_url' => route('user.formfotokiri') 
+            ]);
+        }
+
+        return response()->json(['error' => 'File upload failed'], 422);
+    }
+
+    public function upload_fotokiri(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif'
+        ]);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            $user = auth()->user();
+            $username = $user->name; 
+
+            if ($user->foto_depan) {
+                $oldFilePath = str_replace('/storage/', 'public/', $user->foto_kiri);
+                if (Storage::exists($oldFilePath)) {
+                    Storage::delete($oldFilePath);
+                }
+            }
+
+            $fileName = $username . '_fotokiri.' . $file->getClientOriginalExtension();
+
+            $path = $file->storeAs('public/foto_user', $fileName);
+
+            $fileUrl = Storage::url($path);
+
+            $user->foto_kiri = $fileUrl;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'file_url' => $fileUrl,
+                'redirect_url' => route('user.formfotokanan') 
+            ]);
+        }
+
+        return response()->json(['error' => 'File upload failed'], 422);
+    }
+
+    public function upload_fotokanan(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif'
+        ]);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            $user = auth()->user();
+            $username = $user->name; 
+
+            if ($user->foto_depan) {
+                $oldFilePath = str_replace('/storage/', 'public/', $user->foto_kanan);
+                if (Storage::exists($oldFilePath)) {
+                    Storage::delete($oldFilePath);
+                }
+            }
+
+            $fileName = $username . '_fotokanan.' . $file->getClientOriginalExtension();
+
+            $path = $file->storeAs('public/foto_user', $fileName);
+
+            $fileUrl = Storage::url($path);
+
+            $user->foto_kanan = $fileUrl;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'file_url' => $fileUrl,
+                'redirect_url' => route('user.produk') 
             ]);
         }
 

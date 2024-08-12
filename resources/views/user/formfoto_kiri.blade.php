@@ -146,7 +146,7 @@
                         <div class="card text-white bg-danger text-xs-center">
                             <div class="card-body">
                                 <blockquote class="card-bodyquote mb-0">
-                                    <p>Pastikan wajahmu bersih dan tidak tertutup oleh aksesoris (selain kacamata)
+                                    <p>Hadap Kiri dan pastikan wajahmu bersih dan tidak tertutup oleh aksesoris (selain kacamata)
                                         dan rambut</p>
                                 </blockquote>
                             </div>
@@ -279,10 +279,10 @@
             // Konversi gambar dari canvas ke Blob
             canvas.toBlob(blob => {
                 const formData = new FormData();
-                formData.append('file', blob, 'fotodepan.png'); // Nama file yang dikirim ke server
+                formData.append('file', blob, 'fotokiri.png'); // Nama file yang dikirim ke server
 
                 // Kirim data gambar ke server
-                fetch('{{ route('user.fotodepan') }}', {
+                fetch('{{ route('user.fotokiri') }}', {
                         method: 'POST',
                         body: formData,
                         headers: {

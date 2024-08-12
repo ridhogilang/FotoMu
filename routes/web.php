@@ -52,8 +52,11 @@ Route::prefix('fotografer')->group(function () {
 Route::prefix('pelanggan')->group(function () {
     // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
     Route::get('/foto', [ProdukController::class, 'produk'])->name('user.produk');
-    Route::get('/form-fotodepan', [UserController::class, 'formfoto'])->name('user.formfoto');
+    Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');
     Route::post('/form-fotodepan', [UserController::class, 'upload_fotodepan'])->name('user.fotodepan');
-    Route::get('/form-fotokiri', [UserController::class, 'formfoto'])->name('user.formfoto');
+    Route::get('/form-fotokiri', [UserController::class, 'formfoto_kiri'])->name('user.formfotokiri');
+    Route::post('/form-fotokiri', [UserController::class, 'upload_fotokiri'])->name('user.fotokiri');
+    Route::get('/form-fotokanan', [UserController::class, 'formfoto_kanan'])->name('user.formfotokanan');
+    Route::post('/form-fotokanan', [UserController::class, 'upload_fotokanan'])->name('user.fotokanan');
     // });
 });
