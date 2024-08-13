@@ -1,41 +1,6 @@
 @extends('layout.user')
 
 @push('header')
-    <style>
-        .bg-light {
-            position: relative;
-            /* Agar overlay bisa diposisikan absolut di dalamnya */
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            /* Semi-transparan hitam */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            opacity: 1;
-            transition: opacity 0.3s;
-        }
-
-        .bg-light:hover .overlay {
-            opacity: 2;
-            /* Tampilkan overlay saat hover */
-        }
-
-        .overlay img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: cover;
-            opacity: 0.8;
-            /* Sesuaikan sesuai kebutuhan */
-        }
-    </style>
 @endpush
 
 @section('main')
@@ -62,34 +27,28 @@
                         <div class="card-body">
                             <div class="row justify-content-between">
                                 <div class="col-auto">
-                                    <form class="d-flex flex-wrap align-items-center">
-                                        <label for="inputPassword2" class="visually-hidden">Search</label>
-                                        <div class="me-3">
-                                            <input type="search" class="form-control my-1 my-lg-0" id="inputPassword2"
-                                                placeholder="Search...">
+                                    <div class="d-flex align-items-start">
+                                        <img class="d-flex align-self-center me-3 rounded-circle" src="{{ asset('images/companies/amazon.png') }}" alt="Generic placeholder image" height="64">
+                                        <div class="w-100 ms-3">
+                                            <h4 class="mt-0 mb-2 font-16">{{ $event->event }}</h4>
+                                            <p class="mb-1"><b>Jumlah :</b> {{ $event->foto_count }} Foto</p>
+                                            <p class="mb-0"><b>Tanggal :</b> {{ \Carbon\Carbon::parse($event->created_at)->translatedFormat('d F Y') }} </p>
                                         </div>
-                                        <label for="status-select" class="me-2">Sort By</label>
-                                        <div class="me-sm-3">
-                                            <select class="form-select my-1 my-lg-0" id="status-select">
-                                                <option selected="">All</option>
-                                                <option value="1">Popular</option>
-                                                <option value="2">Price Low</option>
-                                                <option value="3">Price High</option>
-                                                <option value="4">Sold Out</option>
-                                            </select>
+                                        <div class="w-100 ms-2">
+                                            <p class="mb-1"><b>Deskripsi:</b>  {{ $event->deskripsi }}</p>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="text-lg-end my-1 my-lg-0">
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#login-modal"
-                                            class="btn btn-success waves-effect waves-light me-1"><i
-                                                class="mdi mdi-cog"></i></button>
-                                        <a href="ecommerce-product-edit.html"
-                                            class="btn btn-danger waves-effect waves-light"><i
-                                                class="mdi mdi-plus-circle me-1"></i> Add New</a>
                                     </div>
                                 </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <div class="text-lg-end my-1 my-lg-0">
+                                        <button type="button" class="btn btn-success waves-effect waves-light me-1">
+                                            <i class="mdi mdi-cog"></i>
+                                        </button>
+                                        <a href="ecommerce-product-edit.html" class="btn btn-danger waves-effect waves-light">
+                                            <i class="mdi mdi-map-marker me-1"></i> Lihat Lokasi
+                                        </a>
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>
@@ -500,34 +459,21 @@
                 </div>
                 <div class="tab-pane" id="profile-b2">
                     <div class="row">
-                        @foreach ($event as $eventItem)
+                        {{-- @foreach ($event as $eventItem)
                             <div class="col-md-6 col-lg-4 col-xl-3">
                                 <div class="card product-box">
                                     <div class="card-body">
                                         <div class="bg-light">
                                             <img src="{{ asset('images/products/product-1.png') }}" alt="product-pic"
                                                 class="img-fluid" />
-
-                                            @if ($eventItem->is_private)
-                                                <div class="overlay">
-                                                    <img src="{{ asset('foto/overlay-gembok.png') }}" alt="Overlay Image">
-                                                </div>
-                                            @endif
                                         </div>
 
                                         <div class="product-info">
                                             <div class="row align-items-center">
                                                 <div class="col">
-                                                    <h5 class="font-16 mt-0 sp-line-1">
-                                                        @if ($eventItem->is_private)
-                                                            <a href="#" class="text-dark" data-bs-toggle="modal"
-                                                                data-bs-target="#login-modal"
-                                                                data-event-id="{{ $eventItem->id }}">{{ $eventItem->event }}</a>
-                                                        @else
-                                                            <a href="{{ route('user.event', ['id' => Crypt::encryptString($eventItem->id)]) }}"
-                                                                class="text-dark">{{ $eventItem->event }}</a>
-                                                        @endif
-                                                    </h5>
+                                                    <h5 class="font-16 mt-0 sp-line-1"><a
+                                                            href="{{ route('user.event', ['id' => $eventItem->id]) }}"
+                                                            class="text-dark">{{ $eventItem->event }}</a></h5>
                                                     <div class="text-warning mb-2 font-13">
                                                         <p>{{ $eventItem->deskripsi }}</p>
                                                     </div>
@@ -587,30 +533,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <form action="{{ route('event.check-password', ['id' => $eventItem->id]) }}" method="POST" class="px-3">
-                                                @csrf
-                                                <div class="mb-3 mt-3">
-                                                    <label for="password" class="form-label">Password</label>
-                                                    <div class="input-group input-group-merge">
-                                                        <input type="password" id="password" class="form-control"
-                                                            placeholder="Masukkan password event" name="password">
-                                                        <div class="input-group-text" data-password="false">
-                                                            <span class="password-eye" onclick="togglePassword()"></span>
-                                                        </div>
-                                                    </div>                                                </div>
-                                                <div class="mb-2 text-center">
-                                                    <button class="btn rounded-pill btn-primary" type="submit">Masuk ke Event</button>
-                                                </div>
-                                            </form>                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                        @endforeach --}}
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -643,30 +566,4 @@
 @endsection
 
 @push('footer')
-<script src="{{ asset('js/pages/authentication.init.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let loginModal = document.getElementById('login-modal');
-            loginModal.addEventListener('show.bs.modal', function(event) {
-                let button = event.relatedTarget;
-                let eventId = button.getAttribute('data-event-id');
-                let form = loginModal.querySelector('form');
-
-                form.setAttribute('action', `/pelanggan/event/${eventId}/check-password`);
-            });
-        });
-
-        function togglePassword() {
-            const passwordField = document.getElementById('password');
-            const passwordEye = document.querySelector('.password-eye');
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                passwordEye.parentElement.classList.add('show-password');
-            } else {
-                passwordField.type = 'password';
-                passwordEye.parentElement.classList.remove('show-password');
-            }
-        }
-    </script>
 @endpush

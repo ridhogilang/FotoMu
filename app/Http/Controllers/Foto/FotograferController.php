@@ -144,12 +144,20 @@ class FotograferController extends Controller
     public function event_tambah(Request $request)
     {
         // Validasi input
-        $request->validate([
+        $rules = [
             'event' => 'required|string|max:255',
             'tanggal' => 'required|date_format:Y-m-d',
             'flexRadioDefault' => 'required|in:false,true',
             'lokasi' => 'required|string',
-        ]);
+            'deskripsi' => 'required|string',
+        ];
+
+        // Jika radio button adalah "private", tambahkan validasi untuk password
+        if ($request->input('flexRadioDefault') === 'true') {
+            $rules['password'] = 'required|string|min:6'; // Menambahkan validasi untuk password
+        }
+
+        $request->validate($rules);
 
         // Format tanggal
         $tanggal = $request->input('tanggal');
@@ -157,12 +165,11 @@ class FotograferController extends Controller
 
         // Cek apakah ada event dengan nama dan tanggal yang sama
         $existingEvent = Event::where('event', $request->input('event'))
-                              ->where('tanggal', $formattedDate)
-                              ->first();
+            ->where('tanggal', $formattedDate)
+            ->first();
 
         if ($existingEvent) {
             return redirect()->back()->with('toast_error', 'Event sudah ada, tidak bisa ditambahkan kembali!');
-
         }
 
         // Simpan data ke database
@@ -171,6 +178,8 @@ class FotograferController extends Controller
             'tanggal' => $formattedDate,
             'is_private' => $request->input('flexRadioDefault') === 'true',
             'lokasi' => $request->input('lokasi'),
+            'password' => $request->input('flexRadioDefault') === 'true' ? bcrypt($request->input('password')) : null,
+            'deskripsi' => $request->input('deskripsi'),
         ]);
 
         // Redirect atau tampilkan pesan sukses

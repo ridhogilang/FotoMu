@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('tanggal');
             $table->boolean('is_private')->default(false); 
             $table->string('password')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
-
+ 
     /**
      * Reverse the migrations.
      */

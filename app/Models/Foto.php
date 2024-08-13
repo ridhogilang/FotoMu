@@ -20,4 +20,9 @@ class Foto extends Model
         'file_size',
         'resolusi',
     ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
 }

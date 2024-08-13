@@ -39,6 +39,10 @@
             width: 100%;
             height: 400px;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 @endpush
 
@@ -236,6 +240,22 @@
                                         style="margin-right: 10px;">Private</label>
                                 </div>
 
+                                <div class="mb-3" id="password-section">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="password" id="password" class="form-control"
+                                            placeholder="Enter your password" name="password">
+                                        <div class="input-group-text" data-password="false">
+                                            <span class="password-eye" onclick="togglePassword()"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Deskripsi</label>
+                                    <textarea class="form-control" name="deskripsi" rows="3" placeholder="Deskripsikan eventmu"></textarea>
+                                </div>
+
                                 <div id="map"></div>
                                 <input type="hidden" name="lokasi" id="lokasi">
 
@@ -260,9 +280,44 @@
     <script src="{{ asset('libs/quill/quill.min.js') }}"></script>
     <script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
     <script src="{{ asset('js/pages/add-product.init.js') }}"></script>
+    <script src="{{ asset('js/pages/authentication.init.js') }}"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+         // Function to handle the radio button change event
+         function handleRadioChange() {
+            const passwordSection = document.getElementById('password-section');
+            const publicRadio = document.getElementById('customradio-public');
+            const privateRadio = document.getElementById('customradio-private');
+
+            if (publicRadio.checked) {
+                passwordSection.classList.add('hidden');
+            } else if (privateRadio.checked) {
+                passwordSection.classList.remove('hidden');
+            }
+        }
+
+        // Attach event listeners to radio buttons
+        document.getElementById('customradio-public').addEventListener('change', handleRadioChange);
+        document.getElementById('customradio-private').addEventListener('change', handleRadioChange);
+
+        // Initial check when the page loads
+        handleRadioChange();
+
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const passwordEye = document.querySelector('.password-eye');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordEye.parentElement.classList.add('show-password');
+            } else {
+                passwordField.type = 'password';
+                passwordEye.parentElement.classList.remove('show-password');
+            }
+        }
+    </script>
     <script>
         let map;
         let userMarker;

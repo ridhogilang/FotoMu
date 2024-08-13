@@ -17,5 +17,11 @@ class Event extends Model
         'tanggal',
         'is_private',
         'password',
+        'deskripsi',
     ];
+
+    public function foto()
+    {
+        return $this->hasMany(Foto::class, 'event_id');
+    }
 }
