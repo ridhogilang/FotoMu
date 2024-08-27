@@ -50,4 +50,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function foto()
+    {
+        return $this->hasMany(Foto::class, 'user_id');
+    }
+
+    public function similarFoto()
+    {
+        return $this->hasMany(SimilarFoto::class, 'user_id');
+    }
+
+
 }

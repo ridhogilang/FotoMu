@@ -405,6 +405,7 @@
             autoProcessQueue: true, // Mengunggah file ke lokasi sementara saat ditambahkan
             parallelUploads: 10,
             maxFiles: 500,
+            maxFilesize: 10,
             headers: {
                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },

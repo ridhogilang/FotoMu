@@ -15,7 +15,7 @@ class EventSeeder extends Seeder
     public function run(): void
     {
         Event::create([
-            "event" => "Running Pagi",
+            "event" => "Dieng Janabdra",
             "lokasi" => "-7.7916167880215195, 110.36704796292844",
             "tanggal" => Carbon::now()
         ]);
