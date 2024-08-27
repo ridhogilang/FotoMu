@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Foto;
 use App\Models\Foto;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Jobs\ProcessWatermarkJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -83,31 +84,27 @@ class FotograferController extends Controller
         foreach ($request->input('file_paths') as $index => $tempPath) {
             $filename = basename($tempPath);
             $newPath = 'uploads/photos/' . $filename;
+            $newPathWatermark = 'uploads/photoswatermark/' . $filename;
 
-            // Pindahkan file
             if (Storage::disk('public')->exists($tempPath)) {
-                // Dapatkan ukuran file
                 $fileSize = $request->input('file_sizes')[$index];
-
-                // Tentukan resolusi berdasarkan ukuran file
                 $resolusi = $this->determineResolution($fileSize);
-
-                // Debug: Cek ukuran file dan resolusi
-                Log::info("File size: $fileSize, Resolution: $resolusi");
-
                 Storage::disk('public')->move($tempPath, $newPath);
-
-                // Simpan informasi ke database
-                Foto::create([
-                    'user_id' => auth()->id(), // Pastikan user terautentikasi
+            
+                $foto = Foto::create([
+                    'user_id' => auth()->id(),
                     'event_id' => $request->input('event_id'),
                     'foto' => $newPath,
+                    'fotowatermark' => null,
                     'harga' => $request->input('harga'),
                     'deskripsi' => $request->input('deskripsi'),
                     'file_size' => $fileSize,
                     'resolusi' => $resolusi,
                 ]);
+            
+                ProcessWatermarkJob::dispatch($newPath, $newPathWatermark, $foto->id);
             }
+            
         }
 
         $this->clearTempFolder();
@@ -137,7 +134,7 @@ class FotograferController extends Controller
         } elseif ($fileSizeMB >= 7 && $fileSizeMB <= 10) {
             return 'high';
         } else {
-            return 'unknown'; // Jika ukuran file di luar rentang yang ditentukan
+            return 'low'; // Menggunakan 'low' sebagai fallback daripada 'unknown'
         }
     }
 

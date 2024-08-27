@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('event_id');
             $table->string('foto');
+            $table->string('fotowatermark')->nullable();
             $table->string('harga');
             $table->string('deskripsi')->nullable();
             $table->string('file_size')->nullable();;

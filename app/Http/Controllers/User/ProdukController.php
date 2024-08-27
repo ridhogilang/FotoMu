@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\Foto;
 use App\Models\Event;
 use App\Models\SimilarFoto;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Jobs\CompareFacesJob;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
+use Intervention\Image\Facades\Image;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Storage;
 use App\Services\FaceRecognitionService;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -27,26 +30,22 @@ class ProdukController extends Controller
     {
         $this->faceRecognitionService = $faceRecognitionService;
     }
-    
+
     public function produk()
     {
         $event = Event::withCount('foto')->get();
         $user = Auth::user();
         $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
-        // Ambil foto yang sudah pernah terdeteksi sebagai similar
         $similarPhotos = SimilarFoto::where('user_id', $user->id)->pluck('foto_id')->toArray();
 
-        // Jika belum ada, proses perbandingan dengan Queue
         if (empty($similarPhotos)) {
             foreach (Foto::all() as $foto) {
                 $fotoPath = storage_path('app/public/' . $foto->foto);
 
-                // Masukkan job ke dalam queue
                 CompareFacesJob::dispatch($user->id, $foto->id, $userPhotoPath, $fotoPath);
             }
         }
 
-        // Ambil foto-foto yang mirip dari database
         $similarPhotos = Foto::whereIn('id', $similarPhotos)->get();
 
         return view('user.produk', [
@@ -58,12 +57,24 @@ class ProdukController extends Controller
 
     public function event($id)
     {
+        $user = Auth::user();
+
         $encryptId = Crypt::decryptString($id);
         $event = Event::withCount('foto')->find($encryptId);
+
+        $foto = Foto::Where('event_id', $encryptId)->get();
+
+        $similarPhotosId = SimilarFoto::where('user_id', $user->id)->pluck('foto_id');
+
+        $similarPhotos = Foto::whereIn('id', $similarPhotosId)
+            ->where('event_id', $encryptId)
+            ->get();
 
         return view('user.event', [
             "title" => "Foto Anda",
             'event' => $event,
+            "similarPhotos" => $similarPhotos,
+            "semuaFoto" => $foto,
         ]);
     }
 

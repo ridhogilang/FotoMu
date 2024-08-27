@@ -40,8 +40,9 @@ class UserController extends Controller
             $file = $request->file('file');
 
             $user = auth()->user();
-            $username = $user->name; 
+            $username = $user->name;
 
+            // Hapus foto depan lama jika ada
             if ($user->foto_depan) {
                 $oldFilePath = str_replace('/storage/', 'public/', $user->foto_depan);
                 if (Storage::exists($oldFilePath)) {
@@ -49,24 +50,28 @@ class UserController extends Controller
                 }
             }
 
+            // Buat nama file
             $fileName = $username . '_fotodepan.' . $file->getClientOriginalExtension();
 
+            // Simpan file ke storage
             $path = $file->storeAs('public/foto_user', $fileName);
 
-            $fileUrl = Storage::url($path);
+            // Simpan path relatif ke database (tanpa "/storage/")
+            $relativePath = str_replace('public/', '', $path);
 
-            $user->foto_depan = $fileUrl;
+            $user->foto_depan = $relativePath;
             $user->save();
 
             return response()->json([
                 'success' => true,
-                'file_url' => $fileUrl,
-                'redirect_url' => route('user.formfotokiri') 
+                'file_url' => $relativePath,
+                'redirect_url' => route('user.formfotokiri')
             ]);
         }
 
         return response()->json(['error' => 'File upload failed'], 422);
     }
+
 
     public function upload_fotokiri(Request $request)
     {
@@ -78,7 +83,7 @@ class UserController extends Controller
             $file = $request->file('file');
 
             $user = auth()->user();
-            $username = $user->name; 
+            $username = $user->name;
 
             if ($user->foto_depan) {
                 $oldFilePath = str_replace('/storage/', 'public/', $user->foto_kiri);
@@ -99,7 +104,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'file_url' => $fileUrl,
-                'redirect_url' => route('user.formfotokanan') 
+                'redirect_url' => route('user.formfotokanan')
             ]);
         }
 
@@ -116,7 +121,7 @@ class UserController extends Controller
             $file = $request->file('file');
 
             $user = auth()->user();
-            $username = $user->name; 
+            $username = $user->name;
 
             if ($user->foto_depan) {
                 $oldFilePath = str_replace('/storage/', 'public/', $user->foto_kanan);
@@ -137,7 +142,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'file_url' => $fileUrl,
-                'redirect_url' => route('user.produk') 
+                'redirect_url' => route('user.produk')
             ]);
         }
 

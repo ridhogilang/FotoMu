@@ -15,6 +15,7 @@ class Foto extends Model
         'user_id',
         'event_id',
         'foto',
+        'fotowatermark',
         'harga',
         'deskripsi',
         'file_size',
