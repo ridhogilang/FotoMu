@@ -178,7 +178,7 @@
                                                 <div class="col-12">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
-                                                            <button class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-close-circle"></i></button>
+                                                            <button class="btn btn-outline-danger waves-effect waves-light"><i class="mdi mdi-heart-outline"></i></button>
                                                         </div>
                                                         <div>
                                                             <button class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">Beli Sekarang</button>
