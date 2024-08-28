@@ -31,4 +31,9 @@ class Foto extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function similarFoto()
+    {
+        return $this->hasMany(SimilarFoto::class, 'foto_id');
+    }
 }

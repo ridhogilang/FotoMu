@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Foto\FotograferController;
-use App\Http\Controllers\User\ProdukController;
+use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\User\ProdukController;
+use App\Http\Controllers\Foto\FotograferController;
+use App\Http\Controllers\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +56,11 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/foto', [ProdukController::class, 'produk'])->name('user.produk');
     Route::get('/foto/event/{id}', [ProdukController::class, 'event'])->name('user.event');
     Route::post('/event/{id}/check-password', [ProdukController::class, 'checkPassword'])->name('event.check-password');
+    Route::post('/similar-foto/hapus', [ProdukController::class, 'HapusSimilar'])->name('similar-foto.hapus');
 
+    //Wishlist & Wishlist
+    Route::post('/toggle-whishlist', [CartController::class, 'toggleWishlist'])->name('wishlist.toggle');
+    Route::post('/toggle-cart', [CartController::class, 'toggleCart'])->name('cart.toggle');
 
     //user
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');

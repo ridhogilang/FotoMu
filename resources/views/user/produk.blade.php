@@ -123,45 +123,55 @@
                 <div class="tab-pane active" id="home-b2">
                     <div class="row">
                         @foreach ($similarPhotos as $similiar)
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="card product-box">
-                                <div class="card-body">
-                                    <div class="bg-light">
-                                        <img src="{{ Storage::url($similiar->fotowatermark) }}" alt="product-pic"
-                                            class="img-fluid" />
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="row align-items-center">
-                                            <div class="col">
-                                                <h5 class="font-16 mt-0 sp-line-1"><a href="ecommerce-product-detail.html"
-                                                        class="text-dark"><i class="fas fa-map-marker-alt"></i> {{ $similiar->event->event }}</a></h5>
-                                                <h5 class="m-0"> <span class="text-muted"> Fotografer : {{ $similiar->user->name }}</span>
-                                                </h5>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="product-price-tag">
-                                                    {{ number_format($similiar->harga / 1000, 0, ',', '.') . 'K' }}
-                                                </div>
-                                            </div>
+                            <div class="col-md-6 col-lg-4 col-xl-3">
+                                <div class="card product-box">
+                                    <div class="card-body">
+                                        <div class="bg-light">
+                                            <img src="{{ Storage::url($similiar->fotowatermark) }}" alt="product-pic"
+                                                class="img-fluid" />
                                         </div>
-                                        <div class="row align-items-center mt-3">
-                                            <div class="col-12">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <button class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-close-circle"></i></button>
-                                                    </div>
-                                                    <div>
-                                                        <button class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">Beli Sekarang</button>
-                                                        <button type="button" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-cart"></i></button>
+                                        <div class="product-info">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <h5 class="font-16 mt-0 sp-line-1"><a
+                                                            href="ecommerce-product-detail.html" class="text-dark"><i
+                                                                class="fas fa-map-marker-alt"></i>
+                                                            {{ $similiar->event->event }}</a></h5>
+                                                    <h5 class="m-0"> <span class="text-muted"> Fotografer :
+                                                            {{ $similiar->user->name }}</span>
+                                                    </h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="product-price-tag">
+                                                        {{ number_format($similiar->harga / 1000, 0, ',', '.') . 'K' }}
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row align-items-center mt-3">
+                                                <div class="col-12">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <button class="btn btn-danger waves-effect waves-light"><i
+                                                                    class="mdi mdi-close-circle"></i></button>
+                                                        </div>
+                                                        <div>
+                                                            <button
+                                                                class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">Beli
+                                                                Sekarang</button>
+                                                            <button type="button"
+                                                                class="btn {{ in_array($similiar->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart"
+                                                                data-foto-id="{{ $similiar->id }}">
+                                                                <i class="mdi mdi-cart"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
-                                        
                                     </div>
                                 </div>
                             </div>
-                        </div>   
                         @endforeach
                     </div>
                     <div class="row">
@@ -282,7 +292,8 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-body">
-                                            <form action="{{ route('event.check-password', ['id' => $eventItem->id]) }}" method="POST" class="px-3">
+                                            <form action="{{ route('event.check-password', ['id' => $eventItem->id]) }}"
+                                                method="POST" class="px-3">
                                                 @csrf
                                                 <div class="mb-3 mt-3">
                                                     <label for="password" class="form-label">Password</label>
@@ -292,11 +303,13 @@
                                                         <div class="input-group-text" data-password="false">
                                                             <span class="password-eye" onclick="togglePassword()"></span>
                                                         </div>
-                                                    </div>                                                </div>
-                                                <div class="mb-2 text-center">
-                                                    <button class="btn rounded-pill btn-primary" type="submit">Masuk ke Event</button>
+                                                    </div>
                                                 </div>
-                                            </form>                            
+                                                <div class="mb-2 text-center">
+                                                    <button class="btn rounded-pill btn-primary" type="submit">Masuk ke
+                                                        Event</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -334,7 +347,7 @@
 @endsection
 
 @push('footer')
-<script src="{{ asset('js/pages/authentication.init.js') }}"></script>
+    <script src="{{ asset('js/pages/authentication.init.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let loginModal = document.getElementById('login-modal');
@@ -350,7 +363,7 @@
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const passwordEye = document.querySelector('.password-eye');
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 passwordEye.parentElement.classList.add('show-password');
@@ -359,5 +372,68 @@
                 passwordEye.parentElement.classList.remove('show-password');
             }
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.add-to-cart').click(function() {
+                var button = $(this);
+                var fotoId = button.data('foto-id');
+                $.ajax({
+                    url: '{{ route('cart.toggle') }}',
+                    type: 'POST',
+                    data: {
+                        foto_id: fotoId,
+                        _token: '{{ csrf_token() }}' // Laravel CSRF token untuk keamanan
+                    },
+                    success: function(response) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            backdrop: false,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal
+                                    .resumeTimer)
+                            }
+                        }).fire({
+                            icon: 'success',
+                            title: response.success
+                        });
+
+                        // Toggle class button
+                        if (response.status === 'added') {
+                            button.removeClass('btn-outline-success').addClass('btn-success');
+                        } else if (response.status === 'removed') {
+                            button.removeClass('btn-success').addClass('btn-outline-success');
+                        }
+
+                        setTimeout(function() {
+                            location.reload(); // Reload the page after 3 seconds
+                        }, 1000);
+                    },
+                    error: function(xhr) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            backdrop: false,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal
+                                    .resumeTimer)
+                            }
+                        }).fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan saat memproses cart'
+                        });
+                    }
+                });
+            });
+        });
     </script>
 @endpush

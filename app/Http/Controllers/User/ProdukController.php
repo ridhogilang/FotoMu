@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Cart;
 use App\Models\Foto;
 use App\Models\Event;
+use App\Models\Wishlist;
 use App\Models\SimilarFoto;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -48,10 +50,14 @@ class ProdukController extends Controller
 
         $similarPhotos = Foto::whereIn('id', $similarPhotos)->get();
 
+        $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
+
+
         return view('user.produk', [
             "title" => "Foto Anda",
             'event' => $event,
             "similarPhotos" => $similarPhotos,
+            "cartItemIds" => $cartItemIds,
         ]);
     }
 
@@ -68,13 +74,23 @@ class ProdukController extends Controller
 
         $similarPhotos = Foto::whereIn('id', $similarPhotosId)
             ->where('event_id', $encryptId)
+            ->whereHas('similarFoto', function ($query) {
+                $query->where('hapus', false);
+            })
             ->get();
+
+
+        $wishlist = Wishlist::where('user_id',  $user->id)->pluck('foto_id')->toArray();
+
+        $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
 
         return view('user.event', [
             "title" => "Foto Anda",
             'event' => $event,
             "similarPhotos" => $similarPhotos,
             "semuaFoto" => $foto,
+            "wishlist" => $wishlist,
+            "cartItemIds" => $cartItemIds,
         ]);
     }
 
@@ -89,6 +105,24 @@ class ProdukController extends Controller
         } else {
             // Return back with an error if password is incorrect
             return back()->with('toast_error', 'Password event anda salah, silahkan hubungi panitia fotografer anda!');
+        }
+    }
+
+    public function HapusSimilar(Request $request)
+    {
+        $request->validate([
+            'foto_id' => 'required',
+        ]);
+
+        $similarFoto = SimilarFoto::where('user_id', Auth::id())->where('foto_id', $request->foto_id)->first();
+
+        if ($similarFoto) {
+            $similarFoto->hapus = true;
+            $similarFoto->save();
+
+            return response()->json(['success' => 'Foto berhasil dihapus dari similar_foto.']);
+        } else {
+            return response()->json(['error' => 'Foto tidak ditemukan.'], 404);
         }
     }
 }

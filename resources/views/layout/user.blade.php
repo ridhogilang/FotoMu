@@ -21,7 +21,7 @@
 
         <div class="content-page">
 
-           @include('partials.header')
+           @include('partials.header_user')
 
            @yield('main')
 

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('similar_foto', function (Blueprint $table) {
+        Schema::create('cart', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('foto_id');
-            $table->boolean('hapus')->default(false);
+            $table->bigInteger('user_id');
+            $table->bigInteger('foto_id');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('similar_foto');
+        Schema::dropIfExists('cart');
     }
 };
