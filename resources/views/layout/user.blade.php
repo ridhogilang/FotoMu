@@ -21,9 +21,9 @@
 
         <div class="content-page">
 
-           @include('partials.header_user')
+            @include('partials.header_user')
 
-           @yield('main')
+            @yield('main')
 
             @include('partials.footer')
         </div>
@@ -59,6 +59,54 @@
         document.documentElement.setAttribute('data-bs-theme', 'light');
         document.documentElement.setAttribute('data-topbar-color', 'light');
     </script>
+    <script>
+        $(document).on('click', '.noti-close-btn', function() {
+            var cartId = $(this).data('id'); // Mengambil ID cart item dari atribut data-id
+            var url = '{{ route('cart.destroy', ':id') }}';
+            url = url.replace(':id', cartId);
+
+            const toastMixin = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                backdrop: false,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    $(`#cart-item-${cartId}`).remove();
+                    toastMixin.fire({
+                        icon: 'success',
+                        title: response.success || 'Item has been deleted'
+                    });
+
+                    setTimeout(function() {
+                        location.reload(); // Reload the page after 3 seconds
+                    }, 1000);
+                },
+                error: function(xhr) {
+                    console.error('Error:', xhr);
+                    toastMixin.fire({
+                        icon: 'error',
+                        title: 'There was a problem deleting your item.'
+                    });
+                }
+            });
+        });
+    </script>
+
     @stack('footer')
 </body>
+
 </html>

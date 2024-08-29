@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\User\ProdukController;
 use App\Http\Controllers\Foto\FotograferController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\User\PemesananController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,9 +59,15 @@ Route::prefix('pelanggan')->group(function () {
     Route::post('/event/{id}/check-password', [ProdukController::class, 'checkPassword'])->name('event.check-password');
     Route::post('/similar-foto/hapus', [ProdukController::class, 'HapusSimilar'])->name('similar-foto.hapus');
 
-    //Wishlist & Wishlist
+    //Wishlist & Cart
+    Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
     Route::post('/toggle-whishlist', [CartController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::post('/toggle-cart', [CartController::class, 'toggleCart'])->name('cart.toggle');
+    Route::delete('/cart/{id}', [CartController::class, 'hapusCart'])->name('cart.destroy');
+
+    //Pemesanan Foto
+    Route::post('/pemesanan', [PemesananController::class, 'store'])->name('user.pemesanan');
+    Route::get('/invoice/{id}', [PemesananController::class, 'invoice'])->name('user.invoice');
 
     //user
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');

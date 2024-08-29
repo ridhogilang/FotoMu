@@ -36,4 +36,9 @@ class Foto extends Model
     {
         return $this->hasMany(SimilarFoto::class, 'foto_id');
     }
+
+    public function detailPesanan()
+    {
+      return $this->hasMany(DetailPesanan::class, 'foto_id');
+    }
 }

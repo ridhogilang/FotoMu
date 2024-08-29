@@ -10,6 +10,32 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
+    public function cart()
+    {
+        $userId = Auth::id();
+
+        $cart = Cart::where('user_id', $userId)->get();
+
+        $total = 0;
+        foreach ($cart as $cartItem) {
+            $total += $cartItem->foto->harga;
+        }
+
+        $adminFee = 2000;
+        $taxRate = 0.11; // 11%
+        $tax = $total * $taxRate;
+        $totalPayment = $total + $adminFee + $tax;
+
+        return view('user.cart', [
+            "title" => "Keranjang Anda",
+            "cart" => $cart,
+            'total' => $total,
+            'adminFee' => $adminFee,
+            'tax' => $tax,
+            'totalPayment' => $totalPayment
+        ]);
+    }
+
     public function toggleWishlist(Request $request)
     {
         $userId = Auth::id();
@@ -52,5 +78,13 @@ class CartController extends Controller
 
             return response()->json(['status' => 'added', 'success' => 'Foto berhasil ditambahkan ke cart!']);
         }
+    }
+
+    public function hapusCart($id)
+    {
+        $cartItem = Cart::findOrFail($id);
+        $cartItem->delete();
+
+        return response()->json(['success' => 'Item removed from cart']);
     }
 }

@@ -284,7 +284,7 @@
                             <a href="javascript:void(0);"
                                 class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-1">
                                 <div class="card-body">
-                                    <span class="float-end noti-close-btn text-muted"><i
+                                        <span class="float-end noti-close-btn text-muted" id="close-btn-{{ $cart->id }}" data-id="{{ $cart->id }}"><i
                                             class="mdi mdi-close"></i></span>
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0">
@@ -310,9 +310,9 @@
                     </div>
 
                     <!-- All-->
-                    <a href="javascript:void(0);"
+                    <a href="{{ route('user.cart') }}"
                         class="dropdown-item text-center text-primary notify-item border-top border-light py-2">
-                        View All
+                        View Cart
                     </a>
 
                 </div>
