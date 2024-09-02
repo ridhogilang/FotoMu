@@ -188,7 +188,7 @@
         snap.pay('{{ $pesanan->snap_token }}', {
             // Optional
             onSuccess: function(result) {
-                window.location.href = '{{ route('user.produk') }}';
+                window.location.href = '{{ route('checkout.success', $pesanan->id) }}';
             },
             // Optional
             onPending: function(result) {

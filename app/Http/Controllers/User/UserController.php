@@ -65,7 +65,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'file_url' => $relativePath,
-                'redirect_url' => route('user.formfotokiri')
+                'redirect_url' => route('user.produk')
             ]);
         }
 

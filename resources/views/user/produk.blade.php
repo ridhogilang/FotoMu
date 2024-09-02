@@ -1,6 +1,12 @@
 @extends('layout.user')
 
 @push('header')
+    <link href="{{ asset('libs/mohithg-switchery/switchery.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/multiselect/css/multi-select.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/selectize/css/selectize.bootstrap3.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css') }}" rel="stylesheet"
+        type="text/css" />
     <style>
         .bg-light {
             position: relative;
@@ -61,24 +67,11 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-between">
-                                <div class="col-auto">
-                                    <form class="d-flex flex-wrap align-items-center">
-                                        <label for="inputPassword2" class="visually-hidden">Search</label>
-                                        <div class="me-3">
-                                            <input type="search" class="form-control my-1 my-lg-0" id="inputPassword2"
-                                                placeholder="Search...">
-                                        </div>
-                                        <label for="status-select" class="me-2">Sort By</label>
-                                        <div class="me-sm-3">
-                                            <select class="form-select my-1 my-lg-0" id="status-select">
-                                                <option selected="">All</option>
-                                                <option value="1">Popular</option>
-                                                <option value="2">Price Low</option>
-                                                <option value="3">Price High</option>
-                                                <option value="4">Sold Out</option>
-                                            </select>
-                                        </div>
-                                    </form>
+                                <div class="col-6">
+                                    <label for="inputPassword2" class="visually-hidden">Search</label>
+                                    <div class="me-3">
+                                        <input class="form-control" id="event-search" placeholder="Search for an event..."></input>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <div class="text-lg-end my-1 my-lg-0">
@@ -211,7 +204,8 @@
 
                                             @if ($eventItem->is_private)
                                                 <div class="overlay">
-                                                    <img src="{{ asset('foto/overlay-gembok.png') }}" alt="Overlay Image">
+                                                    <img src="{{ asset('foto/overlay-gembok.png') }}"
+                                                        alt="Overlay Image">
                                                 </div>
                                             @endif
                                         </div>
@@ -348,6 +342,8 @@
 
 @push('footer')
     <script src="{{ asset('js/pages/authentication.init.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.default.css">
+    <script src="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let loginModal = document.getElementById('login-modal');
@@ -433,6 +429,51 @@
                         });
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#event-search').selectize({
+                valueField: 'id',
+                labelField: 'event',
+                searchField: ['event', 'lokasi'],
+                placeholder: 'Search for an event...',
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+                    $.ajax({
+                        url: '/pelanggan/search-event',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            query: query
+                        },
+                        error: function() {
+                            callback();
+                        },
+                        success: function(res) {
+                            callback(res);
+                        }
+                    });
+                },
+                render: {
+                    option: function(item, escape) {
+                        return '<div>' +
+                            '<img src="path_to_image/' + escape(item.image) +
+                            '" alt="" style="width: 40px; height: 40px;"/>' +
+                            '<span class="title"><strong>' + escape(item.event) +
+                            '</strong></span><br>' +
+                            '<span class="description">' + escape(item.lokasi) + '</span>' +
+                            '</div>';
+                    },
+                    item: function(item, escape) {
+                        return '<div>' +
+                            '<img src="path_to_image/' + escape(item.image) +
+                            '" alt="" style="width: 40px; height: 40px;"/>' +
+                            '<span class="title"><strong>' + escape(item.event) + '</strong></span>' +
+                            '</div>';
+                    }
+                }
             });
         });
     </script>

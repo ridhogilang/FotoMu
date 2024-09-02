@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('foto', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
+            $table->bigInteger('fotografer_id');
             $table->bigInteger('event_id');
             $table->string('foto');
             $table->string('fotowatermark')->nullable();

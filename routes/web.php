@@ -58,6 +58,7 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/foto/event/{id}', [ProdukController::class, 'event'])->name('user.event');
     Route::post('/event/{id}/check-password', [ProdukController::class, 'checkPassword'])->name('event.check-password');
     Route::post('/similar-foto/hapus', [ProdukController::class, 'HapusSimilar'])->name('similar-foto.hapus');
+    Route::get('/search-event', [ProdukController::class, 'search'])->name('event.search');
 
     //Wishlist & Cart
     Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
@@ -66,8 +67,10 @@ Route::prefix('pelanggan')->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'hapusCart'])->name('cart.destroy');
 
     //Pemesanan Foto
+    Route::get('/pesanan', [PemesananController::class, 'index'])->name('user.pesanan');
     Route::post('/pemesanan', [PemesananController::class, 'store'])->name('user.pemesanan');
     Route::get('/invoice/{id}', [PemesananController::class, 'invoice'])->name('user.invoice');
+    Route::get('/checkout/success/{id}', [PemesananController::class, 'success'])->name('checkout.success');
 
     //user
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');

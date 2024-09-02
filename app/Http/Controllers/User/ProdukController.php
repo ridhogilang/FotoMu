@@ -36,6 +36,7 @@ class ProdukController extends Controller
     public function produk()
     {
         $event = Event::withCount('foto')->get();
+        $eventAll = Event::all();
         $user = Auth::user();
         $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
         $similarPhotos = SimilarFoto::where('user_id', $user->id)->pluck('foto_id')->toArray();
@@ -56,11 +57,23 @@ class ProdukController extends Controller
         return view('user.produk', [
             "title" => "Foto Anda",
             'event' => $event,
+            "eventAll" => $eventAll,
             "similarPhotos" => $similarPhotos,
             "cartItemIds" => $cartItemIds,
         ]);
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->get('query', '');
+
+        // Cari event berdasarkan query
+        $events = Event::where('event', 'LIKE', "%{$query}%")->get();
+
+        // Mengembalikan data dalam format JSON
+        return response()->json($events);
+    }
+    
     public function event($id)
     {
         $user = Auth::user();

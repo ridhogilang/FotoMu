@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Fotografer;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -32,9 +33,10 @@ class UserSeeder extends Seeder
         $admin = User::create(array_merge([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
+            'nowa' => '08123456789',
             'is_admin' => true,
         ], $default_user_value));
-        
+
         $role = Role::create([
             'name' => 'admin',
             'guard_name' => 'web'
@@ -42,6 +44,14 @@ class UserSeeder extends Seeder
 
         $role->syncPermissions($this->permissions);
         $admin->assignRole([$role->id]);
+
+        Fotografer::create([
+            'user_id' => $admin->id,
+            'nama' => 'Nama Fotografer',
+            'alamat' => 'Alamat Fotografer',
+            'nowa' => '08123456789',
+            'foto_ktp' => 'path/to/ktp.jpg',
+        ]);
 
         Role::create([
             'name' => 'foto',
@@ -56,6 +66,7 @@ class UserSeeder extends Seeder
         $foto = User::create(array_merge([
             'name' => 'Fotografer',
             'email' => 'fotografer@gmail.com',
+            'nowa' => '08123456789',
             'is_foto' => true,
         ], $default_user_value));
 
@@ -64,10 +75,10 @@ class UserSeeder extends Seeder
         $user = User::create(array_merge([
             'name' => 'User',
             'email' => 'user@gmail.com',
+            'nowa' => '08123456789',
             'is_user' => true,
         ], $default_user_value));
 
         $user->assignRole('user');
-       
     }
 }

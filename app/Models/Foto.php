@@ -12,7 +12,7 @@ class Foto extends Model
     protected $table = 'foto';
 
     protected $fillable = [
-        'user_id',
+        'fotografer_id',
         'event_id',
         'foto',
         'fotowatermark',
@@ -27,9 +27,9 @@ class Foto extends Model
         return $this->belongsTo(Event::class, 'event_id');
     }
 
-    public function user()
+    public function fotografer()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Fotografer::class, 'fotografer_id');
     }
 
     public function similarFoto()

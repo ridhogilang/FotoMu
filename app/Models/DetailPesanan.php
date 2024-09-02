@@ -12,6 +12,7 @@ class DetailPesanan extends Model
     protected $table = 'detail_pesanan';
 
     protected $fillable = [
+        'user_id',
         'pesanan_id',
         'foto_id',
     ];

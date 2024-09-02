@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Mail\VerifyMail;
+use App\Models\Fotografer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ResetPasswordMail;
@@ -33,6 +34,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Validasi input
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -43,22 +45,48 @@ class AuthController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
-
         $remember = $request->has('remember');
 
+        // Cek kredensial
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
 
+            // Cek apakah email sudah diverifikasi
             if (is_null($user->email_verified_at)) {
                 Auth::logout();
                 return redirect()->back()->with('toast_error', 'Silahkan verifikasi akun via email.');
             }
 
-            return redirect()->route('admin.dashboard')->with('success', 'Halo selamat datang ' . $user->name);
+            // Logika redirect berdasarkan tipe user
+            if ($user->is_admin) {
+                // Redirect ke admin dashboard jika is_admin true
+                return redirect()->route('admin.dashboard')->with('success', 'Halo selamat datang ' . $user->name);
+            } elseif ($user->is_user) {
+                // Jika is_user true, cek foto_depan
+                if (is_null($user->foto_depan)) {
+                    return redirect()->route('user.formfotodepan')->with('warning', 'Silakan lengkapi foto depan Anda.');
+                } else {
+                    return redirect()->route('user.produk')->with('success', 'Halo selamat datang ' . $user->name);
+                }
+            } elseif ($user->is_foto) {
+                // Jika is_foto true, cek apakah user_id sudah ada di tabel fotografer
+                $fotografer = Fotografer::where('user_id', $user->id)->first();
+
+                if (is_null($fotografer)) {
+                    return redirect()->route('foto.upload')->with('warning', 'Silakan lengkapi data fotografer Anda.');
+                } else {
+                    return redirect()->route('foto.profil')->with('success', 'Halo selamat datang ' . $user->name);
+                }
+            }
+
+            // Default jika tipe user tidak dikenali
+            return redirect()->back()->with('toast_error', 'Tipe pengguna tidak dikenali.');
         }
 
+        // Jika login gagal
         return redirect()->back()->with('toast_error', 'Invalid email or password');
     }
+
 
     public function logout(Request $request)
     {

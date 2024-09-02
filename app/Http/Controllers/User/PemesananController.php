@@ -7,12 +7,23 @@ use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use App\Models\DetailPesanan;
 use Illuminate\Support\Carbon;
+use App\Jobs\SendWatzapMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
 class PemesananController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $pesanan = Pesanan::where('user_id', $user->id)->get();
+
+        return view('user.pesanan', [
+            "title" => "Orderan Anda",
+            "pesanan" => $pesanan,
+        ]);
+    }
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -49,6 +60,7 @@ class PemesananController extends Controller
         $params1 = array();
         foreach ($cart as $cartItem) {
             $params1[] = array(
+                'user_id' => $request->user_id,
                 'pesanan_id' => $pesanan->id,
                 'foto_id' => $cartItem->foto_id,
                 'created_at' => Carbon::now(),
@@ -89,5 +101,16 @@ class PemesananController extends Controller
             'tax' => $tax,
             'totalPayment' => $totalPayment
         ]);
+    }
+
+    public function success($id)
+    {
+        // Mengambil data pesanan berdasarkan ID
+        $pesanan = Pesanan::where('id', $id)->first();
+        $pesanan->status = 'Selesai';
+        $pesanan->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('user.pesanan')->with('success', 'Pesanan anda sudah masuk dan akan segera di Proses. Pesan notifikasi sedang dikirim.');
     }
 }
