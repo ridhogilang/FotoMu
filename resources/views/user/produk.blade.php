@@ -70,7 +70,8 @@
                                 <div class="col-6">
                                     <label for="inputPassword2" class="visually-hidden">Search</label>
                                     <div class="me-3">
-                                        <input class="form-control" id="event-search" placeholder="Search for an event..."></input>
+                                        <input class="form-control" id="event-search"
+                                            placeholder="Search for an event..."></input>
                                     </div>
                                 </div>
                                 <div class="col-auto">
@@ -131,7 +132,7 @@
                                                                 class="fas fa-map-marker-alt"></i>
                                                             {{ $similiar->event->event }}</a></h5>
                                                     <h5 class="m-0"> <span class="text-muted"> Fotografer :
-                                                            {{ $similiar->user->name }}</span>
+                                                            {{ $similiar->fotografer->nama }}</span>
                                                     </h5>
                                                 </div>
                                                 <div class="col-auto">
@@ -144,13 +145,17 @@
                                                 <div class="col-12">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
-                                                            <button class="btn btn-danger waves-effect waves-light"><i
-                                                                    class="mdi mdi-close-circle"></i></button>
+                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto" title="Klik jika foto tidak sesuai denganMu!" tabindex="0" data-plugin="tippy" data-tippy-interactive="true" data-foto-id="{{ $similiar->id }}"><i
+                                                                class="mdi mdi-close-circle"></i></span>
                                                         </div>
                                                         <div>
-                                                            <button
-                                                                class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">Beli
-                                                                Sekarang</button>
+                                                            <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <input type="hidden" name="foto_id" value="{{ $similiar->id }}">
+                                                                <button type="submit" class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                    Beli Sekarang
+                                                                </button>
+                                                            </form>
                                                             <button type="button"
                                                                 class="btn {{ in_array($similiar->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart"
                                                                 data-foto-id="{{ $similiar->id }}">
@@ -169,27 +174,8 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <ul class="pagination pagination-rounded justify-content-end mb-3">
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                        <span class="visually-hidden">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div> <!-- end col-->
+                            {{ $similarPhotos->appends(['active_tab' => 'home-b2'])->links('pagination::custom-pagination') }}
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="profile-b2">
@@ -312,27 +298,8 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <ul class="pagination pagination-rounded justify-content-end mb-3">
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                        <span class="visually-hidden">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div> <!-- end col-->
+                            {{ $event->appends(['active_tab' => 'profile-b2'])->links('pagination::custom-pagination') }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -344,6 +311,29 @@
     <script src="{{ asset('js/pages/authentication.init.js') }}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.default.css">
     <script src="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js"></script>
+    {{-- Js untuk pagination --}}
+    <script>
+        $(document).ready(function() {
+            // Save the active tab to local storage
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
+            });
+
+            // Check if active_tab parameter is present in the URL
+            var activeTab = localStorage.getItem('activeTab');
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('active_tab')) {
+                activeTab = '#' + urlParams.get('active_tab');
+                localStorage.setItem('activeTab', activeTab); // Update local storage
+            }
+
+            // If an active tab is found, activate it
+            if (activeTab) {
+                $('a[href="' + activeTab + '"]').tab('show');
+            }
+        });
+    </script>
+    {{-- JS untuk login ke event private --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let loginModal = document.getElementById('login-modal');
@@ -369,6 +359,7 @@
             }
         }
     </script>
+    {{-- Js untuk cart --}}
     <script>
         $(document).ready(function() {
             $('.add-to-cart').click(function() {
@@ -390,9 +381,10 @@
                             timerProgressBar: true,
                             backdrop: false,
                             didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseenter', Swal
+                                .stopTimer);
                                 toast.addEventListener('mouseleave', Swal
-                                    .resumeTimer)
+                                    .resumeTimer);
                             }
                         }).fire({
                             icon: 'success',
@@ -411,6 +403,15 @@
                         }, 1000);
                     },
                     error: function(xhr) {
+                        var response = xhr.responseJSON;
+                        var errorMessage =
+                        'Terjadi kesalahan saat memproses cart'; // Default error message
+
+                        if (xhr.status === 422 && response && response.error) {
+                            // Show the specific error message if it exists
+                            errorMessage = response.error;
+                        }
+
                         Swal.mixin({
                             toast: true,
                             position: 'top-end',
@@ -419,23 +420,25 @@
                             timerProgressBar: true,
                             backdrop: false,
                             didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseenter', Swal
+                                .stopTimer);
                                 toast.addEventListener('mouseleave', Swal
-                                    .resumeTimer)
+                                    .resumeTimer);
                             }
                         }).fire({
                             icon: 'error',
-                            title: 'Terjadi kesalahan saat memproses cart'
+                            title: errorMessage
                         });
                     }
                 });
             });
         });
     </script>
+    {{-- JS untuk search event --}}
     <script>
         $(document).ready(function() {
             $('#event-search').selectize({
-                valueField: 'id',
+                valueField: 'encrypted_id',
                 labelField: 'event',
                 searchField: ['event', 'lokasi'],
                 placeholder: 'Search for an event...',
@@ -465,15 +468,129 @@
                             '</strong></span><br>' +
                             '<span class="description">' + escape(item.lokasi) + '</span>' +
                             '</div>';
-                    },
-                    item: function(item, escape) {
-                        return '<div>' +
-                            '<img src="path_to_image/' + escape(item.image) +
-                            '" alt="" style="width: 40px; height: 40px;"/>' +
-                            '<span class="title"><strong>' + escape(item.event) + '</strong></span>' +
-                            '</div>';
                     }
+                },
+                onItemAdd: function(value, $item) {
+                    var encryptedId = value;
+                    var itemData = this.options[encryptedId];
+                    var plainId = itemData.plain_id; // Get the plain ID
+                    var isPrivate = itemData.is_private;
+
+                    if (isPrivate) {
+                        // Buat modal secara dinamis
+                        var modalHtml = `
+                        <div id="login-modal-search" class="modal js-modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                <form action="/pelanggan/event/${plainId}/check-password" method="POST" class="px-3">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <div class="mb-3 mt-3">
+                                                <label for="password" class="form-label">Password</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input type="password" id="password" class="form-control"
+                                                        placeholder="Masukkan password event" name="password">
+                                                    <div class="input-group-text" data-password="false">
+                                                        <span class="password-eye" onclick="togglePassword1(this)"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2 text-center">
+                                                <button class="btn rounded-pill btn-primary" type="submit">Masuk ke Event</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                        // Hapus modal sebelumnya jika ada
+                        $('#login-modal-search').remove();
+
+                        // Tambahkan modal ke body
+                        $('body').append(modalHtml);
+
+                        // Tampilkan modal
+                        var modal = new bootstrap.Modal(document.getElementById('login-modal-search'));
+                        modal.show();
+                    } else {
+                        // Redirect ke halaman event
+                        var url = '/pelanggan/foto/event/' + encryptedId;
+                        window.location.href = url;
+                    }
+
+                    // Hapus item dari input setelah diklik
+                    this.clear();
+                },
+                onDropdownClose: function($dropdown) {
+                    this
+                        .clear(); // Bersihkan input ketika dropdown ditutup untuk memastikan tidak ada teks yang tersisa
+                },
+                selectOnTab: false,
+                create: false
+            });
+        });
+
+        function togglePassword1(element) {
+            const passwordField = element.closest('.input-group').querySelector(
+                'input[type="password"], input[type="text"]');
+            const passwordEye = element;
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordEye.parentElement.classList.add('show-password');
+            } else {
+                passwordField.type = 'password';
+                passwordEye.parentElement.classList.remove('show-password');
+            }
+        }
+    </script>
+    {{-- JS hapus similar foto --}}
+    <script>
+        $(document).ready(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                backdrop: false,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
                 }
+            });
+
+            $('.hapus-foto').click(function() {
+                var button = $(this);
+                var fotoId = button.data('foto-id');
+
+                $.ajax({
+                    url: '{{ route('similar-foto.hapus') }}', // Route ke updateHapus
+                    type: 'POST',
+                    data: {
+                        foto_id: fotoId,
+                        _token: '{{ csrf_token() }}' // Laravel CSRF token untuk keamanan
+                    },
+                    success: function(response) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.success
+                        });
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    },
+                    error: function(xhr) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan',
+                            text: xhr.responseJSON ? xhr.responseJSON.error :
+                                'Kesalahan tidak diketahui'
+                        });
+                    }
+                });
             });
         });
     </script>

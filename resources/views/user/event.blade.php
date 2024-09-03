@@ -103,7 +103,7 @@
                                                                 class="fas fa-map-marker-alt"></i>
                                                             {{ $similar->event->event }}</a></h5>
                                                     <h5 class="m-0"> <span class="text-muted"> Fotografer :
-                                                            {{ $similar->user->name }}</span>
+                                                            {{ $similar->fotografer->nama }}</span>
                                                     </h5>
                                                 </div>
                                                 <div class="col-auto">
@@ -116,17 +116,22 @@
                                                 <div class="col-12">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
-                                                            <button class="btn btn-danger waves-effect waves-light hapus-foto" data-foto-id="{{ $similar->id }}">
-                                                                <i class="mdi mdi-close-circle"></i>
-                                                            </button>                                                            
+                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto" title="Klik jika foto tidak sesuai denganMu!" tabindex="0" data-plugin="tippy" data-tippy-interactive="true" data-foto-id="{{ $similar->id }}"><i
+                                                                class="mdi mdi-close-circle"></i></span>
                                                         </div>
                                                         <div>
-                                                            <button
-                                                                class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">Beli
-                                                                Sekarang</button>
-                                                                <button type="button" class="btn {{ in_array($similar->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart" data-foto-id="{{ $similar->id }}">
-                                                                    <i class="mdi mdi-cart"></i>
+                                                            <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <input type="hidden" name="foto_id" value="{{ $similar->id }}">
+                                                                <button type="submit" class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                    Beli Sekarang
                                                                 </button>
+                                                            </form>
+                                                            <button type="button"
+                                                                class="btn {{ in_array($similar->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart"
+                                                                data-foto-id="{{ $similar->id }}">
+                                                                <i class="mdi mdi-cart"></i>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -140,27 +145,8 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <ul class="pagination pagination-rounded justify-content-end mb-3">
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                        <span class="visually-hidden">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div> <!-- end col-->
+                            {{ $similarPhotos->appends(['active_tab' => 'home-b2'])->links('pagination::custom-pagination') }}
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="profile-b2">
@@ -182,7 +168,7 @@
                                                                 class="fas fa-map-marker-alt"></i>
                                                             {{ $FotoAll->event->event }}</a></h5>
                                                     <h5 class="m-0"> <span class="text-muted"> Fotografer :
-                                                            {{ $FotoAll->user->name }}</span>
+                                                            {{ $FotoAll->fotografer->name }}</span>
                                                     </h5>
                                                 </div>
                                                 <div class="col-auto">
@@ -205,12 +191,18 @@
                                                             </button>
                                                         </div>
                                                         <div>
-                                                            <button
-                                                                class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">Beli
-                                                                Sekarang</button>
-                                                                <button type="button" class="btn {{ in_array($FotoAll->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart" data-foto-id="{{ $FotoAll->id }}">
-                                                                    <i class="mdi mdi-cart"></i>
+                                                            <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <input type="hidden" name="foto_id" value="{{ $FotoAll->id }}">
+                                                                <button type="submit" class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                    Beli Sekarang
                                                                 </button>
+                                                            </form>
+                                                            <button type="button"
+                                                                class="btn {{ in_array($FotoAll->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart"
+                                                                data-foto-id="{{ $FotoAll->id }}">
+                                                                <i class="mdi mdi-cart"></i>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -224,27 +216,8 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <ul class="pagination pagination-rounded justify-content-end mb-3">
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                        <span class="visually-hidden">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div> 
+                            {{ $semuaFoto->appends(['active_tab' => 'profile-b2'])->links('pagination::custom-pagination') }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -253,183 +226,212 @@
 @endsection
 
 @push('footer')
-<script>
-    $(document).ready(function() {
-        $('.toggle-wishlist').click(function() {
-            var button = $(this);
-            var fotoId = button.data('foto-id');
-            $.ajax({
-                url: '{{ route('wishlist.toggle') }}',
-                type: 'POST',
-                data: {
-                    foto_id: fotoId,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    var countElement = $('#wishlist-count');
-                    var currentCount = parseInt(countElement.text());
-
-                    if (response.added) {
-                        button.removeClass('btn-outline-danger').addClass('btn-danger');
-                        button.find('i').removeClass('mdi-heart-outline').addClass('mdi-heart');
-                        countElement.text(currentCount + 1);  // Tambah 1 ke jumlah wishlist
-                    } else {
-                        button.removeClass('btn-danger').addClass('btn-outline-danger');
-                        button.find('i').removeClass('mdi-heart').addClass('mdi-heart-outline');
-                        countElement.text(currentCount - 1);  // Kurangi 1 dari jumlah wishlist
-                    }
-
-                    // Periksa jumlah wishlist setelah di-update
-                    currentCount = parseInt(countElement.text());
-                    if (currentCount > 0) {
-                        countElement.show();
-                    } else {
-                        countElement.hide();
-                    }
-
-                    Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        backdrop: false,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    }).fire({
-                        icon: response.added ? 'success' : 'info',
-                        title: response.success
-                    });
-                },
-                error: function(xhr) {
-                    Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        backdrop: false,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    }).fire({
-                        icon: 'error',
-                        title: 'Terjadi kesalahan saat mengubah wishlist'
-                    });
-                }
+    <script>
+        $(document).ready(function() {
+            // Save the active tab to local storage
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
             });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        $('.add-to-cart').click(function() {
-            var button = $(this);
-            var fotoId = button.data('foto-id');
-            $.ajax({
-                url: '{{ route("cart.toggle") }}',
-                type: 'POST',
-                data: {
-                    foto_id: fotoId,
-                    _token: '{{ csrf_token() }}' // Laravel CSRF token untuk keamanan
-                },
-                success: function(response) {
-                    Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        backdrop: false,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    }).fire({
-                        icon: 'success',
-                        title: response.success
-                    });
 
-                    // Toggle class button
-                    if(response.status === 'added') {
-                        button.removeClass('btn-outline-success').addClass('btn-success');
-                    } else if(response.status === 'removed') {
-                        button.removeClass('btn-success').addClass('btn-outline-success');
-                    }
+            // Check if active_tab parameter is present in the URL
+            var activeTab = localStorage.getItem('activeTab');
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('active_tab')) {
+                activeTab = '#' + urlParams.get('active_tab');
+                localStorage.setItem('activeTab', activeTab); // Update local storage
+            }
 
-                    setTimeout(function() {
-                        location.reload(); // Reload the page after 3 seconds
-                    }, 1000);
-                },
-                error: function(xhr) {
-                    Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        backdrop: false,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    }).fire({
-                        icon: 'error',
-                        title: 'Terjadi kesalahan saat memproses cart'
-                    });
-                }
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            backdrop: false,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            // If an active tab is found, activate it
+            if (activeTab) {
+                $('a[href="' + activeTab + '"]').tab('show');
             }
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.toggle-wishlist').click(function() {
+                var button = $(this);
+                var fotoId = button.data('foto-id');
+                $.ajax({
+                    url: '{{ route('wishlist.toggle') }}',
+                    type: 'POST',
+                    data: {
+                        foto_id: fotoId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        var countElement = $('#wishlist-count');
+                        var currentCount = parseInt(countElement.text());
 
-        $('.hapus-foto').click(function() {
-            var button = $(this);
-            var fotoId = button.data('foto-id');
+                        if (response.added) {
+                            button.removeClass('btn-outline-danger').addClass('btn-danger');
+                            button.find('i').removeClass('mdi-heart-outline').addClass(
+                                'mdi-heart');
+                            countElement.text(currentCount + 1); // Tambah 1 ke jumlah wishlist
+                        } else {
+                            button.removeClass('btn-danger').addClass('btn-outline-danger');
+                            button.find('i').removeClass('mdi-heart').addClass(
+                                'mdi-heart-outline');
+                            countElement.text(currentCount -
+                                1); // Kurangi 1 dari jumlah wishlist
+                        }
 
-            $.ajax({
-                url: '{{ route("similar-foto.hapus") }}', // Route ke updateHapus
-                type: 'POST',
-                data: {
-                    foto_id: fotoId,
-                    _token: '{{ csrf_token() }}' // Laravel CSRF token untuk keamanan
-                },
-                success: function(response) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: response.success
-                    });
+                        // Periksa jumlah wishlist setelah di-update
+                        currentCount = parseInt(countElement.text());
+                        if (currentCount > 0) {
+                            countElement.show();
+                        } else {
+                            countElement.hide();
+                        }
 
-                    setTimeout(function() {
-                        location.reload(); 
-                    }, 1000);
-                },
-                error: function(xhr) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Terjadi kesalahan',
-                        text: xhr.responseJSON ? xhr.responseJSON.error : 'Kesalahan tidak diketahui'
-                    });
-                }
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            backdrop: false,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal
+                                    .resumeTimer)
+                            }
+                        }).fire({
+                            icon: response.added ? 'success' : 'info',
+                            title: response.success
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            backdrop: false,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal
+                                    .resumeTimer)
+                            }
+                        }).fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan saat mengubah wishlist'
+                        });
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.add-to-cart').click(function() {
+                var button = $(this);
+                var fotoId = button.data('foto-id');
+                $.ajax({
+                    url: '{{ route('cart.toggle') }}',
+                    type: 'POST',
+                    data: {
+                        foto_id: fotoId,
+                        _token: '{{ csrf_token() }}' // Laravel CSRF token untuk keamanan
+                    },
+                    success: function(response) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            backdrop: false,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal
+                                    .resumeTimer)
+                            }
+                        }).fire({
+                            icon: 'success',
+                            title: response.success
+                        });
+
+                        // Toggle class button
+                        if (response.status === 'added') {
+                            button.removeClass('btn-outline-success').addClass('btn-success');
+                        } else if (response.status === 'removed') {
+                            button.removeClass('btn-success').addClass('btn-outline-success');
+                        }
+
+                        setTimeout(function() {
+                            location.reload(); // Reload the page after 3 seconds
+                        }, 1000);
+                    },
+                    error: function(xhr) {
+                        Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            backdrop: false,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal
+                                    .resumeTimer)
+                            }
+                        }).fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan saat memproses cart'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                backdrop: false,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
+            $('.hapus-foto').click(function() {
+                var button = $(this);
+                var fotoId = button.data('foto-id');
+
+                $.ajax({
+                    url: '{{ route('similar-foto.hapus') }}', // Route ke updateHapus
+                    type: 'POST',
+                    data: {
+                        foto_id: fotoId,
+                        _token: '{{ csrf_token() }}' // Laravel CSRF token untuk keamanan
+                    },
+                    success: function(response) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.success
+                        });
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    },
+                    error: function(xhr) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan',
+                            text: xhr.responseJSON ? xhr.responseJSON.error :
+                                'Kesalahan tidak diketahui'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

@@ -35,13 +35,13 @@ class ProdukController extends Controller
 
     public function produk()
     {
-        $event = Event::withCount('foto')->get();
+        $event = Event::withCount('foto')->paginate(8); 
         $eventAll = Event::all();
         $user = Auth::user();
         $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
-        $similarPhotos = SimilarFoto::where('user_id', $user->id)->pluck('foto_id')->toArray();
+        $similarPhotosIds = SimilarFoto::where('user_id', $user->id)->pluck('foto_id')->toArray();
 
-        if (empty($similarPhotos)) {
+        if (empty($similarPhotosIds)) {
             foreach (Foto::all() as $foto) {
                 $fotoPath = storage_path('app/public/' . $foto->foto);
 
@@ -49,11 +49,14 @@ class ProdukController extends Controller
             }
         }
 
-        $similarPhotos = Foto::whereIn('id', $similarPhotos)->get();
-
+        // Get the similar photos with pagination (8 items per page)
+        $similarPhotos = Foto::whereIn('id', $similarPhotosIds)
+        ->whereHas('similarFoto', function ($query) {
+            $query->where('hapus', false);
+        })
+        ->paginate(8);
+        
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
-
-
         return view('user.produk', [
             "title" => "Foto Anda",
             'event' => $event,
@@ -67,13 +70,20 @@ class ProdukController extends Controller
     {
         $query = $request->get('query', '');
 
-        // Cari event berdasarkan query
-        $events = Event::where('event', 'LIKE', "%{$query}%")->get();
+        // Search for events based on the query
+        $events = Event::where('event', 'LIKE', "%{$query}%")
+            ->get();
 
-        // Mengembalikan data dalam format JSON
+        // Encrypt the event ID before sending it to the frontend
+        $events->each(function ($event) {
+            $event->encrypted_id = Crypt::encryptString($event->id);
+            $event->plain_id = $event->id; // Add the plain ID
+        });
+
+        // Return data in JSON format
         return response()->json($events);
     }
-    
+
     public function event($id)
     {
         $user = Auth::user();
@@ -81,7 +91,7 @@ class ProdukController extends Controller
         $encryptId = Crypt::decryptString($id);
         $event = Event::withCount('foto')->find($encryptId);
 
-        $foto = Foto::Where('event_id', $encryptId)->get();
+        $foto = Foto::where('event_id', $encryptId)->paginate(8);
 
         $similarPhotosId = SimilarFoto::where('user_id', $user->id)->pluck('foto_id');
 
@@ -90,8 +100,7 @@ class ProdukController extends Controller
             ->whereHas('similarFoto', function ($query) {
                 $query->where('hapus', false);
             })
-            ->get();
-
+            ->paginate(8);
 
         $wishlist = Wishlist::where('user_id',  $user->id)->pluck('foto_id')->toArray();
 
@@ -110,10 +119,8 @@ class ProdukController extends Controller
     public function checkPassword(Request $request, $id)
     {
         $event = Event::findOrFail($id);
-
         // Check if password is correct
         if (Hash::check($request->input('password'), $event->password)) {
-            // Redirect to the event page with encrypted ID
             return redirect()->route('user.event', ['id' => Crypt::encryptString($event->id)]);
         } else {
             // Return back with an error if password is incorrect

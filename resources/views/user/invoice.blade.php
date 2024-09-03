@@ -103,7 +103,7 @@
                                                 <th>Foto</th>
                                                 <th style="width: 30%" class="text-end">Total</th>
                                             </tr>
-                                        </thead>
+                                        </thead> 
                                         <tbody>
                                             @foreach ($foto as $fotoItem)  
                                             <tr>
@@ -117,7 +117,7 @@
                                                         class="text-reset font-family-secondary">{{ $fotoItem->foto->event->event }}</a>
                                                     <br>
                                                     <small
-                                                        class="me-2"><b>{{ $fotoItem->foto->user->name }}</b></small>
+                                                        class="me-2"><b>{{ $fotoItem->foto->fotografer->nama }}</b></small>
                                                     <small><b>Resolusi :</b> {{ $fotoItem->foto->resolusi }}
                                                     </small>
                                                 </p>

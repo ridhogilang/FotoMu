@@ -77,6 +77,7 @@
 
                                     <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
                                     <input type="hidden" name="totalharga" id="totalharga" value="{{ $totalPayment }}">
+                                    <input type="hidden" name="foto_id" id="foto_id" value="{{ $cartItem->foto_id }}">
                                     <div class="mt-3">
                                         <label for="example-textarea" class="form-label">Catatan :</label>
                                         <textarea class="form-control" name="catatan" id="catatan" rows="3" placeholder="Write some note.."></textarea>
@@ -85,7 +86,7 @@
                                     <!-- action buttons-->
                                     <div class="row mt-4">
                                         <div class="col-sm-6">
-                                            <a href="{{ route('user.produk') }}"
+                                            <a href="{{ url()->previous() }}"
                                                 class="btn text-muted d-none d-sm-inline-block btn-link fw-semibold">
                                                 <i class="mdi mdi-arrow-left"></i> Continue Shopping </a>
                                         </div> <!-- end col -->

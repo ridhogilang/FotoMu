@@ -56,7 +56,7 @@ class PemesananController extends Controller
 
         $pesanan = Pesanan::create($validatedData);
 
-        $cart = Cart::where('user_id', $validatedData['user_id'])->get();
+        $cart = Cart::where('user_id', $validatedData['user_id'])->where('foto_id', $request->foto_id)->get();
         $params1 = array();
         foreach ($cart as $cartItem) {
             $params1[] = array(
@@ -68,7 +68,7 @@ class PemesananController extends Controller
         }
 
         DetailPesanan::insert($params1);
-        Cart::where('user_id', $validatedData['user_id'])->delete();
+        Cart::where('user_id', $validatedData['user_id'])->where('foto_id', $request->foto_id)->delete();
 
         $encryptedId = Crypt::encryptString($pesanan->id);
         return redirect()->route('user.invoice', ['id' => $encryptedId])

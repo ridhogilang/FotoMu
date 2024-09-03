@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+
+    public function fotografer()
+    {
+        return $this->hasOne(Fotografer::class, 'user_id');
+    }
 }

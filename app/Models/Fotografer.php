@@ -19,4 +19,14 @@ class Fotografer extends Model
         'nowa',
         'foto_ktp',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function foto()
+    {
+        return $this->hasMany(User::class, 'fotografer_id');
+    }
 }

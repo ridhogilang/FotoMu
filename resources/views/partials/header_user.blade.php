@@ -360,6 +360,16 @@
                         <span>My Account</span>
                     </a>
 
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="fe-slash"></i>
+                        <span>FotoMu Terhapus</span>
+                    </a>
+
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="fe-heart"></i>
+                        <span>Favorit FotoMu</span>
+                    </a>
+
                     <!-- item-->
                     <a href="javascript:void(0);" class="dropdown-item notify-item">
                         <i class="fe-settings"></i>

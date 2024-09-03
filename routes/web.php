@@ -65,6 +65,7 @@ Route::prefix('pelanggan')->group(function () {
     Route::post('/toggle-whishlist', [CartController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::post('/toggle-cart', [CartController::class, 'toggleCart'])->name('cart.toggle');
     Route::delete('/cart/{id}', [CartController::class, 'hapusCart'])->name('cart.destroy');
+    Route::post('/cart/buy-now', [CartController::class, 'buyNow'])->name('cart.buyNow');
 
     //Pemesanan Foto
     Route::get('/pesanan', [PemesananController::class, 'index'])->name('user.pesanan');

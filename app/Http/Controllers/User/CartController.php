@@ -5,16 +5,24 @@ namespace App\Http\Controllers\User;
 use App\Models\Cart;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use App\Models\DetailPesanan;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function cart()
+    public function cart(Request $request)
     {
         $userId = Auth::id();
+        $fotoId = $request->query('foto_id');
 
-        $cart = Cart::where('user_id', $userId)->get();
+        if ($fotoId) {
+            // If a specific foto_id is passed, only show that item in the cart
+            $cart = Cart::where('user_id', $userId)->where('foto_id', $fotoId)->get();
+        } else {
+            // Otherwise, show all items in the cart
+            $cart = Cart::where('user_id', $userId)->get();
+        }
 
         $total = 0;
         foreach ($cart as $cartItem) {
@@ -35,6 +43,7 @@ class CartController extends Controller
             'totalPayment' => $totalPayment
         ]);
     }
+
 
     public function toggleWishlist(Request $request)
     {
@@ -62,6 +71,19 @@ class CartController extends Controller
             'foto_id' => 'required', // Pastikan 'fotos' adalah nama tabel yang benar
         ]);
 
+        // Get the current user's ID
+        $userId = Auth::id();
+
+        // Periksa apakah foto_id sudah ada di model detail pesanan terkait dengan pesanan user yang sedang login
+        $existsInPesanan = DetailPesanan::whereHas('pesanan', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                  ->where('status', 'Selesai');
+        })->where('foto_id', $request->foto_id)->exists();
+        
+        if ($existsInPesanan) {
+            return response()->json(['status' => 'error', 'error' => 'Foto ini sudah ada di dalam pesanan Anda sebelumnya!'], 422);
+        }
+
         // Periksa apakah item sudah ada di cart
         $existingCart = Cart::where('user_id', Auth::id())->where('foto_id', $request->foto_id)->first();
 
@@ -86,5 +108,39 @@ class CartController extends Controller
         $cartItem->delete();
 
         return response()->json(['success' => 'Item removed from cart']);
+    }
+
+    public function buyNow(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'foto_id' => 'required|exists:foto,id', // Ensure the foto_id exists in the fotos table
+        ]);
+
+        $userId = Auth::id();
+
+        $existsInPesanan = DetailPesanan::whereHas('pesanan', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                  ->where('status', 'Selesai');
+        })->where('foto_id', $request->foto_id)->exists();        
+
+        if ($existsInPesanan) {
+            // If the foto is already in a previous order, return with an error message
+            return redirect()->back()->with('toast_error', 'Foto ini sudah ada di dalam pesanan Anda sebelumnya!');
+        }
+
+        // Check if the item already exists in the cart
+        $existingCart = Cart::where('user_id', $userId)->where('foto_id', $request->foto_id)->first();
+
+        if (!$existingCart) {
+            // If the item is not in the cart, add it
+            Cart::create([
+                'user_id' => $userId,
+                'foto_id' => $request->foto_id,
+            ]);
+        }
+
+        // Redirect to the cart page with the specific foto_id
+        return redirect()->route('user.cart', ['foto_id' => $request->foto_id])->with('success', 'Foto berhasil ditambahkan ke cart!');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Foto;
 
 use App\Models\Foto;
 use App\Models\Event;
+use App\Models\Fotografer;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessWatermarkJob;
 use Illuminate\Support\Facades\Log;
@@ -17,9 +18,11 @@ class FotograferController extends Controller
 {
     public function profil()
     {
-        $user = Auth::user();
+        $user = Auth::id();
 
-        $foto = Foto::where('user_id', $user->id)->get();
+        $foto = Foto::whereHas('fotografer', function ($query) use ($user) {
+            $query->where('user_id', $user);
+        })->get();
 
         return view('fotografer.profil', [
             "title" => "Profil",
@@ -77,6 +80,12 @@ class FotograferController extends Controller
             return response()->json(['error' => 'No files were uploaded. Please upload files before saving.'], 422);
         }
 
+        $fotografer = Fotografer::where('user_id', auth()->id())->first();
+
+        if (!$fotografer) {
+            return response()->json(['error' => 'No photographer associated with this user.'], 422);
+        }
+
         // Debug: Cek data yang diterima
         Log::info('Received file paths:', $request->input('file_paths'));
         Log::info('Received file sizes:', $request->input('file_sizes'));
@@ -90,9 +99,9 @@ class FotograferController extends Controller
                 $fileSize = $request->input('file_sizes')[$index];
                 $resolusi = $this->determineResolution($fileSize);
                 Storage::disk('public')->move($tempPath, $newPath);
-            
+
                 $foto = Foto::create([
-                    'user_id' => auth()->id(),
+                    'fotografer_id' => $fotografer->id,
                     'event_id' => $request->input('event_id'),
                     'foto' => $newPath,
                     'fotowatermark' => null,
@@ -101,10 +110,9 @@ class FotograferController extends Controller
                     'file_size' => $fileSize,
                     'resolusi' => $resolusi,
                 ]);
-            
+
                 ProcessWatermarkJob::dispatch($newPath, $newPathWatermark, $foto->id);
             }
-            
         }
 
         $this->clearTempFolder();
