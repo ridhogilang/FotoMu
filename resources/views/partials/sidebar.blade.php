@@ -11,7 +11,6 @@
     </div>
     <div class="scrollbar">
         <ul class="menu">
-
             <li class="menu-item">
                 <a href="#menuDashboards" data-bs-toggle="collapse" class="menu-link">
                     <span class="menu-icon"><i data-feather="airplay"></i></span>

@@ -145,4 +145,11 @@ class ProdukController extends Controller
             return response()->json(['error' => 'Foto tidak ditemukan.'], 404);
         }
     }
+
+    public function tree()
+    {
+        return view('user.tree', [
+            "title" => "Tree",
+        ]);
+    }
 }

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\User;
+use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Wishlist;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -147,5 +151,20 @@ class UserController extends Controller
         }
 
         return response()->json(['error' => 'File upload failed'], 422);
+    }
+
+    public function profile()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+        $pesanan = Pesanan::where('user_id', Auth::user()->id)->get();
+
+        $foto = Wishlist::where('user_id', Auth::user()->id)->get();
+
+        return view('user.profil', [
+            "title" => "Profil Anda",
+            "user" => $user,
+            "pesanan" => $pesanan,
+            "foto" => $foto,
+        ]);
     }
 }

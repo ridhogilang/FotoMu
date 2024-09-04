@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Mail\ResetPasswordMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -227,5 +228,29 @@ class AuthController extends Controller
                 ->withInput($request->only('email'))
                 ->withErrors(['email' => trans($response)]);
         }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed',
+        ]);
+
+        // Ambil user yang sedang login
+        $user = Auth::user();
+
+        // Cek apakah password lama yang dimasukkan cocok
+        if (!Hash::check($request->old_password, $user->password)) {
+            return redirect()->back()->with('toast_error', 'Password lama salah');
+        }
+
+        // Update password user dengan password baru
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Password berhasil diperbarui');
     }
 }
