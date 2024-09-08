@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Foto;
 
 use App\Models\Foto;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Fotografer;
 use Illuminate\Http\Request;
@@ -19,131 +20,22 @@ class FotograferController extends Controller
     public function profil()
     {
         $user = Auth::id();
+        $getUser = User::where('id', Auth::user()->id)->first();
+
 
         $foto = Foto::whereHas('fotografer', function ($query) use ($user) {
             $query->where('user_id', $user);
-        })->get();
+        })
+            ->orderBy('created_at', 'desc') 
+            ->get();
+
 
         return view('fotografer.profil', [
             "title" => "Profil",
             "user" => $user,
             "foto" => $foto,
+            "getUser" => $getUser,
         ]);
-    }
-
-    public function upload()
-    {
-        $user = Auth::user();
-        $event = Event::all();
-
-        return view('fotografer.upload', [
-            "title" => "Upload Foto",
-            "user" => $user,
-            "event" => $event,
-        ]);
-    }
-
-    public function upload_foto(Request $request)
-    {
-        // Validasi file yang diupload
-        $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'
-        ]);
-
-        if ($request->file('file')) {
-            $file = $request->file('file');
-            $tempPath = $file->store('uploads/temp', 'public'); // Simpan file ke lokasi sementara
-
-            return response()->json(['tempPath' => $tempPath, 'filename' => basename($tempPath)]);
-        }
-
-        return response()->json(['error' => 'File upload failed'], 422);
-    }
-
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'harga' => 'required|numeric|min:0',
-            'event_id' => 'required|exists:events,id',
-            'deskripsi' => 'nullable|string',
-            'file_paths' => 'required|array',
-            'file_paths.*' => 'string',
-            'file_sizes' => 'required|array',
-            'file_sizes.*' => 'integer'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        if (empty($request->input('file_paths'))) {
-            return response()->json(['error' => 'No files were uploaded. Please upload files before saving.'], 422);
-        }
-
-        $fotografer = Fotografer::where('user_id', auth()->id())->first();
-
-        if (!$fotografer) {
-            return response()->json(['error' => 'No photographer associated with this user.'], 422);
-        }
-
-        // Debug: Cek data yang diterima
-        Log::info('Received file paths:', $request->input('file_paths'));
-        Log::info('Received file sizes:', $request->input('file_sizes'));
-
-        foreach ($request->input('file_paths') as $index => $tempPath) {
-            $filename = basename($tempPath);
-            $newPath = 'uploads/photos/' . $filename;
-            $newPathWatermark = 'uploads/photoswatermark/' . $filename;
-
-            if (Storage::disk('public')->exists($tempPath)) {
-                $fileSize = $request->input('file_sizes')[$index];
-                $resolusi = $this->determineResolution($fileSize);
-                Storage::disk('public')->move($tempPath, $newPath);
-
-                $foto = Foto::create([
-                    'fotografer_id' => $fotografer->id,
-                    'event_id' => $request->input('event_id'),
-                    'foto' => $newPath,
-                    'fotowatermark' => null,
-                    'harga' => $request->input('harga'),
-                    'deskripsi' => $request->input('deskripsi'),
-                    'file_size' => $fileSize,
-                    'resolusi' => $resolusi,
-                ]);
-
-                ProcessWatermarkJob::dispatch($newPath, $newPathWatermark, $foto->id);
-            }
-        }
-
-        $this->clearTempFolder();
-        return response()->json(['success' => 'Photos uploaded successfully.']);
-    }
-
-    private function clearTempFolder()
-    {
-        $tempDirectory = 'uploads/temp';
-
-        $files = Storage::disk('public')->files($tempDirectory);
-
-        foreach ($files as $file) {
-            Storage::disk('public')->delete($file);
-        }
-    }
-
-    private function determineResolution($fileSize)
-    {
-        // Ukuran file dalam MB
-        $fileSizeMB = $fileSize / (1024 * 1024);
-
-        if ($fileSizeMB >= 1 && $fileSizeMB <= 3) {
-            return 'low';
-        } elseif ($fileSizeMB >= 4 && $fileSizeMB <= 6) {
-            return 'medium';
-        } elseif ($fileSizeMB >= 7 && $fileSizeMB <= 10) {
-            return 'high';
-        } else {
-            return 'low'; // Menggunakan 'low' sebagai fallback daripada 'unknown'
-        }
     }
 
     public function event_tambah(Request $request)

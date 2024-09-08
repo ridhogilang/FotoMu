@@ -16,4 +16,14 @@ class Rekening extends Model
         'rekening',
         'nama_bank',
     ];
+
+    public function withdrawal()
+    {
+        return $this->hasMany(Withdrawal::class, 'rekening_id');
+    }
+
+    public function fotografer()
+    {
+        return $this->belongsTo(Fotografer::class, 'fotografer_id');
+    }
 }

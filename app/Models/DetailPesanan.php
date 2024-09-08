@@ -26,4 +26,9 @@ class DetailPesanan extends Model
     {
         return $this->belongsTo(Foto::class, 'foto_id');
     }
+
+    public function earning()
+    {
+        return $this->hasOne(Earning::class, 'detail_pesanan_id');
+    }
 }

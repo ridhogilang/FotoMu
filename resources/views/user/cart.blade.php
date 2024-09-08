@@ -70,15 +70,15 @@
                                                             </span>
                                                         </td>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div> <!-- end table-responsive-->
-
-                                    <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
-                                    <input type="hidden" name="totalharga" id="totalharga" value="{{ $totalPayment }}">
-                                    <input type="hidden" name="foto_id" id="foto_id" value="{{ $cartItem->foto_id }}">
-                                    <div class="mt-3">
+                                                    <input type="hidden" name="foto_ids[]" value="{{ $cartItem->foto_id }}">
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div> <!-- end table-responsive-->
+                                        
+                                        <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
+                                        <input type="hidden" name="totalharga" id="totalharga" value="{{ $totalPayment }}">
+                                        <div class="mt-3">
                                         <label for="example-textarea" class="form-label">Catatan :</label>
                                         <textarea class="form-control" name="catatan" id="catatan" rows="3" placeholder="Write some note.."></textarea>
                                     </div>

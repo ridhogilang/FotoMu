@@ -201,12 +201,16 @@
                                         Foto Unggahanmu</h5>
 
                                         <div class="photo-gallery">
-                                            @foreach ($foto as $fotoItem)
-                                            <img src="{{ Storage::url($fotoItem->foto) }}" alt="Image 1">
-                                                
+                                            @foreach ($foto->take(10) as $fotoItem)  <!-- Membatasi hanya 10 foto -->
+                                                <img src="{{ Storage::url($fotoItem->foto) }}" alt="Image {{ $loop->index + 1 }}">
                                             @endforeach
-                                           
-                                        </div>                                 
+                                        </div>
+                                        
+                                        @if($foto->count() > 10)
+                                            <div class="text-center mt-3">
+                                                <a href="{{ route('foto.filemanager') }}" class="btn btn-primary">Lihat Selengkapnya</a> <!-- Tombol Lihat Selengkapnya -->
+                                            </div>
+                                        @endif                              
 
                                     <h5 class="mb-3 mt-4 text-uppercase"><i class="mdi mdi-cards-variant me-1"></i>
                                         Projects</h5>
@@ -425,83 +429,109 @@
                                 <!-- end timeline content-->
 
                                 <div class="tab-pane" id="settings">
-                                    <form>
                                         <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>
                                             Personal Info</h5>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="firstname" class="form-label">First
-                                                        Name</label>
-                                                    <input type="text" class="form-control" id="firstname"
-                                                        placeholder="Enter first name">
+                                            <form action="">
+                                                @csrf
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label for="firstname" class="form-label">Nama</label>
+                                                            <input type="text" class="form-control" id="firstname"
+                                                                value="{{ $getUser->name }}" placeholder="Enter first name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label for="lastname" class="form-label">No. Whatsapp</label>
+                                                            <input type="number" class="form-control" id="lastname"
+                                                                value="{{ $getUser->nowa }}" placeholder="Enter last name">
+                                                        </div>
+                                                    </div> <!-- end col -->
+                                                </div> <!-- end row -->
+        
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label for="useremail" class="form-label">Email
+                                                                Address</label>
+                                                            <input type="email" class="form-control" id="useremail"
+                                                                placeholder="Enter email" value="{{ $getUser->email }}" disabled>
+                                                            <span class="form-text text-muted"><small>If you want to
+                                                                    change email please <a href="javascript: void(0);">click</a>
+                                                                    here.</small></span>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div class="text-end">
+                                                    <button type="submit"
+                                                        class="btn btn-success waves-effect waves-light mb-2"><i
+                                                            class="mdi mdi-content-save"></i> Update Data</button>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="lastname" class="form-label">Last
-                                                        Name</label>
-                                                    <input type="text" class="form-control" id="lastname"
-                                                        placeholder="Enter last name">
-                                                </div>
-                                            </div> <!-- end col -->
-                                        </div> <!-- end row -->
-
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="mb-3">
-                                                    <label for="userbio" class="form-label">Bio</label>
-                                                    <textarea class="form-control" id="userbio" rows="4" placeholder="Write something..."></textarea>
-                                                </div>
-                                            </div> <!-- end col -->
-                                        </div> <!-- end row -->
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="useremail" class="form-label">Email
-                                                        Address</label>
-                                                    <input type="email" class="form-control" id="useremail"
-                                                        placeholder="Enter email">
-                                                    <span class="form-text text-muted"><small>If you want to
-                                                            change email please <a href="javascript: void(0);">click</a>
-                                                            here.</small></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="userpassword" class="form-label">Password</label>
-                                                    <input type="password" class="form-control" id="userpassword"
-                                                        placeholder="Enter password">
-                                                    <span class="form-text text-muted"><small>If you want to
-                                                            change password please <a href="javascript: void(0);">click</a>
-                                                            here.</small></span>
-                                                </div>
-                                            </div> <!-- end col -->
-                                        </div> <!-- end row -->
-
+                                            </form>
                                         <h5 class="mb-3 text-uppercase bg-light p-2"><i
-                                                class="mdi mdi-office-building me-1"></i> Company Info</h5>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="companyname" class="form-label">Company
-                                                        Name</label>
-                                                    <input type="text" class="form-control" id="companyname"
-                                                        placeholder="Enter company name">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="cwebsite" class="form-label">Website</label>
-                                                    <input type="text" class="form-control" id="cwebsite"
-                                                        placeholder="Enter website url">
-                                                </div>
-                                            </div> <!-- end col -->
-                                        </div> <!-- end row -->
+                                                class="mdi mdi-office-building me-1"></i> Keamanan</h5>
+                                                <form method="POST" action="{{ route('user.pass-update') }}">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="old_password" class="form-label">Password Lama</label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <input type="password" id="old_password" name="old_password"
+                                                                        class="form-control" placeholder="Enter your old password"
+                                                                        required>
+                                                                    <div class="input-group-text"
+                                                                        onclick="togglePassword('old_password')">
+                                                                        <span class="password-eye"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="new_password" class="form-label">Password Baru</label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <input type="password" id="new_password" name="new_password"
+                                                                        class="form-control" placeholder="Enter your new password"
+                                                                        required>
+                                                                    <div class="input-group-text"
+                                                                        onclick="togglePassword('new_password')">
+                                                                        <span class="password-eye"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="password_confirmation" class="form-label">Konfirmasi
+                                                                    Password</label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <input type="password" id="password_confirmation"
+                                                                        name="new_password_confirmation" class="form-control"
+                                                                        placeholder="Confirm your password" required
+                                                                        oninput="validatePasswords()">
+                                                                    <div class="input-group-text"
+                                                                        onclick="togglePassword('password_confirmation')">
+                                                                        <span class="password-eye"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="text-end">
+                                                        <button type="submit"
+                                                            class="btn btn-success waves-effect waves-light mb-2"><i
+                                                                class="mdi mdi-content-save"></i> Update Password</button>
+                                                    </div>
+                                                </form>
 
                                         <h5 class="mb-3 text-uppercase bg-light p-2"><i class="mdi mdi-earth me-1"></i>
-                                            Social</h5>
+                                            Fotografer Info</h5>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
@@ -579,9 +609,8 @@
                                         <div class="text-end">
                                             <button type="submit"
                                                 class="btn btn-success waves-effect waves-light mt-2"><i
-                                                    class="mdi mdi-content-save"></i> Save</button>
+                                                    class="mdi mdi-content-save"></i> Update</button>
                                         </div>
-                                    </form>
                                 </div>
                                 <!-- end settings content-->
 
@@ -599,4 +628,34 @@
 @endsection
 
 @push('footer')
+<script>
+    function togglePassword(id) {
+        const passwordField = document.getElementById(id);
+        const passwordEye = passwordField.nextElementSibling.querySelector('.password-eye');
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            passwordEye.parentElement.classList.add('show-password');
+        } else {
+            passwordField.type = 'password';
+            passwordEye.parentElement.classList.remove('show-password');
+        }
+    }
+
+    function validatePasswords() {
+        const password = document.getElementById('new_password');
+        const confirmPassword = document.getElementById('password_confirmation');
+
+        if (confirmPassword.value === '') {
+            confirmPassword.style.borderColor = '';
+            return;
+        }
+
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.style.borderColor = 'red';
+        } else {
+            confirmPassword.style.borderColor = 'green';
+        }
+    }
+</script>
 @endpush

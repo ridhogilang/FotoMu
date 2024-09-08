@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\User\ProdukController;
 use App\Http\Controllers\Foto\FotograferController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Foto\DashFotograferController;
+use App\Http\Controllers\Foto\FotoFotograferController;
+use App\Http\Controllers\Foto\PembayaranController;
 use App\Http\Controllers\User\PemesananController;
 
 /*
@@ -44,11 +47,29 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('fotografer')->group(function () {
     // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
+
+    //dashboard
+    Route::get('/dashboard', [DashFotograferController::class, 'index'])->name('foto.dashboard');
+
+    //Upload Foto
+    Route::get('/upload', [FotoFotograferController::class, 'upload'])->name('foto.upload');
+    Route::post('/foto/upload', [FotoFotograferController::class, 'upload_foto'])->name('photos.upload');
+    Route::post('/foto/store', [FotoFotograferController::class, 'store'])->name('photos.store');
+    Route::post('/event/store', [FotoFotograferController::class, 'event_tambah'])->name('event.store');
+    Route::get('/file-manager', [FotoFotograferController::class, 'file_manager'])->name('foto.filemanager');
+    Route::get('/file-manager/event/{id}', [FotoFotograferController::class, 'foto'])->name('foto.foto');
+
+    //profil dan upload
     Route::get('/profil', [FotograferController::class, 'profil'])->name('foto.profil');
-    Route::get('/upload', [FotograferController::class, 'upload'])->name('foto.upload');
-    Route::post('/foto/upload', [FotograferController::class, 'upload_foto'])->name('photos.upload');
-    Route::post('/foto/store', [FotograferController::class, 'store'])->name('photos.store');
-    Route::post('/event/store', [FotograferController::class, 'event_tambah'])->name('event.store');
+
+    //Pembayaran
+    Route::get('/pembayaran', [PembayaranController::class, 'pembayaran'])->name('foto.pembayaran');
+    Route::post('/bank/store', [PembayaranController::class, 'store_bank'])->name('bank.store');
+    Route::post('/bank/verify-otp', [PembayaranController::class, 'verifyOtp'])->name('bank.verifyOtp');
+    Route::post('/bank/resend-otp', [PembayaranController::class, 'resendOtp'])->name('bank.resendOtp');
+    Route::delete('/bank/{id}', [PembayaranController::class, 'bank_destroy'])->name('bank.destroy');
+
+
     // });
 });
 
@@ -85,6 +106,8 @@ Route::prefix('pelanggan')->group(function () {
 
     //tree
     Route::get('/tree', [ProdukController::class, 'tree'])->name('event.tree');
+    Route::get('/events', [ProdukController::class, 'getEvents']);
+
 
     // });
 });

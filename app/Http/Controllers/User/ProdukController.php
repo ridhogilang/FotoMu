@@ -35,28 +35,47 @@ class ProdukController extends Controller
 
     public function produk()
     {
-        $event = Event::withCount('foto')->paginate(8); 
+        $event = Event::withCount('foto')->paginate(8);
         $eventAll = Event::all();
         $user = Auth::user();
         $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
         $similarPhotosIds = SimilarFoto::where('user_id', $user->id)->pluck('foto_id')->toArray();
 
-        if (empty($similarPhotosIds)) {
-            foreach (Foto::all() as $foto) {
+        $comparedPhotoIds = DB::table('user_foto_comparisons')
+            ->where('user_id', $user->id)
+            ->where('is_compared', true)
+            ->pluck('foto_id')->toArray();
+
+        // Ambil foto yang belum diproses oleh user ini
+        $newPhotos = Foto::whereNotIn('id', $comparedPhotoIds)->get();
+
+        if ($newPhotos->isNotEmpty()) {
+            foreach ($newPhotos as $foto) {
                 $fotoPath = storage_path('app/public/' . $foto->foto);
 
+                // Dispatch job untuk foto yang belum diproses
                 CompareFacesJob::dispatch($user->id, $foto->id, $userPhotoPath, $fotoPath);
+
+                // Simpan status bahwa foto ini telah diproses untuk user ini
+                DB::table('user_foto_comparisons')->insert([
+                    'user_id' => $user->id,
+                    'foto_id' => $foto->id,
+                    'is_compared' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
         }
 
         // Get the similar photos with pagination (8 items per page)
         $similarPhotos = Foto::whereIn('id', $similarPhotosIds)
-        ->whereHas('similarFoto', function ($query) {
-            $query->where('hapus', false);
-        })
-        ->paginate(8);
-        
+            ->whereHas('similarFoto', function ($query) {
+                $query->where('hapus', false);
+            })
+            ->paginate(8);
+
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
+        
         return view('user.produk', [
             "title" => "Foto Anda",
             'event' => $event,
@@ -72,6 +91,7 @@ class ProdukController extends Controller
 
         // Search for events based on the query
         $events = Event::where('event', 'LIKE', "%{$query}%")
+            ->distinct()
             ->get();
 
         // Encrypt the event ID before sending it to the frontend
@@ -151,5 +171,14 @@ class ProdukController extends Controller
         return view('user.tree', [
             "title" => "Tree",
         ]);
+    }
+
+    public function getEvents()
+    {
+        // Mengambil semua event dari database
+        $events = Event::all();
+
+        // Mengirimkan data event dalam format JSON
+        return response()->json($events);
     }
 }

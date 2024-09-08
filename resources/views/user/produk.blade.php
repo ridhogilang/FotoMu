@@ -145,14 +145,20 @@
                                                 <div class="col-12">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
-                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto" title="Klik jika foto tidak sesuai denganMu!" tabindex="0" data-plugin="tippy" data-tippy-interactive="true" data-foto-id="{{ $similiar->id }}"><i
-                                                                class="mdi mdi-close-circle"></i></span>
+                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto"
+                                                                title="Klik jika foto tidak sesuai denganMu!" tabindex="0"
+                                                                data-plugin="tippy" data-tippy-interactive="true"
+                                                                data-foto-id="{{ $similiar->id }}"><i
+                                                                    class="mdi mdi-close-circle"></i></span>
                                                         </div>
                                                         <div>
-                                                            <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                            <form action="{{ route('cart.buyNow') }}" method="POST"
+                                                                class="d-inline">
                                                                 @csrf
-                                                                <input type="hidden" name="foto_id" value="{{ $similiar->id }}">
-                                                                <button type="submit" class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                <input type="hidden" name="foto_id"
+                                                                    value="{{ $similiar->id }}">
+                                                                <button type="submit"
+                                                                    class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
                                                                     Beli Sekarang
                                                                 </button>
                                                             </form>
@@ -382,7 +388,7 @@
                             backdrop: false,
                             didOpen: (toast) => {
                                 toast.addEventListener('mouseenter', Swal
-                                .stopTimer);
+                                    .stopTimer);
                                 toast.addEventListener('mouseleave', Swal
                                     .resumeTimer);
                             }
@@ -405,7 +411,7 @@
                     error: function(xhr) {
                         var response = xhr.responseJSON;
                         var errorMessage =
-                        'Terjadi kesalahan saat memproses cart'; // Default error message
+                            'Terjadi kesalahan saat memproses cart'; // Default error message
 
                         if (xhr.status === 422 && response && response.error) {
                             // Show the specific error message if it exists
@@ -421,7 +427,7 @@
                             backdrop: false,
                             didOpen: (toast) => {
                                 toast.addEventListener('mouseenter', Swal
-                                .stopTimer);
+                                    .stopTimer);
                                 toast.addEventListener('mouseleave', Swal
                                     .resumeTimer);
                             }
@@ -435,7 +441,7 @@
         });
     </script>
     {{-- JS untuk search event --}}
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#event-search').selectize({
                 valueField: 'encrypted_id',
@@ -544,7 +550,142 @@
                 passwordEye.parentElement.classList.remove('show-password');
             }
         }
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi selectize untuk pencarian event
+            var selectize = $('#event-search').selectize({
+                valueField: 'encrypted_id',
+                labelField: 'event',
+                searchField: ['event', 'lokasi'],
+                placeholder: 'Search for an event...',
+                load: function(query, callback) {
+                    if (!query.length) {
+                        callback(); // Jangan muat jika query kosong
+                        return;
+                    }
+
+                    // Bersihkan hasil pencarian sebelumnya dari dropdown
+                    this.clearOptions();
+
+                    $.ajax({
+                        url: '/pelanggan/search-event',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            query: query
+                        },
+                        error: function() {
+                            callback();
+                        },
+                        success: function(res) {
+                            // Hapus duplikat berdasarkan 'id' event
+                            const uniqueResults = [];
+                            const ids = new Set(); // Untuk menyimpan ID yang unik
+
+                            res.forEach(function(item) {
+                                if (!ids.has(item
+                                    .id)) { // Jika ID belum ada, tambahkan ke hasil unik
+                                    ids.add(item.id);
+                                    uniqueResults.push(item);
+                                }
+                            });
+
+                            callback(uniqueResults); // Kirim hasil unik ke selectize
+                        }
+                    });
+                },
+                render: {
+                    option: function(item, escape) {
+                        // Render item dalam dropdown
+                        return '<div>' +
+                            '<img src="path_to_image/' + escape(item.image) +
+                            '" alt="" style="width: 40px; height: 40px;"/>' +
+                            '<span class="title"><strong>' + escape(item.event) +
+                            '</strong></span><br>' +
+                            '<span class="description">' + escape(item.lokasi) + '</span>' +
+                            '</div>';
+                    }
+                },
+                onItemAdd: function(value, $item) {
+                    // Ambil ID dan data dari item yang ditambahkan
+                    var encryptedId = value;
+                    var itemData = this.options[encryptedId];
+                    var plainId = itemData.plain_id; // ID event biasa
+                    var isPrivate = itemData.is_private;
+
+                    if (isPrivate) {
+                        // Buat modal jika event bersifat private
+                        var modalHtml = `
+                        <div id="login-modal-search" class="modal js-modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <form action="/pelanggan/event/${plainId}/check-password" method="POST" class="px-3">
+                                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                                            <div class="mb-3 mt-3">
+                                                <label for="password" class="form-label">Password</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input type="password" id="password" class="form-control"
+                                                        placeholder="Masukkan password event" name="password">
+                                                    <div class="input-group-text" data-password="false">
+                                                        <span class="password-eye" onclick="togglePassword1(this)"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2 text-center">
+                                                <button class="btn rounded-pill btn-primary" type="submit">Masuk ke Event</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                        // Hapus modal sebelumnya jika ada
+                        $('#login-modal-search').remove();
+
+                        // Tambahkan modal ke body
+                        $('body').append(modalHtml);
+
+                        // Tampilkan modal
+                        var modal = new bootstrap.Modal(document.getElementById('login-modal-search'));
+                        modal.show();
+                    } else {
+                        // Redirect ke halaman event jika bukan event private
+                        var url = '/pelanggan/foto/event/' + encryptedId;
+                        window.location.href = url;
+                    }
+
+                    // Hapus item dari input setelah diklik
+                    this.clear();
+                },
+                onDropdownClose: function($dropdown) {
+                    // Bersihkan input ketika dropdown ditutup
+                    this.clear();
+                    this.clearOptions(); // Bersihkan opsi yang ada di dropdown
+                },
+                selectOnTab: false,
+                create: false
+            });
+
+            // Fungsi untuk menampilkan/menyembunyikan password
+            function togglePassword1(element) {
+                const passwordField = element.closest('.input-group').querySelector(
+                    'input[type="password"], input[type="text"]');
+                const passwordEye = element;
+
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordEye.parentElement.classList.add('show-password');
+                } else {
+                    passwordField.type = 'password';
+                    passwordEye.parentElement.classList.remove('show-password');
+                }
+            }
+        });
     </script>
+
     {{-- JS hapus similar foto --}}
     <script>
         $(document).ready(function() {

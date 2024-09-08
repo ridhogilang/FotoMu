@@ -29,4 +29,19 @@ class Fotografer extends Model
     {
         return $this->hasMany(User::class, 'fotografer_id');
     }
+
+    public function earning()
+    {
+        return $this->hasMany(Earning::class, 'fotografer_id');
+    }
+
+    public function withdrawal()
+    {
+        return $this->hasMany(Withdrawal::class, 'fotografer_id');
+    }
+
+    public function rekening()
+    {
+        return $this->belongsTo(Rekening::class, 'rekening_id', 'id');
+    }
 }
