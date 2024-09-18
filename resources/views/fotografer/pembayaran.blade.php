@@ -209,97 +209,103 @@
                                             </form>
                                         </div>
                                     @endif
-
-
-                                    <div class="border mt-4 rounded">
-                                        <h4 class="header-title p-2 mb-0">Order Summary</h4>
-
-                                        <div class="table-responsive">
-                                            <table class="table table-centered table-nowrap mb-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="width: 90px;">
-                                                            <img src="assets/images/products/product-1.png"
-                                                                alt="product-img" title="product-img" class="rounded"
-                                                                height="48" />
-                                                        </td>
-                                                        <td>
-                                                            <a href="ecommerce-product-detail.php"
-                                                                class="text-body fw-semibold">Polo Navy blue
-                                                                T-shirt</a>
-                                                            <small class="d-block">1 x $39</small>
-                                                        </td>
-
-                                                        <td class="text-end">
-                                                            $39
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/products/product-2.png"
-                                                                alt="product-img" title="product-img" class="rounded"
-                                                                height="48" />
-                                                        </td>
-
-                                                        <td>
-                                                            <a href="ecommerce-product-detail.php"
-                                                                class="text-body fw-semibold">Red Hoodie for
-                                                                men</a>
-                                                            <small class="d-block">2 x $46</small>
-                                                        </td>
-                                                        <td class="text-end">
-                                                            $92
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/products/product-3.png"
-                                                                alt="product-img" title="product-img"
-                                                                class="rounded me-2" height="48" />
-                                                        </td>
-                                                        <td>
-                                                            <a href="ecommerce-product-detail.php"
-                                                                class="text-body fw-semibold">Designer Awesome
-                                                                T-Shirt</a>
-                                                            <small class="d-block">1 x $26</small>
-                                                        </td>
-                                                        <td class="text-end">
-                                                            $26
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="text-end">
-                                                        <td colspan="2">
-                                                            <h6 class="m-0">Sub Total:</h6>
-                                                        </td>
-                                                        <td class="text-end">
-                                                            $157
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="text-end">
-                                                        <td colspan="2">
-                                                            <h6 class="m-0">Shipping:</h6>
-                                                        </td>
-                                                        <td class="text-end">
-                                                            FREE
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="text-end">
-                                                        <td colspan="2">
-                                                            <h5 class="m-0">Total:</h5>
-                                                        </td>
-                                                        <td class="text-end fw-semibold">
-                                                            $157
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- end table-responsive -->
-                                    </div>
-                                </div> <!-- end col-->
+                                </div>
                                 <div class="col-lg-8">
                                     <div class="tab-content p-3">
-                                        <div class="tab-pane fade active show" id="custom-v-pills-billing"
+                                        <div class="tab-pane fade active show mt-2" id="custom-v-pills-billing"
+                                            role="tabpanel" aria-labelledby="custom-v-pills-billing-tab">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h4 class="header-title">Riwayat Penarikan</h4>
+                                                <div class="text-sm-end">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light mb-2"
+                                                        id="tarikUangButton">
+                                                        Tarik Uang
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog"
+                                            aria-labelledby="standard-modalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="{{ route('bank.penarikan') }}" method="POST">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="standard-modalLabel">Form
+                                                                Penarikan Penghasilan</h4>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <!-- Input Jumlah -->
+                                                                <label for="jumlah" class="form-label">Penarikan <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="text" id="jumlah" class="form-control"
+                                                                    placeholder="Masukkan jumlah penarikan">
+                                                                <input type="hidden" name="jumlah" id="jumlah-hidden">
+                                                                <!-- Hidden input untuk menyimpan nilai tanpa format Rp. -->
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <!-- Input Rekening -->
+                                                                <label for="rekening_id" class="form-label">Rekening <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ $fotografer->rekening->nama }} - {{ $fotografer->rekening->rekening }} ({{ $fotografer->rekening->nama_bank }})"
+                                                                    disabled>
+                                                                <input type="hidden" name="rekening_id"
+                                                                    value="{{ $fotografer->rekening_id }}">
+                                                                <!-- Hanya kirim rekening_id -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save
+                                                                changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div>
+                                        <table id="basic-datatable"
+                                            class="table table-centered table-nowrap table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No. </th>
+                                                    <th>Rekening</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Saldo</th>
+                                                    <th>Status</th>
+                                                    <th>Pengajuan</th>
+                                                    <th style="width: 82px;">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($penarikan as $penarikanItem)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $penarikanItem->rekening->nama }}</td>
+                                                        <td>Rp.
+                                                            {{ number_format($penarikanItem->jumlah, 0, ',', '.') }}
+                                                        </td>
+                                                        <td>Rp.
+                                                            {{ number_format($penarikanItem->saldo, 0, ',', '.') }}
+                                                        </td>
+                                                        <td>{{ $penarikanItem->status }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($penarikanItem->requested_at)->format('d, M y') }}</td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" class="action-icon"> <i
+                                                                    class="mdi mdi-square-edit-outline"></i></a>
+                                                            <a href="javascript:void(0);" class="action-icon"> <i
+                                                                    class="mdi mdi-delete"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <div class="tab-pane fade active show mt-3" id="custom-v-pills-billing"
                                             role="tabpanel" aria-labelledby="custom-v-pills-billing-tab">
                                             <div>
                                                 <h4 class="header-title mb-3">PendapatanMu</h4>
@@ -313,34 +319,32 @@
                                                     <th>Uang Masuk (Earning)</th>
                                                     <th>Uang Keluar (Withdrawal)</th>
                                                     <th>Status</th>
+                                                    <th>Jumlah</th>
                                                 </tr>
                                             </thead>
-
-
                                             <tbody>
-                                                @php $no = 1; @endphp
-                                                @foreach ($pendapatan as $date => $item)
+                                                @foreach ($uangMasukPerHari as $index => $earning)
                                                     <tr>
-                                                        <td>{{ $no++ }}</td>
-                                                        <td>Rp {{ number_format($item['earning']) }}</td>
-                                                        <td>
-                                                            @if (!empty($item['withdrawals']))
-                                                                @foreach ($item['withdrawals'] as $withdrawal)
-                                                                    Rp {{ number_format($withdrawal['jumlah']) }}<br>
-                                                                @endforeach
-                                                            @else
-                                                                Tidak ada withdrawal
-                                                            @endif
+                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>Rp.
+                                                            {{ number_format($earning->total_uang_masuk, 0, ',', '.') }}
                                                         </td>
-                                                        <td>
-                                                            @if (!empty($item['withdrawals']))
-                                                                @foreach ($item['withdrawals'] as $withdrawal)
-                                                                    {{ $withdrawal['status'] }}<br>
-                                                                @endforeach
-                                                            @else
-                                                                Uang Masuk
-                                                            @endif
+                                                        <td>-</td> <!-- Tidak ada uang keluar di sini -->
+                                                        <td>Pendapatan
+                                                            ({{ \Carbon\Carbon::parse($earning->date)->format('d M Y') }})
                                                         </td>
+                                                        <td>Rp. {{ number_format($earning->saldo_akhir, 0, ',', '.') }}
+                                                        </td> <!-- Saldo akhir -->
+                                                    </tr>
+                                                @endforeach
+                                                @foreach ($uangKeluar as $index => $withdrawal)
+                                                    <tr>
+                                                        <td>{{ $index + 1 + count($uangMasukPerHari) }}</td>
+                                                        <td>-</td> <!-- Tidak ada uang masuk di baris ini -->
+                                                        <td>Rp. {{ number_format($withdrawal->uang_keluar, 0, ',', '.') }}
+                                                        </td>
+                                                        <td>Penarikan ({{ $withdrawal->created_at->format('d M Y') }})</td>
+                                                        <td>Rp. {{ number_format($withdrawal->jumlah, 0, ',', '.') }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -627,5 +631,69 @@
                 });
             });
         });
+    </script>
+    <script>
+        document.getElementById('tarikUangButton').addEventListener('click', function() {
+            // Panggil pengecekan via Ajax
+            cekRekeningFotografer();
+        });
+
+        function cekRekeningFotografer() {
+            // Menggunakan fetch untuk melakukan request ke backend
+            fetch('/fotografer/cek-rekening-fotografer')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.rekening_ada) {
+                        // Jika rekening_id ada, tampilkan modal
+                        var modal = new bootstrap.Modal(document.getElementById('standard-modal'));
+                        modal.show();
+                    } else {
+                        // Jika rekening_id tidak ada, tampilkan SweetAlert
+                        Swal.fire({
+                            title: 'Rekening Tidak Ditemukan!',
+                            text: 'Silakan tambahkan nomor rekening terlebih dahulu sebelum menarik uang.',
+                            icon: 'warning',
+                            confirmButtonText: 'Ok', // Hanya satu tombol OK
+                            showCancelButton: false // Tidak ada tombol Cancel
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Oops...', 'Terjadi kesalahan saat memeriksa rekening!', 'error');
+                });
+        }
+    </script>
+    <script>
+        const jumlahInput = document.getElementById('jumlah');
+        const jumlahHiddenInput = document.getElementById('jumlah-hidden');
+
+        jumlahInput.addEventListener('input', function() {
+            // Hapus format Rp. dan koma untuk mendapatkan nilai asli
+            let value = this.value.replace(/\D/g, '');
+
+            // Perbarui nilai di input hidden (nilai asli tanpa format)
+            jumlahHiddenInput.value = value;
+
+            // Tambahkan format Rp. dan koma pada tampilan input
+            this.value = formatRupiah(value);
+        });
+
+        // Fungsi untuk memformat angka menjadi format Rp.
+        function formatRupiah(angka) {
+            let number_string = angka.toString().replace(/\D/g, '');
+            let split = number_string.split(',');
+            let sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            return 'Rp. ' + rupiah;
+        }
     </script>
 @endpush

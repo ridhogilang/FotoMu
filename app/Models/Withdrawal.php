@@ -15,6 +15,7 @@ class Withdrawal extends Model
         'fotografer_id',
         'rekening_id',
         'jumlah',
+        'saldo',
         'status',
         'requested_at',
         'processed_at',

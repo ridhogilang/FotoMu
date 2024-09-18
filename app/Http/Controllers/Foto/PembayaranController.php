@@ -22,59 +22,47 @@ class PembayaranController extends Controller
         $userId = Auth::user()->id;
         $fotografer = Fotografer::where('user_id', $userId)->first();
 
-        $earnings = Earning::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(jumlah) as total_earning')
-        )
-            ->where('fotografer_id', $fotografer->id)
-            ->groupBy(DB::raw('DATE(created_at)'))
+        $fotograferId = Auth::user()->fotografer->id;
+
+        // Ambil total uang masuk per hari (Pendapatan)
+        $uangMasukPerHari = DB::table('earning')
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('SUM(uang_masuk) as total_uang_masuk'),
+                DB::raw('MAX(id) as max_id')  // Ambil id terbesar per hari
+            )
+            ->where('fotografer_id', $fotograferId)
+            ->where('status', 'Pendapatan')
+            ->groupBy(DB::raw('DATE(created_at)'))  // Group berdasarkan tanggal saja
             ->get();
 
-        // Ambil data withdrawal per ID
-        $withdrawals = Withdrawal::select(
-            'id',
-            'jumlah',
-            'requested_at',
-            'status'
-        )
-            ->where('fotografer_id', $fotografer->id)
+        // Ambil saldo akhir berdasarkan id terbesar per hari
+        $saldoAkhirPerHari = DB::table('earning')
+            ->select('jumlah', DB::raw('DATE(created_at) as date'))
+            ->whereIn('id', $uangMasukPerHari->pluck('max_id'))  // Ambil jumlah berdasarkan id terbesar
+            ->get()
+            ->keyBy('date');  // Mengaitkan saldo akhir dengan tanggal
+
+        // Gabungkan data ke dalam satu hasil
+        $uangMasukPerHari->transform(function ($item) use ($saldoAkhirPerHari) {
+            $item->saldo_akhir = optional($saldoAkhirPerHari->get($item->date))->jumlah;  // Ambil saldo akhir berdasarkan tanggal
+            return $item;
+        });
+
+        // Uang keluar dari penarikan yang disetujui
+        $uangKeluar = Earning::where('fotografer_id', $fotograferId)
+            ->where('status', 'Penarikan')
+            ->whereNotNull('uang_keluar')
             ->get();
 
-        // Gabungkan data earning dan withdrawal dalam satu array
-        $pendapatan = [];
-
-        // Earning diakumulasi per hari
-        foreach ($earnings as $earning) {
-            $pendapatan[$earning->date]['earning'] = $earning->total_earning;
-            $pendapatan[$earning->date]['withdrawals'] = []; // Set empty withdrawals
-        }
-
-        // Withdrawal ditampilkan per ID
-        foreach ($withdrawals as $withdrawal) {
-            $date = $withdrawal->requested_at->format('Y-m-d');
-            if (isset($pendapatan[$date])) {
-                $pendapatan[$date]['withdrawals'][] = [
-                    'id' => $withdrawal->id,
-                    'jumlah' => $withdrawal->jumlah,
-                    'status' => $withdrawal->status
-                ];
-            } else {
-                // Jika tidak ada earning pada hari tersebut, tambahkan tanggal baru
-                $pendapatan[$date]['earning'] = 0; // Set earning ke 0 jika tidak ada
-                $pendapatan[$date]['withdrawals'][] = [
-                    'id' => $withdrawal->id,
-                    'jumlah' => $withdrawal->jumlah,
-                    'status' => $withdrawal->status
-                ];
-            }
-        }
-
-        ksort($pendapatan);
+        $penarikan = Withdrawal::where('fotografer_id', $fotograferId)->get();
 
         return view('fotografer.pembayaran', [
             "title" => "Pembayaran",
             "fotografer" => $fotografer,
-            "pendapatan" => $pendapatan,
+            "uangMasukPerHari" => $uangMasukPerHari,
+            "uangKeluar" => $uangKeluar,
+            "penarikan" => $penarikan,
         ]);
     }
 
@@ -185,5 +173,57 @@ class PembayaranController extends Controller
 
         // Kembalikan response JSON sukses
         return response()->json(['message' => 'OTP baru telah dikirim ke email Anda']);
+    }
+
+    public function cekRekeningFotografer()
+    {
+        // Misalnya, dapatkan ID fotografer yang sedang login
+        $fotograferId = Auth::user()->fotografer->id;
+
+        // Cek apakah rekening_id ada untuk fotografer ini
+        $fotografer = Fotografer::find($fotograferId);
+
+        if ($fotografer && $fotografer->rekening_id) {
+            return response()->json(['rekening_ada' => true]);
+        } else {
+            return response()->json(['rekening_ada' => false]);
+        }
+    }
+
+    public function withdrawal_store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'jumlah' => 'required|numeric|min:1',
+            'rekening_id' => 'required|exists:rekening,id',  // pastikan rekening_id ada di tabel rekening
+        ]);
+
+        // Dapatkan ID fotografer yang sedang login
+        $fotograferId = Auth::user()->fotografer->id;
+
+        // Ambil saldo terbaru dari tabel 'earning'
+        $saldo = Earning::where('fotografer_id', $fotograferId)
+            ->where('status', 'Pendapatan')
+            ->orderBy('created_at', 'desc')  // Dapatkan record terbaru
+            ->orderBy('id', 'desc')          // Dapatkan id terbesar untuk menghindari konflik
+            ->value('jumlah');               // Ambil saldo
+
+        // Validasi jumlah penarikan tidak lebih dari saldo
+        if ($request->jumlah > $saldo) {
+            return redirect()->back()->with('toast_error', 'Jumlah penarikan tidak boleh lebih besar dari saldo yang tersedia.');
+        }
+
+        // Simpan data penarikan ke dalam tabel 'withdrawal'
+        Withdrawal::create([
+            'fotografer_id' => $fotograferId,
+            'rekening_id' => $request->rekening_id,
+            'jumlah' => $request->jumlah,
+            'saldo' => $saldo,
+            'status' => 'Pending',
+            'requested_at' => now(),
+        ]);
+
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Penarikan berhasil diajukan. Menunggu persetujuan.');
     }
 }

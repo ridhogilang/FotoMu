@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('fotografer_id');
             $table->bigInteger('rekening_id');
             $table->decimal('jumlah');
+            $table->decimal('saldo');
             $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
             $table->timestamp('requested_at')->useCurrent();
             $table->timestamp('processed_at')->nullable();

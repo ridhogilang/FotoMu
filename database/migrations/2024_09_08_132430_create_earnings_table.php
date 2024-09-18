@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('earning', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('fotografer_id');
-            $table->bigInteger('detail_pesanan_id');
+            $table->bigInteger('detail_pesanan_id')->nullable();
+            $table->bigInteger('withdrawal_id')->nullable();
+            $table->decimal('uang_masuk')->nullable();
+            $table->decimal('uang_keluar')->nullable();
             $table->decimal('jumlah');
+            $table->enum('status', ['Pendapatan', 'Penarikan']);
             $table->timestamps();
         });
     }

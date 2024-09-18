@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\DetailPesanan;
 use Illuminate\Support\Carbon;
 use App\Jobs\SendWatzapMessage;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -121,18 +122,34 @@ class PemesananController extends Controller
 
         $detailPesanan = DetailPesanan::where('pesanan_id', $pesanan->id)->get();
 
-        foreach ($detailPesanan as $item) {
-            $foto = Foto::find($item->foto_id);
-            $jumlahEarning = $foto->harga * 0.9;
+        $fotograferId = Foto::find($detailPesanan->first()->foto_id)->fotografer_id;
 
-            Earning::create([
-                'fotografer_id'      => $foto->fotografer_id,   // Fotografer yang mengupload foto
-                'detail_pesanan_id'  => $item->id,              // Detail pesanan terkait
-                'jumlah'             => $jumlahEarning,         // 90% dari harga foto
-            ]);
+        $lastEarning = Earning::where('fotografer_id', $fotograferId)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($detailPesanan->isNotEmpty()) {
+            $fotograferId = Foto::find($detailPesanan->first()->foto_id)->fotografer_id;
+
+            $jumlahAkhir = $lastEarning ? $lastEarning->jumlah : 0;
+            foreach ($detailPesanan as $item) {
+                $foto = Foto::find($item->foto_id);
+                $jumlahEarning = $foto->harga * 0.9;  // 90% dari harga foto untuk fotografer
+
+                // Tambahkan nilai uang masuk ke jumlah akhir yang diperbarui
+                $jumlahAkhir += $jumlahEarning;
+
+                // Simpan pendapatan baru dengan jumlah akhir yang diperbarui
+                Earning::create([
+                    'fotografer_id'      => $foto->fotografer_id,   // Fotografer yang mengupload foto
+                    'detail_pesanan_id'  => $item->id,              // Detail pesanan terkait
+                    'uang_masuk'         => $jumlahEarning,         // 90% dari harga foto
+                    'jumlah'             => $jumlahAkhir,           // Jumlah akhir yang diperbarui
+                    'status'             => "Pendapatan"            // Status pendapatan
+                ]);
+            }
         }
-
-        // Redirect dengan pesan sukses
         return redirect()->route('user.pesanan')->with('success', 'Pesanan anda sudah masuk dan akan segera di Proses. Pesan notifikasi sedang dikirim.');
     }
 }

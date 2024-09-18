@@ -14,7 +14,10 @@ class Earning extends Model
     protected $fillable = [
         'fotografer_id',
         'detail_pesanan_id',
+        'uang_masuk',
+        'uang_keluar',
         'jumlah',
+        'status',
     ];
 
     public function fotografer()

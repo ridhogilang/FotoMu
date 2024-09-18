@@ -68,8 +68,8 @@ Route::prefix('fotografer')->group(function () {
     Route::post('/bank/verify-otp', [PembayaranController::class, 'verifyOtp'])->name('bank.verifyOtp');
     Route::post('/bank/resend-otp', [PembayaranController::class, 'resendOtp'])->name('bank.resendOtp');
     Route::delete('/bank/{id}', [PembayaranController::class, 'bank_destroy'])->name('bank.destroy');
-
-
+    Route::get('/cek-rekening-fotografer', [PembayaranController::class, 'cekRekeningFotografer'])->name('bank.cekrekening');
+    Route::post('/penarikan', [PembayaranController::class, 'withdrawal_store'])->name('bank.penarikan');
     // });
 });
 
