@@ -15,6 +15,7 @@ class DetailPesanan extends Model
         'user_id',
         'pesanan_id',
         'foto_id',
+        'foto',
     ];
 
     public function pesanan()

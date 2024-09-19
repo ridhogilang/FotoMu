@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('pesanan_id');
             $table->bigInteger('foto_id');
+            $table->string('foto_path')->nullable();
             $table->timestamps();
         });
     }

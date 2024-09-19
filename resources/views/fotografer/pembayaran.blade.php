@@ -286,7 +286,8 @@
                                                 @foreach ($penarikan as $penarikanItem)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $penarikanItem->rekening->nama }}</td>
+                                                        <td>{{ $penarikanItem->rekening->nama }} -
+                                                            {{ $penarikanItem->rekening->nama_bank }}</td>
                                                         <td>Rp.
                                                             {{ number_format($penarikanItem->jumlah, 0, ',', '.') }}
                                                         </td>
@@ -294,12 +295,19 @@
                                                             {{ number_format($penarikanItem->saldo, 0, ',', '.') }}
                                                         </td>
                                                         <td>{{ $penarikanItem->status }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($penarikanItem->requested_at)->format('d, M y') }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($penarikanItem->requested_at)->format('d, M y') }}
+                                                        </td>
                                                         <td>
-                                                            <a href="javascript:void(0);" class="action-icon"> <i
-                                                                    class="mdi mdi-square-edit-outline"></i></a>
-                                                            <a href="javascript:void(0);" class="action-icon"> <i
-                                                                    class="mdi mdi-delete"></i></a>
+                                                            @if ($penarikanItem->status === 'Pending')
+                                                                <a href="javascript:void(0);" class="action-icon"> <i
+                                                                        class="mdi mdi-square-edit-outline"></i></a>
+                                                                <a href="javascript:void(0);" class="action-icon"
+                                                                    onclick="confirmDelete({{ $penarikanItem->id }})">
+                                                                    <i class="mdi mdi-delete"></i>
+                                                                </a>
+                                                            @else
+                                                                -
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -316,8 +324,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>No.</th>
-                                                    <th>Uang Masuk (Earning)</th>
-                                                    <th>Uang Keluar (Withdrawal)</th>
+                                                    <th>Pendapatan</th>
+                                                    <th>Penarikan</th>
                                                     <th>Status</th>
                                                     <th>Jumlah</th>
                                                 </tr>
@@ -694,6 +702,50 @@
             }
 
             return 'Rp. ' + rupiah;
+        }
+    </script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteData(id);
+                }
+            });
+        }
+    
+        function deleteData(id) {
+            $.ajax({
+                url: '/fotografer/penarikan/' + id,  // URL untuk menghapus data berdasarkan id
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'  // Token CSRF Laravel
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Dihapus!',
+                        'Data berhasil dihapus.',
+                        'success'
+                    ).then((result) => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire(
+                        'Gagal!',
+                        'Data tidak berhasil dihapus.',
+                        'error'
+                    );
+                }
+            });
         }
     </script>
 @endpush

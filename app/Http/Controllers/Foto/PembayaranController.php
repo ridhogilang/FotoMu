@@ -226,4 +226,19 @@ class PembayaranController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Penarikan berhasil diajukan. Menunggu persetujuan.');
     }
+
+    public function withdrawal_destroy($id)
+    {
+        // Cari record withdrawal berdasarkan id
+        $withdrawal = Withdrawal::find($id);
+
+        // Jika withdrawal ditemukan, hapus record tersebut
+        if ($withdrawal) {
+            $withdrawal->delete();
+            return response()->json(['success' => 'Data berhasil dihapus!']);
+        }
+
+        // Jika withdrawal tidak ditemukan, kirimkan respon gagal
+        return response()->json(['error' => 'Data tidak ditemukan!'], 404);
+    }
 }

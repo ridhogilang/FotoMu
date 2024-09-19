@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class PemesananController extends Controller
 {
@@ -121,7 +122,6 @@ class PemesananController extends Controller
         $pesanan->save();
 
         $detailPesanan = DetailPesanan::where('pesanan_id', $pesanan->id)->get();
-
         $fotograferId = Foto::find($detailPesanan->first()->foto_id)->fotografer_id;
 
         $lastEarning = Earning::where('fotografer_id', $fotograferId)
@@ -133,14 +133,13 @@ class PemesananController extends Controller
             $fotograferId = Foto::find($detailPesanan->first()->foto_id)->fotografer_id;
 
             $jumlahAkhir = $lastEarning ? $lastEarning->jumlah : 0;
+
             foreach ($detailPesanan as $item) {
                 $foto = Foto::find($item->foto_id);
                 $jumlahEarning = $foto->harga * 0.9;  // 90% dari harga foto untuk fotografer
-
-                // Tambahkan nilai uang masuk ke jumlah akhir yang diperbarui
                 $jumlahAkhir += $jumlahEarning;
 
-                // Simpan pendapatan baru dengan jumlah akhir yang diperbarui
+                // Buat entri pendapatan (earning)
                 Earning::create([
                     'fotografer_id'      => $foto->fotografer_id,   // Fotografer yang mengupload foto
                     'detail_pesanan_id'  => $item->id,              // Detail pesanan terkait
@@ -150,6 +149,7 @@ class PemesananController extends Controller
                 ]);
             }
         }
-        return redirect()->route('user.pesanan')->with('success', 'Pesanan anda sudah masuk dan akan segera di Proses. Pesan notifikasi sedang dikirim.');
+
+        return redirect()->route('user.pesanan')->with('success', 'Pesanan anda sudah selesai. Foto sudah disalin ke folder baru.');
     }
 }
