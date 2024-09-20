@@ -139,7 +139,6 @@ class PemesananController extends Controller
                 $jumlahEarning = $foto->harga * 0.9;  // 90% dari harga foto untuk fotografer
                 $jumlahAkhir += $jumlahEarning;
 
-                // Buat entri pendapatan (earning)
                 Earning::create([
                     'fotografer_id'      => $foto->fotografer_id,   // Fotografer yang mengupload foto
                     'detail_pesanan_id'  => $item->id,              // Detail pesanan terkait

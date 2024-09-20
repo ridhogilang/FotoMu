@@ -70,7 +70,7 @@ class ProdukController extends Controller
         // Get the similar photos with pagination (8 items per page)
         $similarPhotos = Foto::whereIn('id', $similarPhotosIds)
             ->whereHas('similarFoto', function ($query) {
-                $query->where('hapus', false);
+                $query->where('is_hapus', false);
             })
             ->paginate(8);
 
@@ -118,7 +118,7 @@ class ProdukController extends Controller
         $similarPhotos = Foto::whereIn('id', $similarPhotosId)
             ->where('event_id', $encryptId)
             ->whereHas('similarFoto', function ($query) {
-                $query->where('hapus', false);
+                $query->where('is_hapus', false);
             })
             ->paginate(8);
 
@@ -143,7 +143,6 @@ class ProdukController extends Controller
         if (Hash::check($request->input('password'), $event->password)) {
             return redirect()->route('user.event', ['id' => Crypt::encryptString($event->id)]);
         } else {
-            // Return back with an error if password is incorrect
             return back()->with('toast_error', 'Password event anda salah, silahkan hubungi panitia fotografer anda!');
         }
     }
@@ -157,7 +156,7 @@ class ProdukController extends Controller
         $similarFoto = SimilarFoto::where('user_id', Auth::id())->where('foto_id', $request->foto_id)->first();
 
         if ($similarFoto) {
-            $similarFoto->hapus = true;
+            $similarFoto->is_hapus = true;
             $similarFoto->save();
 
             return response()->json(['success' => 'Foto berhasil dihapus dari similar_foto.']);

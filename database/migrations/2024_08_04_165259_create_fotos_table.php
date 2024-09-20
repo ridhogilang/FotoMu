@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('harga');
             $table->string('deskripsi')->nullable();
             $table->string('file_size')->nullable();;
-            $table->enum('resolusi', ['low', 'medium', 'high'])->nullable();;
+            $table->enum('resolusi', ['low', 'medium', 'high'])->nullable();
+            $table->boolean('is_hapus')->default(false);
             $table->timestamps();
         });
     }

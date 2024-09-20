@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('foto_id');
-            $table->boolean('hapus')->default(false);
+            $table->boolean('is_hapus')->default(false);
             $table->timestamps();
         });
     }

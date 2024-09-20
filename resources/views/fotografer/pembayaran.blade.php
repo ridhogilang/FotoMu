@@ -251,12 +251,14 @@
                                                                 <!-- Input Rekening -->
                                                                 <label for="rekening_id" class="form-label">Rekening <span
                                                                         class="text-danger">*</span></label>
-                                                                <input type="text" class="form-control"
-                                                                    value="{{ $fotografer->rekening->nama }} - {{ $fotografer->rekening->rekening }} ({{ $fotografer->rekening->nama_bank }})"
-                                                                    disabled>
-                                                                <input type="hidden" name="rekening_id"
-                                                                    value="{{ $fotografer->rekening_id }}">
-                                                                <!-- Hanya kirim rekening_id -->
+                                                                @if (optional($fotografer->rekening)->nama)
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ $fotografer->rekening->nama }} - {{ $fotografer->rekening->rekening }} ({{ $fotografer->rekening->nama_bank }})"
+                                                                        disabled>
+                                                                    <input type="hidden" name="rekening_id"
+                                                                        value="{{ $fotografer->rekening_id }}">
+                                                                @endif
+
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -721,13 +723,13 @@
                 }
             });
         }
-    
+
         function deleteData(id) {
             $.ajax({
-                url: '/fotografer/penarikan/' + id,  // URL untuk menghapus data berdasarkan id
+                url: '/fotografer/penarikan/' + id, // URL untuk menghapus data berdasarkan id
                 type: 'DELETE',
                 data: {
-                    _token: '{{ csrf_token() }}'  // Token CSRF Laravel
+                    _token: '{{ csrf_token() }}' // Token CSRF Laravel
                 },
                 success: function(response) {
                     Swal.fire(

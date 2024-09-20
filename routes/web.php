@@ -58,8 +58,11 @@ Route::prefix('fotografer')->group(function () {
     Route::post('/event/store', [FotoFotograferController::class, 'event_tambah'])->name('event.store');
     Route::get('/file-manager', [FotoFotograferController::class, 'file_manager'])->name('foto.filemanager');
     Route::get('/file-manager/event/{id}', [FotoFotograferController::class, 'foto'])->name('foto.foto');
+    Route::delete('/hapus-foto', [FotoFotograferController::class, 'deleteSelectedPhotos'])->name('foto.hapus-foto');
+    Route::get('/get-foto/{id}', [FotoFotograferController::class, 'getFoto'])->name('foto.edit-getfoto');
+    Route::post('/update-selected-photos', [FotoFotograferController::class, 'updateSelectedPhotos'])->name('foto.updatefoto');
 
-    //profil dan upload
+    //profil
     Route::get('/profil', [FotograferController::class, 'profil'])->name('foto.profil');
 
     //Pembayaran

@@ -20,6 +20,7 @@ class Foto extends Model
         'deskripsi',
         'file_size',
         'resolusi',
+        'is_hapus',
     ];
 
     public function event()

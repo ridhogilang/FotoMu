@@ -6,6 +6,7 @@ use App\Models\Foto;
 use App\Models\Event;
 use App\Models\Fotografer;
 use Illuminate\Http\Request;
+use App\Models\DetailPesanan;
 use App\Jobs\ProcessWatermarkJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -191,6 +192,8 @@ class FotoFotograferController extends Controller
         $event = Event::where('id', $encryptId)->pluck('event')->first();
         $foto = Foto::where('event_id', $encryptId)->paginate(15);
 
+        $eventAll = Event::all();
+
         $totalStorage = Foto::where('fotografer_id', $fotografer_id)
             ->sum('file_size');
         $maxStorage = 50 * 1024 * 1024 * 1024; // 50 GB in bytes
@@ -202,11 +205,90 @@ class FotoFotograferController extends Controller
             "title" => "Foto - $event",
             "foto" => $foto,
             "event" => $event,
+            "eventAll" => $eventAll,
             "totalStorage" => $totalStorage,
             "totalStorageFormatted" => $totalStorageFormatted,
             "percentageUsed" => $percentageUsed,
             "maxStorageFormatted" => $maxStorageFormatted,
         ]);
+    }
+
+    public function deleteSelectedPhotos(Request $request)
+    {
+        $request->validate([
+            'foto_id' => 'required',
+        ]);
+
+        // Dapatkan semua foto yang dipilih berdasarkan ID
+        $fotoIds = $request->input('foto_id');
+
+        // Dapatkan foto berdasarkan ID
+        $fotos = Foto::whereIn('id', $fotoIds)->get();
+
+        foreach ($fotos as $foto) {
+            // Cek apakah foto_id ada di DetailPesanan
+            $isInPesanan = DetailPesanan::where('foto_id', $foto->id)->exists();
+
+            if ($isInPesanan) {
+                // Jika ada di DetailPesanan, update kolom is_hapus menjadi true
+                $foto->update(['is_hapus' => true]);
+            } else {
+                // Jika tidak ada di DetailPesanan, hapus foto fisik dan database record
+                if (Storage::disk('public')->exists($foto->foto)) {
+                    Storage::disk('public')->delete($foto->foto);
+                }
+
+                if (Storage::disk('public')->exists($foto->fotowatermark)) {
+                    Storage::disk('public')->delete($foto->fotowatermark);
+                }
+                // Hapus dari database
+                $foto->delete();
+            }
+        }
+
+        return response()->json(['message' => 'Foto Sudah berhasil dihapus'], 200);
+    }
+
+    public function getFoto($id)
+    {
+        // Cari foto berdasarkan ID
+        $foto = Foto::find($id);
+
+        // Jika foto tidak ditemukan, kembalikan respon 404
+        if (!$foto) {
+            return response()->json(['error' => 'Foto tidak ditemukan.'], 404);
+        }
+
+        // Kembalikan hanya ID
+        return response()->json([
+            'id' => $foto->id,
+        ]);
+    }
+
+    public function updateSelectedPhotos(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'foto_ids' => 'required', 
+            'event_id' => 'required',
+            'harga' => 'required',
+            'deskripsi' => 'string',
+        ]);
+
+        // Ambil semua ID foto yang dipilih
+        $fotoIds = $request->input('foto_ids');
+
+        $harga = preg_replace('/[^\d]/', '', $request->input('harga')); 
+
+        // Update data untuk semua foto yang dipilih
+        Foto::whereIn('id', $fotoIds)->update([
+            'event_id' => $request->input('event_id'),
+            'harga' => $harga,
+            'deskripsi' => $request->input('deskripsi'),
+        ]);
+
+        // Kembalikan respon sukses
+        return response()->json(['message' => 'Foto berhasil diupdate.'], 200);
     }
 
 
