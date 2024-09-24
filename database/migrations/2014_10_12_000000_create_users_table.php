@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('nowa');
             $table->string('foto_depan')->nullable();
+            $table->string('foto_kanan')->nullable();
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_foto')->default(false);
             $table->boolean('is_user')->default(false);

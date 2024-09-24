@@ -20,6 +20,17 @@ class UserController extends Controller
         ]);
     }
 
+    public function retake()
+    {
+        $userId = Auth::id();
+        $user = User::where('id', $userId)->first();
+
+        return view('user.retake', [
+            "title" => "Perbaharui Foto",
+            "user" => $user,
+        ]);
+    }
+
     public function formfoto_kiri()
     {
         return view('user.formfoto_kiri', [
@@ -127,25 +138,29 @@ class UserController extends Controller
             $user = auth()->user();
             $username = $user->name;
 
-            if ($user->foto_depan) {
+            // Hapus foto depan lama jika ada
+            if ($user->foto_kanan) {
                 $oldFilePath = str_replace('/storage/', 'public/', $user->foto_kanan);
                 if (Storage::exists($oldFilePath)) {
                     Storage::delete($oldFilePath);
                 }
             }
 
+            // Buat nama file
             $fileName = $username . '_fotokanan.' . $file->getClientOriginalExtension();
 
+            // Simpan file ke storage
             $path = $file->storeAs('public/foto_user', $fileName);
 
-            $fileUrl = Storage::url($path);
+            // Simpan path relatif ke database (tanpa "/storage/")
+            $relativePath = str_replace('public/', '', $path);
 
-            $user->foto_kanan = $fileUrl;
+            $user->foto_kanan = $relativePath;
             $user->save();
 
             return response()->json([
                 'success' => true,
-                'file_url' => $fileUrl,
+                'file_url' => $relativePath,
                 'redirect_url' => route('user.produk')
             ]);
         }

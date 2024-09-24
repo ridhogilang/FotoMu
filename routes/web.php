@@ -50,7 +50,7 @@ Route::prefix('fotografer')->group(function () {
 
     //dashboard
     Route::get('/dashboard', [DashFotograferController::class, 'index'])->name('foto.dashboard');
-
+ 
     //Upload Foto
     Route::get('/upload', [FotoFotograferController::class, 'upload'])->name('foto.upload');
     Route::post('/foto/upload', [FotoFotograferController::class, 'upload_foto'])->name('photos.upload');
@@ -103,6 +103,7 @@ Route::prefix('pelanggan')->group(function () {
     //user
     Route::get('/profil', [UserController::class, 'profile'])->name('user.profil');
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');
+    Route::get('/retake', [UserController::class, 'retake'])->name('user.retake');
     Route::post('/form-fotodepan', [UserController::class, 'upload_fotodepan'])->name('user.fotodepan');
     Route::get('/form-fotokiri', [UserController::class, 'formfoto_kiri'])->name('user.formfotokiri');
     Route::post('/form-fotokiri', [UserController::class, 'upload_fotokiri'])->name('user.fotokiri');

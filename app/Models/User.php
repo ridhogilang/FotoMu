@@ -25,7 +25,6 @@ class User extends Authenticatable
         'password',
         'foto_depan',
         'foto_kanan',
-        'foto_kiri',
         'is_admin',
         'is_foto',
         'is_user',

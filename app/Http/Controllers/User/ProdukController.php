@@ -35,7 +35,13 @@ class ProdukController extends Controller
 
     public function produk()
     {
-        $event = Event::withCount('foto')->paginate(8);
+        $user = Auth::user();
+
+        if (is_null($user->foto_depan)) {
+            return redirect()->route('user.formfotodepan');
+        }
+
+        $event = Event::withCount('foto')->paginate(8, ['*'], 'event_page');
         $eventAll = Event::all();
         $user = Auth::user();
         $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
@@ -69,13 +75,13 @@ class ProdukController extends Controller
 
         // Get the similar photos with pagination (8 items per page)
         $similarPhotos = Foto::whereIn('id', $similarPhotosIds)
-            ->whereHas('similarFoto', function ($query) {
-                $query->where('is_hapus', false);
-            })
-            ->paginate(8);
+        ->whereHas('similarFoto', function ($query) {
+            $query->where('is_hapus', false);
+        })
+        ->paginate(8, ['*'], 'similar_page');    
 
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
-        
+
         return view('user.produk', [
             "title" => "Foto Anda",
             'event' => $event,
@@ -111,17 +117,17 @@ class ProdukController extends Controller
         $encryptId = Crypt::decryptString($id);
         $event = Event::withCount('foto')->find($encryptId);
 
-        $foto = Foto::where('event_id', $encryptId)->paginate(8);
+        $foto = Foto::where('event_id', $encryptId)->paginate(8, ['*'], 'semua_page');
 
         $similarPhotosId = SimilarFoto::where('user_id', $user->id)->pluck('foto_id');
 
         $similarPhotos = Foto::whereIn('id', $similarPhotosId)
-            ->where('event_id', $encryptId)
-            ->whereHas('similarFoto', function ($query) {
-                $query->where('is_hapus', false);
-            })
-            ->paginate(8);
-
+        ->where('event_id', $encryptId)
+        ->whereHas('similarFoto', function ($query) {
+            $query->where('is_hapus', false);
+        })
+        ->paginate(8, ['*'], 'similar_page');
+        
         $wishlist = Wishlist::where('user_id',  $user->id)->pluck('foto_id')->toArray();
 
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();

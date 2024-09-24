@@ -62,13 +62,13 @@
                             <div class="col-auto">
                                 <ul class="nav nav-tabs nav-bordered nav-justified mb-2">
                                     <li class="nav-item">
-                                        <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false"
+                                        <a href="#home-b3" data-bs-toggle="tab" aria-expanded="false"
                                             class="nav-link active">
                                             FotoMu
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
+                                        <a href="#profile-b3" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
                                             Galeri
                                         </a>
                                     </li>
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <div class="tab-content">
-                <div class="tab-pane active" id="home-b2">
+                <div class="tab-pane active" id="home-b3">
                     <div class="row">
                         @foreach ($similarPhotos as $similar)
                             <div class="col-md-6 col-lg-4 col-xl-3">
@@ -145,11 +145,11 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            {{ $similarPhotos->appends(['active_tab' => 'home-b2'])->links('pagination::custom-pagination') }}
+                            {{ $similarPhotos->appends(['active_tab' => 'home-b3'])->links('pagination::custom-pagination') }}
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="profile-b2">
+                <div class="tab-pane" id="profile-b3">
                     <div class="row">
                         @foreach ($semuaFoto as $FotoAll)
                             <div class="col-md-6 col-lg-4 col-xl-3">
@@ -216,7 +216,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            {{ $semuaFoto->appends(['active_tab' => 'profile-b2'])->links('pagination::custom-pagination') }}
+                            {{ $semuaFoto->appends(['active_tab' => 'profile-b3'])->links('pagination::custom-pagination') }}
                         </div>
                     </div>
                 </div>
@@ -226,7 +226,7 @@
 @endsection
 
 @push('footer')
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             // Save the active tab to local storage
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -246,7 +246,42 @@
                 $('a[href="' + activeTab + '"]').tab('show');
             }
         });
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+            // Simpan tab aktif hanya di halaman /foto/event
+            var currentPath = window.location.pathname;
+    
+            if (currentPath.startsWith('/pelanggan/foto/event')) {
+                // Simpan tab aktif ke localStorage ketika tab berubah
+                $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                    localStorage.setItem('activeTab', $(e.target).attr('href'));
+                });
+    
+                // Cek apakah ada parameter active_tab di URL
+                var urlParams = new URLSearchParams(window.location.search);
+                var activeTab = localStorage.getItem('activeTab');
+    
+                // Jika ada active_tab di URL (misalnya dari pagination), gunakan itu sebagai activeTab
+                if (urlParams.has('active_tab')) {
+                    activeTab = '#' + urlParams.get('active_tab');
+                    localStorage.setItem('activeTab', activeTab); // Simpan di localStorage
+                }
+    
+                // Set tab default ke #home-b3 jika tidak ada activeTab di localStorage atau URL
+                if (!activeTab || activeTab === '#') {
+                    activeTab = '#home-b3';  // Tab default adalah home-b3
+                }
+    
+                // Aktifkan tab sesuai activeTab
+                $('a[href="' + activeTab + '"]').tab('show');
+            } else {
+                // Hapus activeTab dari localStorage jika keluar dari halaman /foto/event
+                localStorage.removeItem('activeTab');
+            }
+        });
     </script>
+    
     <script>
         $(document).ready(function() {
             $('.toggle-wishlist').click(function() {

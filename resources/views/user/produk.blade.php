@@ -116,74 +116,82 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="home-b2">
                     <div class="row">
-                        @foreach ($similarPhotos as $similiar)
-                            <div class="col-md-6 col-lg-4 col-xl-3">
-                                <div class="card product-box">
-                                    <div class="card-body">
-                                        <div class="bg-light">
-                                            <img src="{{ Storage::url($similiar->fotowatermark) }}" alt="product-pic"
-                                                class="img-fluid" />
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="row align-items-center">
-                                                <div class="col">
-                                                    <h5 class="font-16 mt-0 sp-line-1"><a
-                                                            href="ecommerce-product-detail.html" class="text-dark"><i
-                                                                class="fas fa-map-marker-alt"></i>
-                                                            {{ $similiar->event->event }}</a></h5>
-                                                    <h5 class="m-0"> <span class="text-muted"> Fotografer :
-                                                            {{ $similiar->fotografer->nama }}</span>
-                                                    </h5>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="product-price-tag">
-                                                        {{ number_format($similiar->harga / 1000, 0, ',', '.') . 'K' }}
+                        @if ($similarPhotos->isEmpty())
+                            <div class="col-12 text-center mt-5">
+                                <img src="{{ asset('iconrobot/ROBOT RESEARCH.png') }}" alt="No photos found" class="img-fluid" style="max-width: 200px;" />
+                                <h3><strong>Jika foto belum ditemukan, coba tambahkan selfie di menu RoboMu 🤖</strong></h3>
+                                <p>Kamu juga dapat menghubungi/menunggu fotografer untuk mengunggah fotomu. Jangan buat akun kedua.</p>
+                                <a href="{{ route('user.pesanan') }}" class="btn btn-primary">Tambah Selfie</a>
+                            </div>
+                        @else
+                            @foreach ($similarPhotos as $similiar)
+                                <div class="col-md-6 col-lg-4 col-xl-3">
+                                    <div class="card product-box">
+                                        <div class="card-body">
+                                            <div class="bg-light">
+                                                <img src="{{ Storage::url($similiar->fotowatermark) }}" alt="product-pic" class="img-fluid" />
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="row align-items-center">
+                                                    <div class="col">
+                                                        <h5 class="font-16 mt-0 sp-line-1">
+                                                            <a href="ecommerce-product-detail.html" class="text-dark">
+                                                                <i class="fas fa-map-marker-alt"></i> {{ $similiar->event->event }}
+                                                            </a>
+                                                        </h5>
+                                                        <h5 class="m-0">
+                                                            <span class="text-muted">Fotografer: {{ $similiar->fotografer->nama }}</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="product-price-tag">
+                                                            {{ number_format($similiar->harga / 1000, 0, ',', '.') . 'K' }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row align-items-center mt-3">
-                                                <div class="col-12">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <div>
-                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto"
-                                                                title="Klik jika foto tidak sesuai denganMu!" tabindex="0"
-                                                                data-plugin="tippy" data-tippy-interactive="true"
-                                                                data-foto-id="{{ $similiar->id }}"><i
-                                                                    class="mdi mdi-close-circle"></i></span>
-                                                        </div>
-                                                        <div>
-                                                            <form action="{{ route('cart.buyNow') }}" method="POST"
-                                                                class="d-inline">
-                                                                @csrf
-                                                                <input type="hidden" name="foto_id"
-                                                                    value="{{ $similiar->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
-                                                                    Beli Sekarang
+                                                <div class="row align-items-center mt-3">
+                                                    <div class="col-12">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <span class="btn btn-danger waves-effect waves-light hapus-foto"
+                                                                      title="Klik jika foto tidak sesuai denganMu!" tabindex="0"
+                                                                      data-plugin="tippy" data-tippy-interactive="true"
+                                                                      data-foto-id="{{ $similiar->id }}">
+                                                                    <i class="mdi mdi-close-circle"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    <input type="hidden" name="foto_id" value="{{ $similiar->id }}">
+                                                                    <button type="submit"
+                                                                            class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                        Beli Sekarang
+                                                                    </button>
+                                                                </form>
+                                                                <button type="button"
+                                                                        class="btn {{ in_array($similiar->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart"
+                                                                        data-foto-id="{{ $similiar->id }}">
+                                                                    <i class="mdi mdi-cart"></i>
                                                                 </button>
-                                                            </form>
-                                                            <button type="button"
-                                                                class="btn {{ in_array($similiar->id, $cartItemIds) ? 'btn-success' : 'btn-outline-success' }} waves-effect waves-light add-to-cart"
-                                                                data-foto-id="{{ $similiar->id }}">
-                                                                <i class="mdi mdi-cart"></i>
-                                                            </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @endif
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            {{ $similarPhotos->appends(['active_tab' => 'home-b2'])->links('pagination::custom-pagination') }}
+                            {{ $similarPhotos->appends(['active_tab' => 'home-b2', 'similar_page' => request()->get('similar_page')])->links('pagination::custom-pagination') }}
                         </div>
                     </div>
                 </div>
+                
                 <div class="tab-pane" id="profile-b2">
                     <div class="row">
                         @foreach ($event as $eventItem)
@@ -304,7 +312,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            {{ $event->appends(['active_tab' => 'profile-b2'])->links('pagination::custom-pagination') }}
+                            {{ $event->appends(['active_tab' => 'profile-b2', 'event_page' => request()->get('event_page')])->links('pagination::custom-pagination') }}
                         </div>
                     </div>
                 </div>
@@ -318,7 +326,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.default.css">
     <script src="https://cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js"></script>
     {{-- Js untuk pagination --}}
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             // Save the active tab to local storage
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -336,6 +344,40 @@
             // If an active tab is found, activate it
             if (activeTab) {
                 $('a[href="' + activeTab + '"]').tab('show');
+            }
+        });
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+            // Simpan tab aktif hanya di halaman /foto
+            var currentPath = window.location.pathname;
+    
+            if (currentPath === '/pelanggan/foto') {
+                // Simpan tab aktif ke localStorage ketika tab berubah
+                $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                    localStorage.setItem('activeTab', $(e.target).attr('href'));
+                });
+    
+                // Cek apakah ada parameter active_tab di URL
+                var urlParams = new URLSearchParams(window.location.search);
+                var activeTab = localStorage.getItem('activeTab');
+    
+                // Jika ada active_tab di URL (misalnya dari pagination), gunakan itu sebagai activeTab
+                if (urlParams.has('active_tab')) {
+                    activeTab = '#' + urlParams.get('active_tab');
+                    localStorage.setItem('activeTab', activeTab); // Simpan di localStorage
+                }
+    
+                // Set tab default ke #home-b2 jika tidak ada activeTab di localStorage atau URL
+                if (!activeTab || activeTab === '#') {
+                    activeTab = '#home-b2';  // Tab default adalah home-b2
+                }
+    
+                // Aktifkan tab sesuai activeTab
+                $('a[href="' + activeTab + '"]').tab('show');
+            } else {
+                // Hapus activeTab dari localStorage jika keluar dari halaman /foto
+                localStorage.removeItem('activeTab');
             }
         });
     </script>
