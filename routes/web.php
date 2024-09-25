@@ -104,6 +104,7 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/profil', [UserController::class, 'profile'])->name('user.profil');
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');
     Route::get('/retake', [UserController::class, 'retake'])->name('user.retake');
+    Route::get('/robomu', [UserController::class, 'robomu'])->name('user.robomu');
     Route::post('/form-fotodepan', [UserController::class, 'upload_fotodepan'])->name('user.fotodepan');
     Route::get('/form-fotokiri', [UserController::class, 'formfoto_kiri'])->name('user.formfotokiri');
     Route::post('/form-fotokiri', [UserController::class, 'upload_fotokiri'])->name('user.fotokiri');

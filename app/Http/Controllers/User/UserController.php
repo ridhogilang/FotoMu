@@ -31,6 +31,13 @@ class UserController extends Controller
         ]);
     }
 
+    public function robomu()
+    {
+        return view('user.robomu', [
+            "title" => "Fitur Robomu",
+        ]);
+    }
+
     public function formfoto_kiri()
     {
         return view('user.formfoto_kiri', [
