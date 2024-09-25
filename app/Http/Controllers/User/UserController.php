@@ -4,9 +4,10 @@ namespace App\Http\Controllers\User;
 
 use App\Models\User;
 use App\Models\Pesanan;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Wishlist;
+use Illuminate\Http\Request;
+use App\Models\DaftarFotografer;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -188,5 +189,52 @@ class UserController extends Controller
             "pesanan" => $pesanan,
             "foto" => $foto,
         ]);
+    }
+
+    public function become()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+
+        $existingFotografer = DaftarFotografer::where('user_id',  Auth::user()->id)->first();
+
+        if ($existingFotografer) {
+            return redirect()->route('user.produk')->with('info', 'You are already registered as a photographer.');
+        }
+
+        return view('user.become', [
+            "title" => "Become Fotografer",
+            "user" => $user,
+        ]);
+    }
+
+    public function store_fotografer(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
+            'nowa' => 'required',
+            'foto_ktp' => 'required', // 10 MB max
+            'pesan' => 'min:10|max:100',
+        ]);
+
+        // Handle the file upload for 'foto_ktp'
+        $file = $request->file('foto_ktp');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('ktp_photos', $filename, 'public'); // Save in 'storage/app/public/ktp_photos'
+
+        // Create a new photographer entry in the database
+        DaftarFotografer::create([
+            'user_id' => Auth::id(), // Assuming you have user authentication
+            'nama' => $request->input('nama'),
+            'alamat' => $request->input('alamat'),
+            'nowa' => '62' . ltrim($request->input('nowa'), '0'), // Add 62 prefix, remove leading 0 if exists
+            'foto_ktp' => $path, // File path must be present
+            'pesan' => $request->input('pesan'),
+            'status' => 'Pengajuan', // Default status (can be changed according to your app logic)
+        ]);
+
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Pendaftaran berhasil, silakan tunggu konfirmasi!');
     }
 }

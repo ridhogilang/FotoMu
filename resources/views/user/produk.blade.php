@@ -121,7 +121,7 @@
                                 <img src="{{ asset('iconrobot/ROBOT RESEARCH.png') }}" alt="No photos found" class="img-fluid" style="max-width: 200px;" />
                                 <h3><strong>Jika foto belum ditemukan, coba tambahkan selfie di menu RoboMu 🤖</strong></h3>
                                 <p>Kamu juga dapat menghubungi/menunggu fotografer untuk mengunggah fotomu. Jangan buat akun kedua.</p>
-                                <a href="{{ route('user.pesanan') }}" class="btn btn-primary">Tambah Selfie</a>
+                                <a href="{{ route('user.retake') }}" class="btn btn-primary">Tambah Selfie</a>
                             </div>
                         @else
                             @foreach ($similarPhotos as $similiar)

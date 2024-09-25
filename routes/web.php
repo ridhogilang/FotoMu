@@ -55,7 +55,7 @@ Route::prefix('fotografer')->group(function () {
     Route::get('/upload', [FotoFotograferController::class, 'upload'])->name('foto.upload');
     Route::post('/foto/upload', [FotoFotograferController::class, 'upload_foto'])->name('photos.upload');
     Route::post('/foto/store', [FotoFotograferController::class, 'store'])->name('photos.store');
-    Route::post('/event/store', [FotoFotograferController::class, 'event_tambah'])->name('event.store');
+    Route::post('/event/store', [FotograferController::class, 'event_tambah'])->name('event.store');
     Route::get('/file-manager', [FotoFotograferController::class, 'file_manager'])->name('foto.filemanager');
     Route::get('/file-manager/event/{id}', [FotoFotograferController::class, 'foto'])->name('foto.foto');
     Route::delete('/hapus-foto', [FotoFotograferController::class, 'deleteSelectedPhotos'])->name('foto.hapus-foto');
@@ -110,6 +110,9 @@ Route::prefix('pelanggan')->group(function () {
     Route::post('/form-fotokiri', [UserController::class, 'upload_fotokiri'])->name('user.fotokiri');
     Route::get('/form-fotokanan', [UserController::class, 'formfoto_kanan'])->name('user.formfotokanan');
     Route::post('/form-fotokanan', [UserController::class, 'upload_fotokanan'])->name('user.fotokanan');
+    Route::get('/upgrade', [UserController::class, 'become'])->name('user.upgrade');
+    Route::post('/upgrade', [UserController::class, 'store_fotografer'])->name('user.upgrade-store');
+
 
     //tree
     Route::get('/tree', [ProdukController::class, 'tree'])->name('event.tree');
