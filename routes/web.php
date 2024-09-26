@@ -85,10 +85,13 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/foto/event/{id}', [ProdukController::class, 'event'])->name('user.event');
     Route::post('/event/{id}/check-password', [ProdukController::class, 'checkPassword'])->name('event.check-password');
     Route::post('/similar-foto/hapus', [ProdukController::class, 'HapusSimilar'])->name('similar-foto.hapus');
+    Route::post('/similar-foto/pulihkan', [ProdukController::class, 'PulihkanSimilar'])->name('similar-foto.pulihkan');
     Route::get('/search-event', [ProdukController::class, 'search'])->name('event.search');
+    Route::get('/foto/terhapus', [ProdukController::class, 'konten_terhapus'])->name('user.konten-terhapus');
 
     //Wishlist & Cart
     Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
+    Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
     Route::post('/toggle-whishlist', [CartController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::post('/toggle-cart', [CartController::class, 'toggleCart'])->name('cart.toggle');
     Route::delete('/cart/{id}', [CartController::class, 'hapusCart'])->name('cart.destroy');

@@ -75,10 +75,10 @@ class ProdukController extends Controller
 
         // Get the similar photos with pagination (8 items per page)
         $similarPhotos = Foto::whereIn('id', $similarPhotosIds)
-        ->whereHas('similarFoto', function ($query) {
-            $query->where('is_hapus', false);
-        })
-        ->paginate(8, ['*'], 'similar_page');    
+            ->whereHas('similarFoto', function ($query) {
+                $query->where('is_hapus', false);
+            })
+            ->paginate(8, ['*'], 'similar_page');
 
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
 
@@ -122,12 +122,12 @@ class ProdukController extends Controller
         $similarPhotosId = SimilarFoto::where('user_id', $user->id)->pluck('foto_id');
 
         $similarPhotos = Foto::whereIn('id', $similarPhotosId)
-        ->where('event_id', $encryptId)
-        ->whereHas('similarFoto', function ($query) {
-            $query->where('is_hapus', false);
-        })
-        ->paginate(8, ['*'], 'similar_page');
-        
+            ->where('event_id', $encryptId)
+            ->whereHas('similarFoto', function ($query) {
+                $query->where('is_hapus', false);
+            })
+            ->paginate(8, ['*'], 'similar_page');
+
         $wishlist = Wishlist::where('user_id',  $user->id)->pluck('foto_id')->toArray();
 
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
@@ -171,6 +171,25 @@ class ProdukController extends Controller
         }
     }
 
+    public function PulihkanSimilar(Request $request)
+    {
+        $request->validate([
+            'foto_id' => 'required',
+        ]);
+
+        $similarFoto = SimilarFoto::where('user_id', Auth::id())->where('foto_id', $request->foto_id)->first();
+
+        if ($similarFoto) {
+            $similarFoto->is_hapus = false;  // Set is_hapus to false
+            $similarFoto->save();
+
+            return response()->json(['success' => 'Foto berhasil dipulihkan.']);
+        } else {
+            return response()->json(['error' => 'Foto tidak ditemukan.'], 404);
+        }
+    }
+
+
     public function tree()
     {
         return view('user.tree', [
@@ -186,4 +205,24 @@ class ProdukController extends Controller
         // Mengirimkan data event dalam format JSON
         return response()->json($events);
     }
+
+    public function konten_terhapus()
+    {
+        $user = Auth::user();
+
+        $similarPhotosIds = SimilarFoto::where('user_id', $user->id)->pluck('foto_id')->toArray();
+
+        $similarPhotos = Foto::whereIn('id', $similarPhotosIds)
+            ->whereHas('similarFoto', function ($query) {
+                $query->where('is_hapus', true);
+            })
+            ->paginate(8, ['*'], 'similar_page');
+
+        return view('user.deletefoto', [
+            "title" => "Konten Terhapus",
+            "foto" => $similarPhotos,
+        ]);
+    }
+
+   
 }

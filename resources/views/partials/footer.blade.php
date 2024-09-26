@@ -5,8 +5,8 @@
                 <div>
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> © Ubold - <a href="https://coderthemes.com/"
-                        target="_blank">Coderthemes.com</a>
+                    </script> © FotoMu - <a href="https://coderthemes.com/"
+                        target="_blank">fotomu.com</a>
                 </div>
             </div>
             <div class="col-md-6">

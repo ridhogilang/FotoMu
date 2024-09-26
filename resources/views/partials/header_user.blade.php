@@ -153,36 +153,25 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
                     <!-- item-->
-                    <div class="dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">Welcome !</h6>
-                    </div>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('user.profil') }}" class="dropdown-item notify-item">
                         <i class="fe-user"></i>
-                        <span>My Account</span>
+                        <span>Profil</span>
                     </a>
 
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('user.konten-terhapus') }}" class="dropdown-item notify-item">
                         <i class="fe-slash"></i>
                         <span>FotoMu Terhapus</span>
                     </a>
 
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('user.wishlist') }}" class="dropdown-item notify-item">
                         <i class="fe-heart"></i>
                         <span>Favorit FotoMu</span>
                     </a>
 
                     <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-settings"></i>
-                        <span>Settings</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-lock"></i>
-                        <span>Lock Screen</span>
+                    <a href="{{ route('user.robomu') }}" class="dropdown-item notify-item">
+                        <i class="mdi mdi-robot-love-outline"></i>
+                        <span>RoboMu</span>
                     </a>
 
                     <div class="dropdown-divider"></div>
@@ -198,14 +187,6 @@
                         @csrf
                     </form>
                 </div>
-            </li>
-
-            <!-- Right Bar offcanvas button (Theme Customization Panel) -->
-            <li>
-                <a class="nav-link waves-effect waves-light" data-bs-toggle="offcanvas"
-                    href="#theme-settings-offcanvas">
-                    <i class="fe-settings font-22"></i>
-                </a>
             </li>
         </ul>
     </div>
