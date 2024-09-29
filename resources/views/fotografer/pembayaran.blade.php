@@ -220,7 +220,7 @@
                                                     <button type="button"
                                                         class="btn btn-success waves-effect waves-light mb-2"
                                                         id="tarikUangButton">
-                                                        Tarik Uang
+                                                        Tarik Saldo
                                                     </button>
                                                 </div>
                                             </div>
@@ -296,13 +296,28 @@
                                                         <td>Rp.
                                                             {{ number_format($penarikanItem->saldo, 0, ',', '.') }}
                                                         </td>
-                                                        <td>{{ $penarikanItem->status }}</td>
+                                                        @switch($penarikanItem->status)
+                                                            @case('Pending')
+                                                                <td><span
+                                                                        class="badge label-table bg-success">{{ $penarikanItem->status }}</span>
+                                                                </td>
+                                                            @break
+
+                                                            @case('Approved')
+                                                                <td><span
+                                                                        class="badge label-table bg-secondary text-light">{{ $penarikanItem->status }}</span>
+                                                                </td>
+                                                            @break
+
+                                                            @default
+                                                                <td><span
+                                                                        class="badge label-table bg-danger">{{ $penarikanItem->status }}</span>
+                                                                </td>
+                                                        @endswitch
                                                         <td>{{ \Carbon\Carbon::parse($penarikanItem->requested_at)->format('d, M y') }}
                                                         </td>
-                                                        <td>
+                                                        <td class="justify-content-center align-items-center">
                                                             @if ($penarikanItem->status === 'Pending')
-                                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                                        class="mdi mdi-square-edit-outline"></i></a>
                                                                 <a href="javascript:void(0);" class="action-icon"
                                                                     onclick="confirmDelete({{ $penarikanItem->id }})">
                                                                     <i class="mdi mdi-delete"></i>
@@ -310,7 +325,7 @@
                                                             @else
                                                                 -
                                                             @endif
-                                                        </td>
+                                                        </td>                                                        
                                                     </tr>
                                                 @endforeach
                                             </tbody>

@@ -21,7 +21,9 @@ class PemesananController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $pesanan = Pesanan::where('user_id', $user->id)->get();
+        $pesanan = Pesanan::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan tanggal pembuatan secara descending (terbaru di atas)
+            ->get();
 
         return view('user.pesanan', [
             "title" => "Orderan Anda",
@@ -147,8 +149,48 @@ class PemesananController extends Controller
                     'status'             => "Pendapatan"            // Status pendapatan
                 ]);
             }
+
+
+            // Membuat ZIP secara langsung dalam memori
+            $zip = new \ZipArchive();
+            $zipFileName = 'pesanan_' . $pesanan->id . '.zip';
+
+            // Buat file ZIP dalam memori (output buffer)
+            $tempZip = tempnam(sys_get_temp_dir(), $zipFileName);
+            if ($zip->open($tempZip, \ZipArchive::CREATE) === TRUE) {
+                foreach ($detailPesanan as $item) {
+                    $filePath = Storage::path('public/' . Foto::find($item->foto_id)->foto);
+                    $zip->addFile($filePath, basename($filePath)); // Tambahkan file ke dalam zip
+                }
+                $zip->close();
+            }
+
+            // Mengirim file ZIP sebagai respons download
+            return response()->download($tempZip, $zipFileName)->deleteFileAfterSend(true);
         }
 
         return redirect()->route('user.pesanan')->with('success', 'Pesanan anda sudah selesai. Foto sudah disalin ke folder baru.');
+    }
+
+    public function download()
+    {
+        $user = Auth::user();
+
+        $pesanan = DetailPesanan::with(['pesanan', 'user', 'foto']) // Sesuaikan dengan relasi yang ada
+            ->where('user_id', $user->id) // Filter berdasarkan id user
+            ->get()
+            ->groupBy(function ($item) {
+                // Kelompokkan berdasarkan tanggal (format hari/bulan/tahun)
+                return Carbon::parse($item->created_at)->format('d F Y');
+            })
+            ->sortByDesc(function ($items, $tanggal) {
+                // Urutkan tanggal secara descending
+                return Carbon::createFromFormat('d F Y', $tanggal)->timestamp;
+            });
+
+        return view('user.download', [
+            "title" => "Download FotoMu",
+            "pesanan" => $pesanan,
+        ]);
     }
 }

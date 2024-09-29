@@ -50,6 +50,7 @@ Route::prefix('fotografer')->group(function () {
 
     //dashboard
     Route::get('/dashboard', [DashFotograferController::class, 'index'])->name('foto.dashboard');
+    Route::get('/dashboard/search', [DashFotograferController::class, 'index_search'])->name('foto.dashboardsearch');
  
     //Upload Foto
     Route::get('/upload', [FotoFotograferController::class, 'upload'])->name('foto.upload');
@@ -102,6 +103,7 @@ Route::prefix('pelanggan')->group(function () {
     Route::post('/pemesanan', [PemesananController::class, 'store'])->name('user.pemesanan');
     Route::get('/invoice/{id}', [PemesananController::class, 'invoice'])->name('user.invoice');
     Route::get('/checkout/success/{id}', [PemesananController::class, 'success'])->name('checkout.success');
+    Route::get('/download', [PemesananController::class, 'download'])->name('user.download');
 
     //user
     Route::get('/profil', [UserController::class, 'profile'])->name('user.profil');

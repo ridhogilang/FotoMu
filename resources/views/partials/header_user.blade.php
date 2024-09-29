@@ -168,6 +168,11 @@
                         <span>Favorit FotoMu</span>
                     </a>
 
+                    <a href="{{ route('user.download') }}" class="dropdown-item notify-item">
+                        <i class="fe-download"></i>
+                        <span>Download FotoMu</span>
+                    </a>
+
                     <!-- item-->
                     <a href="{{ route('user.robomu') }}" class="dropdown-item notify-item">
                         <i class="mdi mdi-robot-love-outline"></i>

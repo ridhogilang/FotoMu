@@ -47,7 +47,7 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="widgets.php" class="menu-link">
+                            <a href="{{ route('user.download') }}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="download"></i></span>
                                 <span class="menu-text"> Download FotoMu </span>
                             </a>

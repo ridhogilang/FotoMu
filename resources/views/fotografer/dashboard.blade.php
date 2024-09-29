@@ -4,9 +4,18 @@
     <link href="{{ asset('libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/selectize/css/selectize.bootstrap3.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('libs/datatables.net-select-bs5/css//select.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('libs/datatables.net-select-bs5/css//select.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <style>
+        .btn {
+            white-space: nowrap;
+            /* Pastikan konten di dalam tombol tidak dipisahkan menjadi dua baris */
+        }
+    </style>
 @endpush
 
 @section('main')
@@ -19,20 +28,51 @@
                 <div class="col-12">
                     <div class="page-title-box">
                         <div class="page-title-right">
-                            <form class="d-flex align-items-center mb-3">
+                            <form action="{{ route('foto.dashboardsearch') }}" method="GET"
+                                class="d-flex align-items-center mb-3">
+                                @csrf
+                                @php
+                                    $tanggalRequest = request('tanggal');
+                                    if ($tanggalRequest) {
+                                        // Memisahkan rentang tanggal berdasarkan " to "
+                                        $dates = explode(' to ', $tanggalRequest);
+
+                                        // Jika ada dua tanggal (rentang)
+                                        if (count($dates) == 2) {
+                                            $startDate = \Carbon\Carbon::parse($dates[0])->format('F j, y'); // Format ke 'MMMM D, YY'
+                                            $endDate = \Carbon\Carbon::parse($dates[1])->format('F j, y'); // Format ke 'MMMM D, YY'
+                                            $formattedDate = $startDate . ' to ' . $endDate;
+                                        } else {
+                                            // Jika hanya satu tanggal
+                                            $formattedDate = \Carbon\Carbon::parse($dates[0])->format('F j, y');
+                                        }
+                                    } else {
+                                        $formattedDate = '';
+                                    }
+                                @endphp
+
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control border" id="dash-daterange">
+                                    <input type="text" class="form-control border" name="tanggal" value="{{ $formattedDate }}" id="dash-daterange"
+                                         placeholder="Pilih Tanggal">
                                     <span class="input-group-text bg-blue border-blue text-white">
                                         <i class="mdi mdi-calendar-range"></i>
                                     </span>
                                 </div>
-                                <a href="javascript: void(0);" class="btn btn-blue btn-sm ms-2">
-                                    <i class="mdi mdi-autorenew"></i>
+
+                                {{-- {{ dd($formattedDate) }} --}}
+
+
+                                <button type="submit" class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
+                                    <i class="mdi mdi-filter-variant me-1"></i> Filter
+                                </button>
+
+                                <a href="{{ route('foto.dashboard') }}"
+                                    class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
+                                    <i class="mdi mdi-find-replace me-1"></i> Hapus Filter
                                 </a>
-                                <a href="javascript: void(0);" class="btn btn-blue btn-sm ms-1">
-                                    <i class="mdi mdi-filter-variant"></i>
-                                </a>
+
                             </form>
+
                         </div>
                         <h4 class="page-title">Dashboard</h4>
                     </div>
@@ -214,6 +254,7 @@
                                     <thead>
                                         <tr class="table-light">
                                             <th>No. </th>
+                                            <th>Tanggal</th>
                                             <th>ID Pesanan (Invoice)</th>
                                             <th>Event</th>
                                             <th>Pendapatan (Setelah Pajak)</th>
@@ -221,13 +262,15 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($detailPesanan as $pesanan)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>#0000{{ $pesanan['id_pesanan'] }}</td>
-                                            <td>{{ $pesanan['event'] }}</td>
-                                            <td>Rp {{ number_format($pesanan['pendapatan'], 0, ',', '.') }}</td>
-                                        </tr>
-                                    @endforeach
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pesanan['created_at'])->format('j M y') }}
+                                                </td>
+                                                <td>#0000{{ $pesanan['id_pesanan'] }}</td>
+                                                <td>{{ $pesanan['event'] }}</td>
+                                                <td>Rp {{ number_format($pesanan['pendapatan'], 0, ',', '.') }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -239,176 +282,72 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                </div>
+                                <a href="{{ route('foto.pembayaran') }}"
+                                    class="btn btn-primary btn-sm waves-effect waves-light">Tarik Saldo</a>
                             </div>
 
-                            <h4 class="header-title mb-3">Revenue History</h4>
+                            <h4 class="header-title mb-3">Penarikan Saldo</h4>
 
                             <div class="table-responsive">
-                                <table class="table table-borderless table-nowrap table-hover table-centered m-0">
-
-                                    <thead class="table-light">
+                                <table id="basic-datatable" class="table table-centered table-nowrap table-hover mb-0">
+                                    <thead>
                                         <tr>
-                                            <th>Marketplaces</th>
-                                            <th>Date</th>
-                                            <th>Payouts</th>
+                                            <th>No. </th>
+                                            <th>Rekening</th>
+                                            <th>Jumlah</th>
+                                            <th>Saldo</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Pengajuan</th>
+                                            <th style="width: 82px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Themes Market</h5>
-                                            </td>
+                                        @foreach ($withdrawal as $penarikanItem)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $penarikanItem->rekening->nama }} -
+                                                    {{ $penarikanItem->rekening->nama_bank }}</td>
+                                                <td>Rp.
+                                                    {{ number_format($penarikanItem->jumlah, 0, ',', '.') }}
+                                                </td>
+                                                <td>Rp.
+                                                    {{ number_format($penarikanItem->saldo, 0, ',', '.') }}
+                                                </td>
+                                                @switch($penarikanItem->status)
+                                                    @case('Pending')
+                                                        <td><span
+                                                                class="badge label-table bg-success">{{ $penarikanItem->status }}</span>
+                                                        </td>
+                                                    @break
 
-                                            <td>
-                                                Oct 15, 2018
-                                            </td>
+                                                    @case('Approved')
+                                                        <td><span
+                                                                class="badge label-table bg-secondary text-light">{{ $penarikanItem->status }}</span>
+                                                        </td>
+                                                    @break
 
-                                            <td>
-                                                $5848.68
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-warning text-warning">Upcoming</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Freelance</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 12, 2018
-                                            </td>
-
-                                            <td>
-                                                $1247.25
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-success text-success">Paid</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Share Holding</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 10, 2018
-                                            </td>
-
-                                            <td>
-                                                $815.89
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-success text-success">Paid</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Envato's Affiliates</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 03, 2018
-                                            </td>
-
-                                            <td>
-                                                $248.75
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-danger text-danger">Overdue</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Marketing Revenue</h5>
-                                            </td>
-
-                                            <td>
-                                                Sep 21, 2018
-                                            </td>
-
-                                            <td>
-                                                $978.21
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-warning text-warning">Upcoming</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Advertise Revenue</h5>
-                                            </td>
-
-                                            <td>
-                                                Sep 15, 2018
-                                            </td>
-
-                                            <td>
-                                                $358.10
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-success text-success">Paid</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
+                                                    @default
+                                                        <td><span
+                                                                class="badge label-table bg-danger">{{ $penarikanItem->status }}</span>
+                                                        </td>
+                                                @endswitch
+                                                <td>{{ \Carbon\Carbon::parse($penarikanItem->requested_at)->format('d, M y') }}
+                                                </td>
+                                                <td class="justify-content-center align-items-center">
+                                                    @if ($penarikanItem->status === 'Pending')
+                                                        <a href="javascript:void(0);" class="action-icon"
+                                                            onclick="confirmDelete({{ $penarikanItem->id }})">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </a>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
-                            </div> <!-- end .table-responsive-->
+                            </div>
                         </div>
                     </div> <!-- end card-->
                 </div> <!-- end col -->
@@ -519,4 +458,78 @@
             });
         });
     </script>
+   <script>
+    $(document).ready(function() {
+        // Ambil tanggal dari request dan format
+        var initialDate = "{{ request('tanggal') }}"; // Ambil dari request
+
+        // Hanya jika ada tanggal dari request, disable interupsi dari skrip lain
+        if (initialDate) {
+            // Pisahkan jika ada rentang tanggal dengan " to "
+            var dates = initialDate.split(' to ');
+
+            if (dates.length === 2) {
+                // Jika ada dua tanggal (rentang)
+                var startDate = moment(dates[0], 'YYYY-MM-DD').format('MMMM D, YY');
+                var endDate = moment(dates[1], 'YYYY-MM-DD').format('MMMM D, YY');
+
+                // Set tanggal di daterangepicker tanpa memperbarui input otomatis
+                $('#dash-daterange').daterangepicker({
+                    startDate: moment(dates[0]),
+                    endDate: moment(dates[1]),
+                    locale: {
+                        format: 'MMMM D, YY' // Pastikan format sesuai
+                    },
+                    autoUpdateInput: false // Jangan perbarui input otomatis
+                });
+
+                // Set input field manual dengan tanggal dari request
+                $('#dash-daterange').val(startDate + ' to ' + endDate);
+            } else {
+                // Jika hanya satu tanggal
+                var singleDate = moment(dates[0], 'YYYY-MM-DD').format('MMMM D, YY');
+
+                // Set satu tanggal di daterangepicker
+                $('#dash-daterange').daterangepicker({
+                    startDate: moment(dates[0]),
+                    endDate: moment(dates[0]),
+                    locale: {
+                        format: 'MMMM D, YY' // Format yang diinginkan
+                    },
+                    autoUpdateInput: false // Jangan perbarui input otomatis
+                });
+
+                // Tampilkan di input dengan format yang diinginkan
+                $('#dash-daterange').val(singleDate);
+            }
+        } else {
+            // Jika tidak ada request, set up daterangepicker seperti biasa
+            $('#dash-daterange').daterangepicker({
+                locale: {
+                    format: 'MMMM D, YY', // Format yang diinginkan
+                },
+                autoUpdateInput: false, // Jangan perbarui input otomatis
+                showDropdowns: true, // Menambahkan dropdown untuk memilih tahun dan bulan
+            });
+        }
+
+        // Event saat user memilih rentang tanggal
+        $('#dash-daterange').on('apply.daterangepicker', function(ev, picker) {
+            if (picker.startDate.format('MMMM D, YY') === picker.endDate.format('MMMM D, YY')) {
+                // Jika tanggal awal dan akhir sama, tampilkan hanya satu tanggal
+                $(this).val(picker.startDate.format('MMMM D, YY'));
+            } else {
+                // Jika ada rentang, tampilkan "startDate to endDate"
+                $(this).val(picker.startDate.format('MMMM D, YY') + ' to ' + picker.endDate.format(
+                    'MMMM D, YY'));
+            }
+        });
+
+        // Event saat user membatalkan pilihan tanggal
+        $('#dash-daterange').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val(''); // Kosongkan input jika user batal
+        });
+    });
+</script>
+
 @endpush
