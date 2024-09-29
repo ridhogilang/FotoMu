@@ -50,12 +50,13 @@ Route::prefix('fotografer')->group(function () {
 
     //dashboard
     Route::get('/dashboard', [DashFotograferController::class, 'index'])->name('foto.dashboard');
+    Route::get('/dashboard/search', [DashFotograferController::class, 'index_search'])->name('foto.dashboardsearch');
  
     //Upload Foto
     Route::get('/upload', [FotoFotograferController::class, 'upload'])->name('foto.upload');
     Route::post('/foto/upload', [FotoFotograferController::class, 'upload_foto'])->name('photos.upload');
     Route::post('/foto/store', [FotoFotograferController::class, 'store'])->name('photos.store');
-    Route::post('/event/store', [FotoFotograferController::class, 'event_tambah'])->name('event.store');
+    Route::post('/event/store', [FotograferController::class, 'event_tambah'])->name('event.store');
     Route::get('/file-manager', [FotoFotograferController::class, 'file_manager'])->name('foto.filemanager');
     Route::get('/file-manager/event/{id}', [FotoFotograferController::class, 'foto'])->name('foto.foto');
     Route::delete('/hapus-foto', [FotoFotograferController::class, 'deleteSelectedPhotos'])->name('foto.hapus-foto');
@@ -85,10 +86,13 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/foto/event/{id}', [ProdukController::class, 'event'])->name('user.event');
     Route::post('/event/{id}/check-password', [ProdukController::class, 'checkPassword'])->name('event.check-password');
     Route::post('/similar-foto/hapus', [ProdukController::class, 'HapusSimilar'])->name('similar-foto.hapus');
+    Route::post('/similar-foto/pulihkan', [ProdukController::class, 'PulihkanSimilar'])->name('similar-foto.pulihkan');
     Route::get('/search-event', [ProdukController::class, 'search'])->name('event.search');
+    Route::get('/foto/terhapus', [ProdukController::class, 'konten_terhapus'])->name('user.konten-terhapus');
 
     //Wishlist & Cart
     Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
+    Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
     Route::post('/toggle-whishlist', [CartController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::post('/toggle-cart', [CartController::class, 'toggleCart'])->name('cart.toggle');
     Route::delete('/cart/{id}', [CartController::class, 'hapusCart'])->name('cart.destroy');
@@ -99,16 +103,21 @@ Route::prefix('pelanggan')->group(function () {
     Route::post('/pemesanan', [PemesananController::class, 'store'])->name('user.pemesanan');
     Route::get('/invoice/{id}', [PemesananController::class, 'invoice'])->name('user.invoice');
     Route::get('/checkout/success/{id}', [PemesananController::class, 'success'])->name('checkout.success');
+    Route::get('/download', [PemesananController::class, 'download'])->name('user.download');
 
     //user
     Route::get('/profil', [UserController::class, 'profile'])->name('user.profil');
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');
     Route::get('/retake', [UserController::class, 'retake'])->name('user.retake');
+    Route::get('/robomu', [UserController::class, 'robomu'])->name('user.robomu');
     Route::post('/form-fotodepan', [UserController::class, 'upload_fotodepan'])->name('user.fotodepan');
     Route::get('/form-fotokiri', [UserController::class, 'formfoto_kiri'])->name('user.formfotokiri');
     Route::post('/form-fotokiri', [UserController::class, 'upload_fotokiri'])->name('user.fotokiri');
     Route::get('/form-fotokanan', [UserController::class, 'formfoto_kanan'])->name('user.formfotokanan');
     Route::post('/form-fotokanan', [UserController::class, 'upload_fotokanan'])->name('user.fotokanan');
+    Route::get('/upgrade', [UserController::class, 'become'])->name('user.upgrade');
+    Route::post('/upgrade', [UserController::class, 'store_fotografer'])->name('user.upgrade-store');
+
 
     //tree
     Route::get('/tree', [ProdukController::class, 'tree'])->name('event.tree');

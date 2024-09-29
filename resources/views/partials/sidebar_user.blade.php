@@ -47,7 +47,7 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="widgets.php" class="menu-link">
+                            <a href="{{ route('user.download') }}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="download"></i></span>
                                 <span class="menu-text"> Download FotoMu </span>
                             </a>
@@ -70,9 +70,9 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="{{ route('user.cart') }}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="camera"></i></span>
-                                <span class="menu-text"> Perbaharui Wajah </span>
+                            <a href="{{ route('user.robomu') }}" class="menu-link">
+                                <span class="menu-icon"><i class="mdi mdi-robot-love-outline"></i></span>
+                                <span class="menu-text"> RoboMu </span>
                             </a>
                         </li>
                     </ul>

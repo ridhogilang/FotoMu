@@ -18,6 +18,8 @@ return new class extends Migration
             $table->decimal('jumlah');
             $table->decimal('saldo');
             $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            $table->string('bukti_foto')->nullable();
+            $table->text('pesan')->nullable();
             $table->timestamp('requested_at')->useCurrent();
             $table->timestamp('processed_at')->nullable();
             $table->timestamps();

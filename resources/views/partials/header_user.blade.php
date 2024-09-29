@@ -6,14 +6,14 @@
             <div class="logo-box">
                 <!-- Brand Logo Light -->
                 <a href="index.php" class="logo-light">
-                    <img src="assets/images/logo-light.png" alt="logo" class="logo-lg">
-                    <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm">
+                    <img src="{{ asset('images/logo-light.png') }}" alt="logo" class="logo-lg">
+                    <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
                 </a>
 
                 <!-- Brand Logo Dark -->
                 <a href="index.php" class="logo-dark">
-                    <img src="assets/images/logo-dark.png" alt="dark logo" class="logo-lg">
-                    <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm">
+                    <img src="{{ asset('images/logo-dark.png') }}" alt="dark logo" class="logo-lg">
+                    <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
                 </a>
             </div>
 
@@ -21,221 +21,22 @@
             <button class="button-toggle-menu">
                 <i class="mdi mdi-menu"></i>
             </button>
-
-            <!-- Dropdown Menu -->
-            <div class="dropdown d-none d-xl-block">
-                <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false">
-                    Create New
-                    <i class="mdi mdi-chevron-down ms-1"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-briefcase me-1"></i>
-                        <span>New Projects</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-user me-1"></i>
-                        <span>Create Users</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-bar-chart-line- me-1"></i>
-                        <span>Revenue Report</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-settings me-1"></i>
-                        <span>Settings</span>
-                    </a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-headphones me-1"></i>
-                        <span>Help & Support</span>
-                    </a>
-
-                </div>
-            </div>
-
-            <!-- Mega Menu Dropdown -->
-            <div class="dropdown dropdown-mega d-none d-xl-block">
-                <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false">
-                    Mega Menu
-                    <i class="mdi mdi-chevron-down  ms-1"></i>
-                </a>
-                <div class="dropdown-menu dropdown-megamenu">
-                    <div class="row">
-                        <div class="col-sm-8">
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h5 class="text-dark mt-0">UI Components</h5>
-                                    <ul class="list-unstyled megamenu-list">
-                                        <li>
-                                            <a href="widgets.php">Widgets</a>
-                                        </li>
-                                        <li>
-                                            <a href="extended-nestable.php">Nestable List</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Range Sliders</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-gallery.php">Masonry Items</a>
-                                        </li>
-                                        <li>
-                                            <a href="extended-sweet-alert.php">Sweet Alerts</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Treeview Page</a>
-                                        </li>
-                                        <li>
-                                            <a href="extended-tour.php">Tour Page</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <h5 class="text-dark mt-0">Applications</h5>
-                                    <ul class="list-unstyled megamenu-list">
-                                        <li>
-                                            <a href="ecommerce-products.php">eCommerce Pages</a>
-                                        </li>
-                                        <li>
-                                            <a href="crm-dashboard.php">CRM Pages</a>
-                                        </li>
-                                        <li>
-                                            <a href="email-inbox.php">Email</a>
-                                        </li>
-                                        <li>
-                                            <a href="apps-calendar.php">Calendar</a>
-                                        </li>
-                                        <li>
-                                            <a href="contacts-list.php">Team Contacts</a>
-                                        </li>
-                                        <li>
-                                            <a href="task-kanban-board.php">Task Board</a>
-                                        </li>
-                                        <li>
-                                            <a href="email-templates.php">Email Templates</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <h5 class="text-dark mt-0">Extra Pages</h5>
-                                    <ul class="list-unstyled megamenu-list">
-                                        <li>
-                                            <a href="javascript:void(0);">Left Sidebar with User</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Menu Collapsed</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Small Left Sidebar</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">New Header Style</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-search-results.php">Search Result</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-gallery.php">Gallery Pages</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-coming-soon.php">Maintenance & Coming Soon</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="text-center mt-3">
-                                <h3 class="text-dark">Special Discount Sale!</h3>
-                                <h4>Save up to 70% off.</h4>
-                                <a href="https://1.envato.market/uboldadmin" target="_blank"
-                                    class="btn btn-primary rounded-pill mt-3">Download Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <ul class="topbar-menu d-flex align-items-center">
             <!-- Topbar Search Form -->
-            <li class="app-search dropdown me-3 d-none d-lg-block">
-                <form>
-                    <input type="search" class="form-control rounded-pill" placeholder="Search..." id="top-search">
-                    <span class="fe-search search-icon font-16"></span>
-                </form>
-                <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
-                    <!-- item-->
-                    <div class="dropdown-header noti-title">
-                        <h5 class="text-overflow mb-2">Found 22 results</h5>
-                    </div>
+            @php
+                // Check if the authenticated user is already in DaftarFotografer
+                $isFotografer = \App\Models\DaftarFotografer::where('user_id', Auth::id())->exists();
+            @endphp
 
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-home me-1"></i>
-                        <span>Analytics Report</span>
+            @if (!$isFotografer)
+                <li class="app-search dropdown me-3 d-none d-lg-block">
+                    <a href="{{ route('user.upgrade') }}" class="btn btn-info rounded-pill waves-effect waves-light">
+                        <i class="mdi mdi-camera me-1"></i> Become Fotografer
                     </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-aperture me-1"></i>
-                        <span>How can I help you?</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-settings me-1"></i>
-                        <span>User profile settings</span>
-                    </a>
-
-                    <!-- item-->
-                    <div class="dropdown-header noti-title">
-                        <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
-                    </div>
-
-                    <div class="notification-list">
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <div class="d-flex align-items-start">
-                                <img class="d-flex me-2 rounded-circle" src="assets/images/users/user-2.jpg"
-                                    alt="Generic placeholder image" height="32">
-                                <div class="w-100">
-                                    <h5 class="m-0 font-14">Erwin E. Brown</h5>
-                                    <span class="font-12 mb-0">UI Designer</span>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <div class="d-flex align-items-start">
-                                <img class="d-flex me-2 rounded-circle" src="assets/images/users/user-5.jpg"
-                                    alt="Generic placeholder image" height="32">
-                                <div class="w-100">
-                                    <h5 class="m-0 font-14">Jacob Deo</h5>
-                                    <span class="font-12 mb-0">Developer</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </li>
-
+                </li>
+            @endif
             <!-- Fullscreen Button -->
             <li class="d-none d-md-inline-block">
                 <a class="nav-link waves-effect waves-light" href="" data-toggle="fullscreen">
@@ -284,12 +85,14 @@
                             <a href="javascript:void(0);"
                                 class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-1">
                                 <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted" id="close-btn-{{ $cart->id }}" data-id="{{ $cart->id }}"><i
+                                    <span class="float-end noti-close-btn text-muted"
+                                        id="close-btn-{{ $cart->id }}" data-id="{{ $cart->id }}"><i
                                             class="mdi mdi-close"></i></span>
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0">
                                             <div class="notify-icon bg-primary">
-                                                <img src="{{ Storage::url($cart->foto->fotowatermark) }}" alt="Icon" style="width: 40px; height: 40px;">
+                                                <img src="{{ Storage::url($cart->foto->fotowatermark) }}"
+                                                    alt="Icon" style="width: 40px; height: 40px;">
                                             </div>
                                         </div>
                                         <div class="flex-grow-1 text-truncate ms-2">
@@ -343,43 +146,37 @@
             <li class="dropdown">
                 <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown"
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <img src="assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">
+                    <img src="{{ asset('images/users/user-1.jpg') }}" alt="user-image" class="rounded-circle">
                     <span class="ms-1 d-none d-md-inline-block">
                         {{ Auth::user()->name }} <i class="mdi mdi-chevron-down"></i>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
                     <!-- item-->
-                    <div class="dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">Welcome !</h6>
-                    </div>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('user.profil') }}" class="dropdown-item notify-item">
                         <i class="fe-user"></i>
-                        <span>My Account</span>
+                        <span>Profil</span>
                     </a>
 
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('user.konten-terhapus') }}" class="dropdown-item notify-item">
                         <i class="fe-slash"></i>
                         <span>FotoMu Terhapus</span>
                     </a>
 
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="{{ route('user.wishlist') }}" class="dropdown-item notify-item">
                         <i class="fe-heart"></i>
                         <span>Favorit FotoMu</span>
                     </a>
 
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-settings"></i>
-                        <span>Settings</span>
+                    <a href="{{ route('user.download') }}" class="dropdown-item notify-item">
+                        <i class="fe-download"></i>
+                        <span>Download FotoMu</span>
                     </a>
 
                     <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                        <i class="fe-lock"></i>
-                        <span>Lock Screen</span>
+                    <a href="{{ route('user.robomu') }}" class="dropdown-item notify-item">
+                        <i class="mdi mdi-robot-love-outline"></i>
+                        <span>RoboMu</span>
                     </a>
 
                     <div class="dropdown-divider"></div>
@@ -395,14 +192,6 @@
                         @csrf
                     </form>
                 </div>
-            </li>
-
-            <!-- Right Bar offcanvas button (Theme Customization Panel) -->
-            <li>
-                <a class="nav-link waves-effect waves-light" data-bs-toggle="offcanvas"
-                    href="#theme-settings-offcanvas">
-                    <i class="fe-settings font-22"></i>
-                </a>
             </li>
         </ul>
     </div>

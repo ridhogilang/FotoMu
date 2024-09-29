@@ -48,7 +48,7 @@
                                         <button type="button" class="btn btn-success waves-effect waves-light me-1">
                                             <i class="mdi mdi-cog"></i>
                                         </button>
-                                        <a href="ecommerce-product-edit.html"
+                                        <a href="{{ route('event.tree') }}"
                                             class="btn btn-danger waves-effect waves-light">
                                             <i class="mdi mdi-map-marker me-1"></i> Lihat Lokasi
                                         </a>
@@ -168,7 +168,7 @@
                                                                 class="fas fa-map-marker-alt"></i>
                                                             {{ $FotoAll->event->event }}</a></h5>
                                                     <h5 class="m-0"> <span class="text-muted"> Fotografer :
-                                                            {{ $FotoAll->fotografer->name }}</span>
+                                                            {{ $FotoAll->fotografer->nama }}</span>
                                                     </h5>
                                                 </div>
                                                 <div class="col-auto">

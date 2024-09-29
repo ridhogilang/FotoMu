@@ -4,16 +4,15 @@
 
             <!-- Topbar Brand Logo -->
             <div class="logo-box">
-                <!-- Brand Logo Light -->
                 <a href="index.php" class="logo-light">
-                    <img src="assets/images/logo-light.png" alt="logo" class="logo-lg">
-                    <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm">
+                    <img src="{{ asset('images/logo-light.png') }}" alt="logo" class="logo-lg">
+                    <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
                 </a>
 
                 <!-- Brand Logo Dark -->
                 <a href="index.php" class="logo-dark">
-                    <img src="assets/images/logo-dark.png" alt="dark logo" class="logo-lg">
-                    <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm">
+                    <img src="{{ asset('images/logo-dark.png') }}" alt="dark logo" class="logo-lg">
+                    <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
                 </a>
             </div>
 
@@ -21,155 +20,6 @@
             <button class="button-toggle-menu">
                 <i class="mdi mdi-menu"></i>
             </button>
-
-            <!-- Dropdown Menu -->
-            <div class="dropdown d-none d-xl-block">
-                <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false">
-                    Create New
-                    <i class="mdi mdi-chevron-down ms-1"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-briefcase me-1"></i>
-                        <span>New Projects</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-user me-1"></i>
-                        <span>Create Users</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-bar-chart-line- me-1"></i>
-                        <span>Revenue Report</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-settings me-1"></i>
-                        <span>Settings</span>
-                    </a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <i class="fe-headphones me-1"></i>
-                        <span>Help & Support</span>
-                    </a>
-
-                </div>
-            </div>
-
-            <!-- Mega Menu Dropdown -->
-            <div class="dropdown dropdown-mega d-none d-xl-block">
-                <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false">
-                    Mega Menu
-                    <i class="mdi mdi-chevron-down  ms-1"></i>
-                </a>
-                <div class="dropdown-menu dropdown-megamenu">
-                    <div class="row">
-                        <div class="col-sm-8">
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h5 class="text-dark mt-0">UI Components</h5>
-                                    <ul class="list-unstyled megamenu-list">
-                                        <li>
-                                            <a href="widgets.php">Widgets</a>
-                                        </li>
-                                        <li>
-                                            <a href="extended-nestable.php">Nestable List</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Range Sliders</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-gallery.php">Masonry Items</a>
-                                        </li>
-                                        <li>
-                                            <a href="extended-sweet-alert.php">Sweet Alerts</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Treeview Page</a>
-                                        </li>
-                                        <li>
-                                            <a href="extended-tour.php">Tour Page</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <h5 class="text-dark mt-0">Applications</h5>
-                                    <ul class="list-unstyled megamenu-list">
-                                        <li>
-                                            <a href="ecommerce-products.php">eCommerce Pages</a>
-                                        </li>
-                                        <li>
-                                            <a href="crm-dashboard.php">CRM Pages</a>
-                                        </li>
-                                        <li>
-                                            <a href="email-inbox.php">Email</a>
-                                        </li>
-                                        <li>
-                                            <a href="apps-calendar.php">Calendar</a>
-                                        </li>
-                                        <li>
-                                            <a href="contacts-list.php">Team Contacts</a>
-                                        </li>
-                                        <li>
-                                            <a href="task-kanban-board.php">Task Board</a>
-                                        </li>
-                                        <li>
-                                            <a href="email-templates.php">Email Templates</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <h5 class="text-dark mt-0">Extra Pages</h5>
-                                    <ul class="list-unstyled megamenu-list">
-                                        <li>
-                                            <a href="javascript:void(0);">Left Sidebar with User</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Menu Collapsed</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">Small Left Sidebar</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">New Header Style</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-search-results.php">Search Result</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-gallery.php">Gallery Pages</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages-coming-soon.php">Maintenance & Coming Soon</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="text-center mt-3">
-                                <h3 class="text-dark">Special Discount Sale!</h3>
-                                <h4>Save up to 70% off.</h4>
-                                <a href="https://1.envato.market/uboldadmin" target="_blank"
-                                    class="btn btn-primary rounded-pill mt-3">Download Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <ul class="topbar-menu d-flex align-items-center">
@@ -241,109 +91,6 @@
                 <a class="nav-link waves-effect waves-light" href="" data-toggle="fullscreen">
                     <i class="fe-maximize font-22"></i>
                 </a>
-            </li>
-
-            <!-- Search Dropdown (for Mobile/Tablet) -->
-            <li class="dropdown d-lg-none">
-                <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none" data-bs-toggle="dropdown"
-                    href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <i class="ri-search-line font-22"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
-                    <form class="p-3">
-                        <input type="search" class="form-control" placeholder="Search ..."
-                            aria-label="Recipient's username">
-                    </form>
-                </div>
-            </li>
-
-            <!-- App Dropdown -->
-            <li class="dropdown d-none d-md-inline-block">
-                <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none" data-bs-toggle="dropdown"
-                    href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <i class="fe-grid font-22"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg p-0">
-
-                    <div class="p-2">
-                        <div class="row g-0">
-                            <div class="col">
-                                <a class="dropdown-icon-item" href="#">
-                                    <img src="assets/images/brands/slack.png" alt="slack">
-                                    <span>Slack</span>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a class="dropdown-icon-item" href="#">
-                                    <img src="assets/images/brands/github.png" alt="Github">
-                                    <span>GitHub</span>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a class="dropdown-icon-item" href="#">
-                                    <img src="assets/images/brands/dribbble.png" alt="dribbble">
-                                    <span>Dribbble</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="row g-0">
-                            <div class="col">
-                                <a class="dropdown-icon-item" href="#">
-                                    <img src="assets/images/brands/bitbucket.png" alt="bitbucket">
-                                    <span>Bitbucket</span>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a class="dropdown-icon-item" href="#">
-                                    <img src="assets/images/brands/dropbox.png" alt="dropbox">
-                                    <span>Dropbox</span>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a class="dropdown-icon-item" href="#">
-                                    <img src="assets/images/brands/g-suite.png" alt="G Suite">
-                                    <span>G Suite</span>
-                                </a>
-                            </div>
-                        </div> <!-- end row-->
-                    </div>
-                </div>
-            </li>
-
-            <!-- Language flag dropdown  -->
-            <li class="dropdown d-none d-md-inline-block">
-                <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none" data-bs-toggle="dropdown"
-                    href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <img src="assets/images/flags/us.jpg" alt="user-image" class="me-0 me-sm-1" height="18">
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated">
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="assets/images/flags/germany.jpg" alt="user-image" class="me-1" height="12">
-                        <span class="align-middle">German</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="assets/images/flags/italy.jpg" alt="user-image" class="me-1" height="12">
-                        <span class="align-middle">Italian</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="assets/images/flags/spain.jpg" alt="user-image" class="me-1" height="12">
-                        <span class="align-middle">Spanish</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="assets/images/flags/russia.jpg" alt="user-image" class="me-1" height="12">
-                        <span class="align-middle">Russian</span>
-                    </a>
-
-                </div>
             </li>
 
             <!-- Notofication dropdown -->
@@ -507,9 +254,9 @@
             <li class="dropdown">
                 <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown"
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <img src="assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">
+                    <img src="{{ asset('images/users/user-1.jpg') }}" alt="user-image" class="rounded-circle">
                     <span class="ms-1 d-none d-md-inline-block">
-                        Geneva <i class="mdi mdi-chevron-down"></i>
+                        {{ Auth::user()->name }} <i class="mdi mdi-chevron-down"></i>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end profile-dropdown ">

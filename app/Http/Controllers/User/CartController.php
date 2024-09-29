@@ -143,4 +143,21 @@ class CartController extends Controller
         // Redirect to the cart page with the specific foto_id
         return redirect()->route('user.cart', ['foto_id' => $request->foto_id])->with('success', 'Foto berhasil ditambahkan ke cart!');
     }
+
+    public function wishlist()
+    {
+        $user = Auth::user();
+
+        $wishlist = Wishlist::where('user_id',  $user->id)->pluck('foto_id')->toArray();
+        $wishlistAll = Wishlist::where('user_id',  $user->id)->paginate(8, ['*'], 'semua_page');
+
+        $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
+
+        return view('user.wishlist', [
+            "title" => "Wishlist FotoMu",
+            "semuaFoto" => $wishlistAll,
+            "wishlist" => $wishlist,
+            "cartItemIds" => $cartItemIds,
+        ]);
+    }
 }
