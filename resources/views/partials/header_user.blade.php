@@ -5,13 +5,13 @@
             <!-- Topbar Brand Logo -->
             <div class="logo-box">
                 <!-- Brand Logo Light -->
-                <a href="index.php" class="logo-light">
+                <a href="{{ route('user.produk') }}" class="logo-light">
                     <img src="{{ asset('images/logo-light.png') }}" alt="logo" class="logo-lg">
                     <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
                 </a>
 
                 <!-- Brand Logo Dark -->
-                <a href="index.php" class="logo-dark">
+                <a href="{{ route('user.produk') }}" class="logo-dark">
                     <img src="{{ asset('images/logo-dark.png') }}" alt="dark logo" class="logo-lg">
                     <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
                 </a>
@@ -146,7 +146,7 @@
             <li class="dropdown">
                 <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown"
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <img src="{{ asset('images/users/user-1.jpg') }}" alt="user-image" class="rounded-circle">
+                    <img src="{{ asset('iconrobot/user/user1.png') }}" alt="user-image" class="rounded-circle">
                     <span class="ms-1 d-none d-md-inline-block">
                         {{ Auth::user()->name }} <i class="mdi mdi-chevron-down"></i>
                     </span>

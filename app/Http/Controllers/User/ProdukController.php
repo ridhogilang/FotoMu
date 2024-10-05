@@ -10,6 +10,7 @@ use App\Models\SimilarFoto;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Jobs\CompareFacesJob;
+use App\Jobs\CompareEventFacesJob;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -78,7 +79,11 @@ class ProdukController extends Controller
             ->whereHas('similarFoto', function ($query) {
                 $query->where('is_hapus', false);
             })
+            ->whereHas('event', function ($query) {
+                $query->where('is_private', false); // Hanya event yang tidak private
+            })
             ->paginate(8, ['*'], 'similar_page');
+
 
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
 
@@ -114,11 +119,14 @@ class ProdukController extends Controller
     {
         $user = Auth::user();
 
+        // Dekripsi ID event
         $encryptId = Crypt::decryptString($id);
         $event = Event::withCount('foto')->find($encryptId);
 
+        // Foto berdasarkan event_id
         $foto = Foto::where('event_id', $encryptId)->paginate(8, ['*'], 'semua_page');
 
+        // Foto yang serupa yang sudah dibandingkan
         $similarPhotosId = SimilarFoto::where('user_id', $user->id)->pluck('foto_id');
 
         $similarPhotos = Foto::whereIn('id', $similarPhotosId)
@@ -128,9 +136,42 @@ class ProdukController extends Controller
             })
             ->paginate(8, ['*'], 'similar_page');
 
+        // Foto yang ada di wishlist
         $wishlist = Wishlist::where('user_id',  $user->id)->pluck('foto_id')->toArray();
 
+        // Foto yang ada di keranjang
         $cartItemIds = Cart::where('user_id', Auth::id())->pluck('foto_id')->toArray();
+
+        // Ambil foto yang sudah dibandingkan sebelumnya oleh user
+        $comparedPhotoIds = DB::table('user_foto_comparisons')
+            ->where('user_id', $user->id)
+            ->where('is_compared', true)
+            ->pluck('foto_id')
+            ->toArray();
+
+        // Ambil foto-foto dari event yang belum dibandingkan
+        $newPhotos = Foto::where('event_id', $encryptId)
+            ->whereNotIn('id', $comparedPhotoIds)
+            ->get();
+
+        if ($newPhotos->isNotEmpty()) {
+            foreach ($newPhotos as $foto) {
+                $fotoPath = storage_path('app/public/' . $foto->foto);
+                $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
+
+                // Dispatch job for each photo comparison
+                CompareEventFacesJob::dispatch($user->id, $foto->id, $userPhotoPath, $fotoPath);
+
+                // Tandai foto ini telah diproses
+                DB::table('user_foto_comparisons')->insert([
+                    'user_id' => $user->id,
+                    'foto_id' => $foto->id,
+                    'is_compared' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
 
         return view('user.event', [
             "title" => "Foto Anda",
@@ -141,6 +182,8 @@ class ProdukController extends Controller
             "cartItemIds" => $cartItemIds,
         ]);
     }
+
+
 
     public function checkPassword(Request $request, $id)
     {
@@ -223,6 +266,4 @@ class ProdukController extends Controller
             "foto" => $similarPhotos,
         ]);
     }
-
-   
 }

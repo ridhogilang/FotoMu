@@ -65,6 +65,7 @@ Route::prefix('fotografer')->group(function () {
 
     //profil
     Route::get('/profil', [FotograferController::class, 'profil'])->name('foto.profil');
+    Route::get('/tree', [FotograferController::class, 'tree'])->name('foto.tree');
 
     //Pembayaran
     Route::get('/pembayaran', [PembayaranController::class, 'pembayaran'])->name('foto.pembayaran');

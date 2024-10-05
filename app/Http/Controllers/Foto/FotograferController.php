@@ -82,4 +82,11 @@ class FotograferController extends Controller
         // Redirect atau tampilkan pesan sukses
         return redirect()->back()->with('success', 'Event created successfully!');
     }
+
+    public function tree()
+    {
+        return view('fotografer.tree', [
+            "title" => "Tree",
+        ]);
+    }
 }

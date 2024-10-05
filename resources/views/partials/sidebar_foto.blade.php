@@ -1,10 +1,10 @@
 <div class="app-menu">
     <div class="logo-box">
-        <a href="index.php" class="logo-light">
+        <a href="{{ route('foto.dashboard') }}" class="logo-light">
             <img src="assets/images/logo-light.png" alt="logo" class="logo-lg">
             <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm">
         </a>
-        <a href="index.php" class="logo-dark">
+        <a href="{{ route('foto.dashboard') }}" class="logo-dark">
             <img src="assets/images/logo-dark.png" alt="dark logo" class="logo-lg">
             <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm">
         </a>
@@ -19,7 +19,7 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('event.tree') }}" class="menu-link">
+                <a href="{{ route('foto.tree') }}" class="menu-link">
                     <span class="menu-icon"><i data-feather="map"></i></span>
                     <span class="menu-text"> FotoMu Tree </span>
                 </a>
