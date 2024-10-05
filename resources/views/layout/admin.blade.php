@@ -21,9 +21,9 @@
 
         <div class="content-page">
 
-           @include('partials.header')
+            @include('partials.header')
 
-           @yield('main')
+            @yield('main')
 
             @include('partials.footer')
         </div>
@@ -58,7 +58,10 @@
     <script>
         document.documentElement.setAttribute('data-bs-theme', 'light');
         document.documentElement.setAttribute('data-topbar-color', 'light');
+        document.documentElement.setAttribute('data-layout', 'vertical');
     </script>
     @stack('footer')
 </body>
+
 </html>
+

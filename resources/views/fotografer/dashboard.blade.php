@@ -52,8 +52,8 @@
                                 @endphp
 
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control border" name="tanggal" value="{{ $formattedDate }}" id="dash-daterange"
-                                         placeholder="Pilih Tanggal">
+                                    <input type="text" class="form-control border" name="tanggal"
+                                        value="{{ $formattedDate }}" id="dash-daterange" placeholder="Pilih Tanggal">
                                     <span class="input-group-text bg-blue border-blue text-white">
                                         <i class="mdi mdi-calendar-range"></i>
                                     </span>
@@ -65,11 +65,13 @@
                                 <button type="submit" class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
                                     <i class="mdi mdi-filter-variant me-1"></i> Filter
                                 </button>
-
-                                <a href="{{ route('foto.dashboard') }}"
-                                    class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
-                                    <i class="mdi mdi-find-replace me-1"></i> Hapus Filter
-                                </a>
+                                
+                                @if ($formattedDate)
+                                    <a href="{{ route('foto.dashboard') }}"
+                                        class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
+                                        <i class="mdi mdi-find-replace me-1"></i> Hapus Filter
+                                    </a>
+                                @endif
 
                             </form>
 
@@ -458,78 +460,77 @@
             });
         });
     </script>
-   <script>
-    $(document).ready(function() {
-        // Ambil tanggal dari request dan format
-        var initialDate = "{{ request('tanggal') }}"; // Ambil dari request
+    <script>
+        $(document).ready(function() {
+            // Ambil tanggal dari request dan format
+            var initialDate = "{{ request('tanggal') }}"; // Ambil dari request
 
-        // Hanya jika ada tanggal dari request, disable interupsi dari skrip lain
-        if (initialDate) {
-            // Pisahkan jika ada rentang tanggal dengan " to "
-            var dates = initialDate.split(' to ');
+            // Hanya jika ada tanggal dari request, disable interupsi dari skrip lain
+            if (initialDate) {
+                // Pisahkan jika ada rentang tanggal dengan " to "
+                var dates = initialDate.split(' to ');
 
-            if (dates.length === 2) {
-                // Jika ada dua tanggal (rentang)
-                var startDate = moment(dates[0], 'YYYY-MM-DD').format('MMMM D, YY');
-                var endDate = moment(dates[1], 'YYYY-MM-DD').format('MMMM D, YY');
+                if (dates.length === 2) {
+                    // Jika ada dua tanggal (rentang)
+                    var startDate = moment(dates[0], 'YYYY-MM-DD').format('MMMM D, YY');
+                    var endDate = moment(dates[1], 'YYYY-MM-DD').format('MMMM D, YY');
 
-                // Set tanggal di daterangepicker tanpa memperbarui input otomatis
-                $('#dash-daterange').daterangepicker({
-                    startDate: moment(dates[0]),
-                    endDate: moment(dates[1]),
-                    locale: {
-                        format: 'MMMM D, YY' // Pastikan format sesuai
-                    },
-                    autoUpdateInput: false // Jangan perbarui input otomatis
-                });
+                    // Set tanggal di daterangepicker tanpa memperbarui input otomatis
+                    $('#dash-daterange').daterangepicker({
+                        startDate: moment(dates[0]),
+                        endDate: moment(dates[1]),
+                        locale: {
+                            format: 'MMMM D, YY' // Pastikan format sesuai
+                        },
+                        autoUpdateInput: false // Jangan perbarui input otomatis
+                    });
 
-                // Set input field manual dengan tanggal dari request
-                $('#dash-daterange').val(startDate + ' to ' + endDate);
+                    // Set input field manual dengan tanggal dari request
+                    $('#dash-daterange').val(startDate + ' to ' + endDate);
+                } else {
+                    // Jika hanya satu tanggal
+                    var singleDate = moment(dates[0], 'YYYY-MM-DD').format('MMMM D, YY');
+
+                    // Set satu tanggal di daterangepicker
+                    $('#dash-daterange').daterangepicker({
+                        startDate: moment(dates[0]),
+                        endDate: moment(dates[0]),
+                        locale: {
+                            format: 'MMMM D, YY' // Format yang diinginkan
+                        },
+                        autoUpdateInput: false // Jangan perbarui input otomatis
+                    });
+
+                    // Tampilkan di input dengan format yang diinginkan
+                    $('#dash-daterange').val(singleDate);
+                }
             } else {
-                // Jika hanya satu tanggal
-                var singleDate = moment(dates[0], 'YYYY-MM-DD').format('MMMM D, YY');
-
-                // Set satu tanggal di daterangepicker
+                // Jika tidak ada request, set up daterangepicker seperti biasa
                 $('#dash-daterange').daterangepicker({
-                    startDate: moment(dates[0]),
-                    endDate: moment(dates[0]),
                     locale: {
-                        format: 'MMMM D, YY' // Format yang diinginkan
+                        format: 'MMMM D, YY', // Format yang diinginkan
                     },
-                    autoUpdateInput: false // Jangan perbarui input otomatis
+                    autoUpdateInput: false, // Jangan perbarui input otomatis
+                    showDropdowns: true, // Menambahkan dropdown untuk memilih tahun dan bulan
                 });
-
-                // Tampilkan di input dengan format yang diinginkan
-                $('#dash-daterange').val(singleDate);
             }
-        } else {
-            // Jika tidak ada request, set up daterangepicker seperti biasa
-            $('#dash-daterange').daterangepicker({
-                locale: {
-                    format: 'MMMM D, YY', // Format yang diinginkan
-                },
-                autoUpdateInput: false, // Jangan perbarui input otomatis
-                showDropdowns: true, // Menambahkan dropdown untuk memilih tahun dan bulan
+
+            // Event saat user memilih rentang tanggal
+            $('#dash-daterange').on('apply.daterangepicker', function(ev, picker) {
+                if (picker.startDate.format('MMMM D, YY') === picker.endDate.format('MMMM D, YY')) {
+                    // Jika tanggal awal dan akhir sama, tampilkan hanya satu tanggal
+                    $(this).val(picker.startDate.format('MMMM D, YY'));
+                } else {
+                    // Jika ada rentang, tampilkan "startDate to endDate"
+                    $(this).val(picker.startDate.format('MMMM D, YY') + ' to ' + picker.endDate.format(
+                        'MMMM D, YY'));
+                }
             });
-        }
 
-        // Event saat user memilih rentang tanggal
-        $('#dash-daterange').on('apply.daterangepicker', function(ev, picker) {
-            if (picker.startDate.format('MMMM D, YY') === picker.endDate.format('MMMM D, YY')) {
-                // Jika tanggal awal dan akhir sama, tampilkan hanya satu tanggal
-                $(this).val(picker.startDate.format('MMMM D, YY'));
-            } else {
-                // Jika ada rentang, tampilkan "startDate to endDate"
-                $(this).val(picker.startDate.format('MMMM D, YY') + ' to ' + picker.endDate.format(
-                    'MMMM D, YY'));
-            }
+            // Event saat user membatalkan pilihan tanggal
+            $('#dash-daterange').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val(''); // Kosongkan input jika user batal
+            });
         });
-
-        // Event saat user membatalkan pilihan tanggal
-        $('#dash-daterange').on('cancel.daterangepicker', function(ev, picker) {
-            $(this).val(''); // Kosongkan input jika user batal
-        });
-    });
-</script>
-
+    </script>
 @endpush
