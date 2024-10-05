@@ -226,19 +226,21 @@ class FotoFotograferController extends Controller
         $fotos = Foto::whereIn('id', $fotoIds)->get();
 
         foreach ($fotos as $foto) {
+            Log::info('Memproses foto dengan ID:', ['foto_id' => $foto->id, 'foto' => $foto->foto, 'fotowatermark' => $foto->fotowatermark]);
+        
             // Cek apakah foto_id ada di DetailPesanan
             $isInPesanan = DetailPesanan::where('foto_id', $foto->id)->exists();
-
+        
             if ($isInPesanan) {
                 // Jika ada di DetailPesanan, update kolom is_hapus menjadi true
                 $foto->update(['is_hapus' => true]);
             } else {
                 // Jika tidak ada di DetailPesanan, hapus foto fisik dan database record
-                if (Storage::disk('public')->exists($foto->foto)) {
+                if ($foto->foto && Storage::disk('public')->exists($foto->foto)) {
                     Storage::disk('public')->delete($foto->foto);
                 }
-
-                if (Storage::disk('public')->exists($foto->fotowatermark)) {
+        
+                if ($foto->fotowatermark && Storage::disk('public')->exists($foto->fotowatermark)) {
                     Storage::disk('public')->delete($foto->fotowatermark);
                 }
                 // Hapus dari database

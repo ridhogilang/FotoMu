@@ -26,9 +26,9 @@ class RedirectIfAuthenticated
                 if ($user->hasRole('admin')) {
                     return redirect('/admin/dashboard');
                 } elseif ($user->hasRole('foto')) {
-                    return redirect('/fotografer');
+                    return redirect('/fotografer/dashboard');
                 } elseif ($user->hasRole('user')) {
-                    return redirect('/pelanggan');
+                    return redirect('/pelanggan/foto');
                 }
 
                 // Default redirect if no role matches

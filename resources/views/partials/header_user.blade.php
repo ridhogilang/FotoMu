@@ -85,9 +85,8 @@
                             <a href="javascript:void(0);"
                                 class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-1">
                                 <div class="card-body">
-                                    <span class="float-end noti-close-btn text-muted"
-                                        id="close-btn-{{ $cart->id }}" data-id="{{ $cart->id }}"><i
-                                            class="mdi mdi-close"></i></span>
+                                    <span class="float-end noti-close-btn text-muted" id="close-btn-{{ $cart->id }}"
+                                        data-id="{{ $cart->id }}"><i class="mdi mdi-close"></i></span>
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0">
                                             <div class="notify-icon bg-primary">
@@ -178,6 +177,14 @@
                         <i class="mdi mdi-robot-love-outline"></i>
                         <span>RoboMu</span>
                     </a>
+
+                    @if (\App\Models\Fotografer::where('user_id', Auth::id())->exists())
+                        <a href="{{ route('foto.dashboard') }}" class="dropdown-item notify-item">
+                            <i class="mdi mdi-view-dashboard"></i>
+                            <span>Dashboard Fotografer</span>
+                        </a>
+                    @endif
+
 
                     <div class="dropdown-divider"></div>
 

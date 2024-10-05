@@ -22,7 +22,7 @@
 
         <div class="content-page">
 
-           @include('partials.header')
+           @include('partials.header_foto')
 
            @yield('main')
 
