@@ -70,22 +70,33 @@
 
             <li class="menu-item">
                 <a href="#FotoMu" data-bs-toggle="collapse" class="menu-link">
-                    <span class="menu-icon"><i data-feather="camera"></i></span>
+                    <span class="menu-icon"><i data-feather="image"></i></span>
                     <span class="menu-text"> Fotomu </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <div class="collapse" id="FotoMu">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="ecommerce-dashboard.php" class="menu-link">
+                            <a href="{{ route('admin.fotokontrol') }}" class="menu-link">
                                 <span class="menu-text">Foto Kontrol</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="ecommerce-products.php" class="menu-link">
+                            <a href="{{ route('admin.event') }}" class="menu-link">
                                 <span class="menu-text">Event</span>
                             </a>
                         </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="menu-item">
+                <a href="#Fotografer" data-bs-toggle="collapse" class="menu-link">
+                    <span class="menu-icon"><i data-feather="camera"></i></span>
+                    <span class="menu-text"> Fotografer </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="Fotografer">
+                    <ul class="sub-menu">
                         <li class="menu-item">
                             <a href="ecommerce-product-detail.php" class="menu-link">
                                 <span class="menu-text">Pendaftaran Fotografer</span>

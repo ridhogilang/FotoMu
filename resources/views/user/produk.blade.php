@@ -84,11 +84,6 @@
                                             Galeri
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="#messages-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                                            Messages
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
                         </div>

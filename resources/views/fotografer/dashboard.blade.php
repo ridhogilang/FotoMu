@@ -249,7 +249,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Top 5 Users Balances</h4>
+                            <h4 class="header-title mb-3">Pendapatan</h4>
 
                             <div class="table-responsive">
                                 <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">

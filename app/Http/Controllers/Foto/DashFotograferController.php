@@ -68,8 +68,8 @@ class DashFotograferController extends Controller
             ->join('foto', 'detail_pesanan.foto_id', '=', 'foto.id')
             ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id')  // Join ke pesanan
             ->where('pesanan.status', 'Selesai')
-            ->whereMonth('pesanan.created_at', 9)
-            ->whereYear('pesanan.created_at', 2024)
+            ->whereMonth('pesanan.created_at', $currentMonth)
+            ->whereYear('pesanan.created_at', $currentYear)
             ->groupBy(DB::raw('DAY(pesanan.created_at)'))
             ->get();
 

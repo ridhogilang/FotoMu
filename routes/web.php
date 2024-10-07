@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\FotomuAdminController;
 use App\Http\Controllers\User\ProdukController;
 use App\Http\Controllers\Foto\FotograferController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -42,6 +43,11 @@ Route::post('/update-password', [AuthController::class, 'updatePassword'])->name
 Route::prefix('admin')->group(function () {
     // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    Route::get('/foto-kontrol', [FotomuAdminController::class, 'fotomu_kontrol'])->name('admin.fotokontrol');
+    Route::get('/foto-kontrol/event/{id}', [FotomuAdminController::class, 'foto'])->name('admin.fotoevent');
+    Route::get('/admin-fotohapus', [FotomuAdminController::class, 'AdmindeleteSelectedPhotos'])->name('admin.hapusfoto');
+    Route::get('/event', [FotomuAdminController::class, 'event'])->name('admin.event');
     // });
 });
 

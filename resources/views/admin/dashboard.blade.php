@@ -3,6 +3,40 @@
 @push('header')
     <link href="{{ asset('libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/selectize/css/selectize.bootstrap3.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('libs/datatables.net-select-bs5/css//select.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <style>
+        #total-revenue {
+            width: 100%;
+            height: 300px;
+            /* Sesuaikan dengan tinggi yang cukup */
+            max-width: 300px;
+            /* Batasi lebar agar grafik tidak terlalu besar */
+            margin: 0 auto;
+            /* Pastikan elemen berada di tengah */
+            display: block;
+        }
+
+        .widget-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        #sales-analytics1 {
+            width: 100%;
+            /* Sesuaikan lebar agar memenuhi card */
+            height: 100%;
+            /* Sesuaikan tinggi agar memenuhi card */
+        }
+    </style>
 @endpush
 
 @section('main')
@@ -44,8 +78,9 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">58,947</span></h3>
-                                        <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                        <h3 class="text-dark mt-1"><span
+                                                data-plugin="counterup">{{ $jmlFotoTerjual }}</span></h3>
+                                        <p class="text-muted mb-1 text-truncate">Foto Terjual</p>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -64,9 +99,10 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">127</span>
+                                        <h3 class="text-dark mt-1"><span>Rp
+                                                {{ number_format($totalPenghasilan, 0, ',', '.') }}</span>
                                         </h3>
-                                        <p class="text-muted mb-1 text-truncate">Today's Sales</p>
+                                        <p class="text-muted mb-1 text-truncate">Penghasilan Kotor</p>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -85,8 +121,9 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0.58</span>%</h3>
-                                        <p class="text-muted mb-1 text-truncate">Conversion</p>
+                                        <h3 class="text-dark mt-1"><span
+                                                data-plugin="counterup">{{ $totalEventAktif }}</span></h3>
+                                        <p class="text-muted mb-1 text-truncate">Event Aktif</p>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -105,8 +142,9 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">78.41</span>k</h3>
-                                        <p class="text-muted mb-1 text-truncate">Today's Visits</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{ $fotoAktif }}</span>
+                                        </h3>
+                                        <p class="text-muted mb-1 text-truncate">Foto Aktif</p>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -141,28 +179,15 @@
 
                             <div class="widget-chart text-center" dir="ltr">
 
-                                <div id="total-revenue" class="mt-0" data-colors="#f1556c"></div>
+                                <div id="total-revenue1" class="mt-0" data-colors="#f1556c"></div>
 
                                 <h5 class="text-muted mt-0">Total sales made today</h5>
-                                <h2>$178</h2>
+                                <h2>{{ 'Rp. ' . number_format($totalPembelianBersih, 0, ',', '.') }}
+                                </h2>
 
                                 <p class="text-muted w-75 mx-auto sp-line-2">Traditional heading elements are
                                     designed to work best in the meat of your page content.</p>
 
-                                <div class="row mt-3">
-                                    <div class="col-4">
-                                        <p class="text-muted font-15 mb-1 text-truncate">Target</p>
-                                        <h4><i class="fe-arrow-down text-danger me-1"></i>$7.8k</h4>
-                                    </div>
-                                    <div class="col-4">
-                                        <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
-                                        <h4><i class="fe-arrow-up text-success me-1"></i>$1.4k</h4>
-                                    </div>
-                                    <div class="col-4">
-                                        <p class="text-muted font-15 mb-1 text-truncate">Last Month</p>
-                                        <h4><i class="fe-arrow-down text-danger me-1"></i>$15k</h4>
-                                    </div>
-                                </div>
 
                             </div>
                         </div>
@@ -183,7 +208,7 @@
                             <h4 class="header-title mb-3">Sales Analytics</h4>
 
                             <div dir="ltr">
-                                <div id="sales-analytics" class="mt-4" data-colors="#1abc9c,#4a81d4">
+                                <div id="sales-analytics1" class="mt-4" data-colors="#1abc9c,#4a81d4">
                                 </div>
                             </div>
                         </div>
@@ -211,181 +236,33 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Top 5 Users Balances</h4>
+                            <h4 class="header-title mb-3">Pendapatan</h4>
 
                             <div class="table-responsive">
-                                <table class="table table-borderless table-hover table-nowrap table-centered m-0">
-
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th colspan="2">Profile</th>
-                                            <th>Currency</th>
-                                            <th>Balance</th>
-                                            <th>Reserved in orders</th>
-                                            <th>Action</th>
+                                <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100" style="table-layout: fixed;">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th style="width: 10px; overflow: hidden;">No. </th>
+                                            <th style="width: 90px; overflow: hidden;">Tanggal</th>
+                                            <th style="width: 90px; overflow: hidden;">ID Pesanan</th>
+                                            <th style="width: 90px; overflow: hidden;">Event</th>
+                                            <th style="width: 90px; overflow: hidden;">Pendapatan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td style="width: 36px;">
-                                                <img src="assets/images/users/user-2.jpg" alt="contact-img"
-                                                    title="contact-img" class="rounded-circle avatar-sm" />
-                                            </td>
-
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Tomaslau</h5>
-                                                <p class="mb-0 text-muted"><small>Member Since 2017</small>
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <i class="mdi mdi-currency-btc text-primary"></i> BTC
-                                            </td>
-
-                                            <td>
-                                                0.00816117 BTC
-                                            </td>
-
-                                            <td>
-                                                0.00097036 BTC
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-plus"></i></a>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
-                                                        class="mdi mdi-minus"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td style="width: 36px;">
-                                                <img src="assets/images/users/user-3.jpg" alt="contact-img"
-                                                    title="contact-img" class="rounded-circle avatar-sm" />
-                                            </td>
-
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Erwin E. Brown</h5>
-                                                <p class="mb-0 text-muted"><small>Member Since 2017</small>
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <i class="mdi mdi-currency-eth text-primary"></i> ETH
-                                            </td>
-
-                                            <td>
-                                                3.16117008 ETH
-                                            </td>
-
-                                            <td>
-                                                1.70360009 ETH
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-plus"></i></a>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
-                                                        class="mdi mdi-minus"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 36px;">
-                                                <img src="assets/images/users/user-4.jpg" alt="contact-img"
-                                                    title="contact-img" class="rounded-circle avatar-sm" />
-                                            </td>
-
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Margeret V. Ligon</h5>
-                                                <p class="mb-0 text-muted"><small>Member Since 2017</small>
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <i class="mdi mdi-currency-eur text-primary"></i> EUR
-                                            </td>
-
-                                            <td>
-                                                25.08 EUR
-                                            </td>
-
-                                            <td>
-                                                12.58 EUR
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-plus"></i></a>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
-                                                        class="mdi mdi-minus"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 36px;">
-                                                <img src="assets/images/users/user-5.jpg" alt="contact-img"
-                                                    title="contact-img" class="rounded-circle avatar-sm" />
-                                            </td>
-
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Jose D. Delacruz</h5>
-                                                <p class="mb-0 text-muted"><small>Member Since 2017</small>
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <i class="mdi mdi-currency-cny text-primary"></i> CNY
-                                            </td>
-
-                                            <td>
-                                                82.00 CNY
-                                            </td>
-
-                                            <td>
-                                                30.83 CNY
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-plus"></i></a>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
-                                                        class="mdi mdi-minus"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 36px;">
-                                                <img src="assets/images/users/user-6.jpg" alt="contact-img"
-                                                    title="contact-img" class="rounded-circle avatar-sm" />
-                                            </td>
-
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Luke J. Sain</h5>
-                                                <p class="mb-0 text-muted"><small>Member Since 2017</small>
-                                                </p>
-                                            </td>
-
-                                            <td>
-                                                <i class="mdi mdi-currency-btc text-primary"></i> BTC
-                                            </td>
-
-                                            <td>
-                                                2.00816117 BTC
-                                            </td>
-
-                                            <td>
-                                                1.00097036 BTC
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-plus"></i></a>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i
-                                                        class="mdi mdi-minus"></i></a>
-                                            </td>
-                                        </tr>
-
+                                        @foreach ($detailPesanan as $pesanan)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pesanan['created_at'])->format('j M y') }}</td>
+                                                <td>#0000{{ $pesanan['id_pesanan'] }}</td>
+                                                <td>{{ $pesanan['event'] }}</td>
+                                                <td>Rp {{ number_format($pesanan['pendapatan'], 0, ',', '.') }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
+                                                   
                         </div>
                     </div>
                 </div> <!-- end col -->
@@ -576,6 +453,144 @@
     <script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('libs/selectize/js/standalone/selectize.min.js') }}"></script>
+    <script src="{{ asset('js/pages/dashboard-1.init.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
+    <script src="{{ asset('libs/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('libs/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('js/pages/datatables.init.js') }}"></script>
+    <script>
+        // Total pendapatan hari ini
+        var totalRevenueToday = {{ $totalPembelianBersih }}; // Pendapatan Rp 178,000
+        var totalTarget = 1000000; // Total penuh adalah Rp 1,000,000 (1 juta rupiah)
+
+        // Hitung persentase dari total pendapatan hari ini
+        var percentageRevenue = (totalRevenueToday / totalTarget) * 100;
+
+        var options = {
+            chart: {
+                type: 'radialBar',
+                height: 250,
+                width: 300,
+            },
+            series: [percentageRevenue], // Persentase pendapatan hari ini
+            labels: ['Revenue'],
+            plotOptions: {
+                radialBar: {
+                    dataLabels: {
+                        name: {
+                            fontSize: '22px',
+                        },
+                        value: {
+                            fontSize: '16px',
+                            formatter: function(val) {
+                                return parseFloat(val).toFixed(0) + "%"; // Menampilkan persentase
+                            }
+                        },
+                        total: {
+                            show: true,
+                            label: 'Target',
+                            formatter: function() {
+                                return 'Rp. 1jt'; // Nilai total yang ditampilkan
+                            }
+                        }
+                    }
+                }
+            },
+            colors: ['#f1556c'], // Warna lingkaran
+        }
+
+        var chart = new ApexCharts(document.querySelector("#total-revenue1"), options);
+        chart.render();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Script is running");
+
+            var days = {!! json_encode($days) !!};
+            var revenues = {!! json_encode($revenueData) !!}; // Convert to numbers
+            var sales = {!! json_encode($salesData) !!}; // Convert to numbers
+
+            console.log("Revenues after conversion:", revenues);
+
+            var chartElement = document.querySelector("#sales-analytics1");
+            if (!chartElement) {
+                console.error("Element #sales-analytics tidak ditemukan di halaman.");
+                return;
+            }
+
+            var options = {
+                chart: {
+                    height: 330,
+                    width: 850,
+                    type: 'line',
+                    stacked: false
+                },
+                stroke: {
+                    width: [0, 2],
+                    curve: 'smooth'
+                },
+                plotOptions: {
+                    bar: {
+                        columnWidth: '50%'
+                    }
+                },
+                colors: ['#1abc9c', '#4a81d4'],
+                series: [{
+                    name: 'Revenue',
+                    type: 'column',
+                    data: revenues,
+                }, {
+                    name: 'Sales',
+                    type: 'line',
+                    data: sales,
+                }],
+                xaxis: {
+                    categories: days,
+                },
+                yaxis: [{
+                    title: {
+                        text: 'Revenue'
+                    },
+                    labels: {
+                        formatter: function(val) {
+                            return "Rp " + val.toLocaleString();
+                        }
+                    }
+                }, {
+                    opposite: true,
+                    title: {
+                        text: 'Sales'
+                    }
+                }],
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                    y: {
+                        formatter: function(val, {
+                            seriesIndex
+                        }) {
+                            return seriesIndex === 0 ?
+                                "Rp " + val.toLocaleString() :
+                                val + " transactions";
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(chartElement, options);
+            chart.render().catch(err => {
+                console.error("ApexCharts render error:", err);
+            });
+        });
+    </script>
 @endpush
-
-
