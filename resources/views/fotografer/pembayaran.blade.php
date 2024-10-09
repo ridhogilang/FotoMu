@@ -461,7 +461,7 @@
                 $('#otpModal').modal('show'); // Tampilkan modal OTP
 
                 $.ajax({
-                    url: "{{ route('bank.store') }}", // Arahkan ke route store rekening
+                    url: "/fotografer/bank/store", // Arahkan ke route store rekening
                     method: "POST",
                     data: $(this).serialize(),
                     success: function(response) {
@@ -486,7 +486,7 @@
 
                 // Kirim OTP ke server melalui AJAX
                 $.ajax({
-                    url: "{{ route('bank.verifyOtp') }}", // Ganti dengan route verifikasi OTP
+                    url: "/fotografer/bank/verify-otp", // Ganti dengan route verifikasi OTP
                     method: "POST",
                     data: {
                         otp: otp, // Kirim OTP sebagai satu string
@@ -582,7 +582,7 @@
             $('#resend-timer').on('click', function() {
                 if ($(this).hasClass('active')) { // Pastikan tombol aktif setelah timer habis
                     $.ajax({
-                        url: "{{ route('bank.resendOtp') }}", // Route untuk resend OTP
+                        url: "/fotografer/bank/resend-otp", // Route untuk resend OTP
                         method: "POST",
                         success: function(response) {
                             alert('OTP baru telah dikirim.');

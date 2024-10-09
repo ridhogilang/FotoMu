@@ -149,8 +149,7 @@
     <script>
         $(document).on('click', '.hapus-cart', function() {
             var cartId = $(this).data('id'); // Mengambil ID cart item dari atribut data-id
-            var url = '{{ route('cart.destroy', ':id') }}';
-            url = url.replace(':id', cartId);
+            var url = '/pelanggan/cart/' + + cartId;
 
             const toastMixin = Swal.mixin({
                 toast: true,

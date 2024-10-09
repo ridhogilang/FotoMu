@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Foto;
 use App\Models\Event;
 use Illuminate\Http\Request;
@@ -135,6 +136,49 @@ class FotomuAdminController extends Controller
             "eventAll" => $eventAll
         ]);
     }
+
+    public function event_update(Request $request, $id)
+    {
+        $event = Event::findOrFail($id);
+    
+        // Validasi input dengan kondisi khusus
+        $rules = [
+            'event' => 'required|string|max:255',
+            'tanggal' => 'required|date_format:Y-m-d',
+            'is_private' => 'required|boolean',
+            'deskripsi' => 'nullable|string',
+            'lokasi' => 'required|string',
+        ];
+    
+        // Tambahkan aturan validasi untuk password hanya jika event bersifat private
+        if ($request->input('is_private') == 1) {
+            $rules['password'] = 'required|string|min:6';
+        }
+    
+        // Validasi data input
+        $validatedData = $request->validate($rules);
+    
+        // Set data event dengan input yang telah divalidasi
+        $event->event = $validatedData['event'];
+        $event->tanggal = Carbon::parse($validatedData['tanggal']);
+        $event->is_private = $validatedData['is_private'];
+        $event->deskripsi = $validatedData['deskripsi'] ?? null; // Deskripsi opsional
+        $event->lokasi = $validatedData['lokasi'];
+    
+        // Simpan password hanya jika event bersifat private
+        if ($validatedData['is_private'] == 1) {
+            $event->password = bcrypt($validatedData['password']);
+        } else {
+            $event->password = null; // Jika event public, password dihapus
+        }
+    
+        // Simpan perubahan pada event ke dalam database
+        $event->save();
+    
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Event berhasil diperbarui!');
+    }
+    
 
     private function formatSizeUnits($bytes)
     {

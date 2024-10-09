@@ -288,7 +288,7 @@
                 var button = $(this);
                 var fotoId = button.data('foto-id');
                 $.ajax({
-                    url: '{{ route('wishlist.toggle') }}',
+                    url: '/pelanggan/toggle-whishlist',
                     type: 'POST',
                     data: {
                         foto_id: fotoId,
@@ -364,7 +364,7 @@
                 var button = $(this);
                 var fotoId = button.data('foto-id');
                 $.ajax({
-                    url: '{{ route('cart.toggle') }}',
+                    url: '/pelanggan/toggle-cart',
                     type: 'POST',
                     data: {
                         foto_id: fotoId,
@@ -441,7 +441,7 @@
                 var fotoId = button.data('foto-id');
 
                 $.ajax({
-                    url: '{{ route('similar-foto.hapus') }}', // Route ke updateHapus
+                    url: '/pelanggan/similar-foto/hapus', // Route ke updateHapus
                     type: 'POST',
                     data: {
                         foto_id: fotoId,

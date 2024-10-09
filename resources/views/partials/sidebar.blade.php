@@ -98,12 +98,12 @@
                 <div class="collapse" id="Fotografer">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="ecommerce-product-detail.php" class="menu-link">
+                            <a href="{{ route('admin.daftar-foto') }}" class="menu-link">
                                 <span class="menu-text">Pendaftaran Fotografer</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="ecommerce-product-edit.php" class="menu-link">
+                            <a href="{{ route('admin.fotografer') }}" class="menu-link">
                                 <span class="menu-text">Fotografer Aktif</span>
                             </a>
                         </li>

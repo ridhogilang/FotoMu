@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminFotograferController;
 use App\Http\Controllers\Admin\FotomuAdminController;
 use App\Http\Controllers\User\ProdukController;
 use App\Http\Controllers\Foto\FotograferController;
@@ -48,6 +49,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/foto-kontrol/event/{id}', [FotomuAdminController::class, 'foto'])->name('admin.fotoevent');
     Route::get('/admin-fotohapus', [FotomuAdminController::class, 'AdmindeleteSelectedPhotos'])->name('admin.hapusfoto');
     Route::get('/event', [FotomuAdminController::class, 'event'])->name('admin.event');
+    Route::put('/event/update/{id}', [FotomuAdminController::class, 'event_update'])->name('admin.event-update');
+
+    Route::get('/daftar-fotografer', [AdminFotograferController::class, 'pendaftaran_fotografer'])->name('admin.daftar-foto');
+    Route::get('/fotografer', [AdminFotograferController::class, 'fotografer'])->name('admin.fotografer');
     // });
 });
 
