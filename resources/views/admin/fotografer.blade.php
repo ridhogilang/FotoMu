@@ -18,12 +18,11 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tickets</a></li>
-                                <li class="breadcrumb-item active">Ticket List</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Fotografer</a></li>
+                                <li class="breadcrumb-item active">Fotografer List</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Event</h4>
+                        <h4 class="page-title">Fotografer</h4>
                     </div>
                 </div>
             </div>
@@ -32,7 +31,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title mb-4">Event Aktif</h4>
+                            <h4 class="header-title mb-4">Fotografer Aktif</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"

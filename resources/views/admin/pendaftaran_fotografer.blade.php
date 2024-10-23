@@ -18,12 +18,11 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tickets</a></li>
-                                <li class="breadcrumb-item active">Ticket List</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Fotografer</a></li>
+                                <li class="breadcrumb-item active">Pendaftaran List</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Event</h4>
+                        <h4 class="page-title">Pendaftaran</h4>
                     </div>
                 </div>
             </div>
@@ -32,7 +31,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title mb-4">Event Aktif</h4>
+                            <h4 class="header-title mb-4">Pendaftaran Fotografer</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
@@ -63,6 +62,15 @@
                                                         data-id="{{ $daftarItem->id }}">
                                                         <i class="mdi mdi-pencil"></i>
                                                     </a>
+                                                    <form action="{{ route('admin.reject-foto', $daftarItem->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button class="btn btn-xs btn-danger edit-event-btn"
+                                                            data-id="{{ $daftarItem->id }}">
+                                                            <i class="mdi mdi-trash-can-outline"></i>
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
 
@@ -78,71 +86,60 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <form
-                                                                action="{{ route('admin.event-update', $daftarItem->id) }}"
+                                                                action="{{ route('admin.validasi-foto', $daftarItem->id) }}"
                                                                 method="POST" class="px-3">
                                                                 @csrf
                                                                 @method('PUT')
                                                                 <div class="mb-3">
-                                                                    <label for="event" class="form-label">Nama
-                                                                        Event</label>
-                                                                    <input class="form-control" name="event"
-                                                                        type="text" value="{{ $daftarItem->event }}"
-                                                                        required="">
+                                                                    <label for="nama-{{ $daftarItem->id }}"
+                                                                        class="form-label">Full Name * :</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="nama" id="nama-{{ $daftarItem->id }}"
+                                                                        value="{{ $daftarItem->nama }}" required="">
                                                                 </div>
+
                                                                 <div class="mb-3">
-                                                                    <label for="tanggal" class="form-label">Date</label>
-                                                                    <input class="form-control" id="tanggal"
-                                                                        name="tanggal" type="date"
-                                                                        value="{{ \Carbon\Carbon::parse($daftarItem->tanggal)->format('Y-m-d') }}">
-
+                                                                    <label for="alamat-{{ $daftarItem->id }}"
+                                                                        class="form-label">Full Name * :</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="alamat" id="alamat-{{ $daftarItem->id }}"
+                                                                        value="{{ $daftarItem->alamat }}" required="">
                                                                 </div>
+
                                                                 <div class="mb-3">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="is_private" value="0"
-                                                                        id="customradio-public-{{ $daftarItem->id }}"
-                                                                        {{ $daftarItem->is_private == 0 ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="customradio-public-{{ $daftarItem->id }}">Public</label>
-
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="is_private" value="1"
-                                                                        id="customradio-private-{{ $daftarItem->id }}"
-                                                                        {{ $daftarItem->is_private == 1 ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="customradio-private-{{ $daftarItem->id }}">Private</label>
-                                                                </div>
-
-                                                                <div class="mb-3"
-                                                                    id="password-section-{{ $daftarItem->id }}"
-                                                                    style="{{ $daftarItem->is_private == 0 ? 'display: none;' : '' }}">
-                                                                    <label for="password"
-                                                                        class="form-label">Password</label>
-                                                                    <div class="input-group input-group-merge">
-                                                                        <input type="password" id="password"
-                                                                            class="form-control"
-                                                                            placeholder="Enter your password"
-                                                                            name="password">
-                                                                        <div class="input-group-text" data-password="false">
-                                                                            <span class="password-eye"
-                                                                                onclick="togglePassword()"></span>
-                                                                        </div>
+                                                                    <label for="nowa-{{ $daftarItem->id }}"
+                                                                        class="form-label">No. Whatsapp * :</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text"
+                                                                            id="nowa-prefix">62</span>
+                                                                        <input data-parsley-type="number" type="text"
+                                                                            class="form-control" name="nowa"
+                                                                            id="nowa-{{ $daftarItem->id }}"
+                                                                            value="{{ $daftarItem->nowa }}" required="">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label class="form-label">Deskripsi</label>
-                                                                    <textarea class="form-control" name="deskripsi" rows="3">{{ $daftarItem->deskripsi }}</textarea>
+                                                                    <label for="pesan-{{ $daftarItem->id }}"
+                                                                        class="form-label">Message (20 chars min, 100 max)
+                                                                        :</label>
+                                                                    <textarea id="pesan-{{ $daftarItem->id }}" class="form-control" name="pesan" data-parsley-trigger="keyup"
+                                                                        data-parsley-minlength="20" data-parsley-maxlength="100"
+                                                                        data-parsley-minlength-message="Come on! You need to enter at least a 20 character comment.." required>{{ $daftarItem->pesan }}</textarea>
                                                                 </div>
 
-                                                                <!-- Map container with unique ID for each event -->
-                                                                <div id="map-{{ $daftarItem->id }}"
-                                                                    style="height: 300px;"></div>
-                                                                <input type="hidden" name="lokasi"
-                                                                    id="lokasi-{{ $daftarItem->id }}"
-                                                                    value="{{ $daftarItem->lokasi }}">
+                                                                <div class="mb-3">
+                                                                    <label for="foto_ktp-{{ $daftarItem->id }}"
+                                                                        class="form-label">Foto KTP * :</label>
+                                                                    <div class="col-lg-12">
+                                                                        <img src="{{ Storage::url($daftarItem->foto_ktp) }}"
+                                                                            alt="Foto KTP" class="img-fluid" />
+                                                                    </div>
+                                                                </div>
+
                                                                 <div class="mb-2 text-center">
                                                                     <button class="btn rounded-pill btn-primary"
-                                                                        type="submit">Update Event</button>
+                                                                        type="submit">Setujui</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -151,6 +148,7 @@
                                             </div>
                                         @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -170,4 +168,50 @@
     <script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
+    <script>
+        $(document).on('click', '.reject-event-btn', function(e) {
+            e.preventDefault();
+
+            var id = $(this).data('id'); // Ambil ID dari data attribute
+            var url = "/admin/fotografer/reject/" + id; // URL dengan ID
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak akan bisa mengembalikan aksi ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, tolak!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                'content') // Mengambil token dari meta tag
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Ditolak!',
+                                'Data telah berhasil ditolak.',
+                                'success'
+                            ).then(() => {
+                                location
+                                    .reload(); // Reload halaman setelah alert ditutup
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan, coba lagi.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endpush

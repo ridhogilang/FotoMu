@@ -3,13 +3,13 @@
     <!-- Brand Logo -->
     <div class="logo-box">
         <!-- Brand Logo Light -->
-        <a href="index.php" class="logo-light">
+        <a href="{{ route('admin.dashboard') }}" class="logo-light">
             <img src="{{ asset('images/logo-light.png') }}" alt="logo" class="logo-lg">
             <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
         </a>
 
         <!-- Brand Logo Dark -->
-        <a href="index.php" class="logo-dark">
+        <a href="{{ route('admin.dashboard') }}" class="logo-dark">
             <img src="{{ asset('images/logo-dark.png') }}" alt="dark logo" class="logo-lg">
             <img src="{{ asset('') }}images/logo-sm.png" alt="small logo" class="logo-sm">
         </a>
