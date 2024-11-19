@@ -57,13 +57,35 @@ class PembayaranController extends Controller
 
         $penarikan = Withdrawal::where('fotografer_id', $fotograferId)->get();
 
+        $userEmail = Auth::user()->email;
+        $maskedEmail = $this->maskEmail($userEmail);
+
         return view('fotografer.pembayaran', [
             "title" => "Pembayaran",
             "fotografer" => $fotografer,
             "uangMasukPerHari" => $uangMasukPerHari,
             "uangKeluar" => $uangKeluar,
             "penarikan" => $penarikan,
+            "maskedEmail" => $maskedEmail,
         ]);
+    }
+
+    private function maskEmail($email)
+    {
+        // Pisahkan email menjadi bagian nama pengguna dan domain
+        [$user, $domain] = explode('@', $email);
+
+        // Mask sebagian nama pengguna (hanya tampilkan 3 karakter pertama)
+        $maskedUser = substr($user, 0, 3) . str_repeat('*', strlen($user) - 3);
+
+        // Pisahkan domain menjadi nama domain dan ekstensi
+        [$domainName, $domainExt] = explode('.', $domain);
+
+        // Mask sebagian nama domain (hanya tampilkan 1 karakter pertama)
+        $maskedDomain = substr($domainName, 0, 1) . str_repeat('*', strlen($domainName) - 1);
+
+        // Gabungkan kembali domain yang dimask dengan ekstensi
+        return $maskedUser . '@' . $maskedDomain . '.' . $domainExt;
     }
 
     public function store_bank(Request $request)

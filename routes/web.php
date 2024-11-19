@@ -55,6 +55,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/fotografer', [AdminFotograferController::class, 'fotografer'])->name('admin.fotografer');
     Route::put('/daftar-fotografer/proses/{id}', [AdminFotograferController::class, 'setujui_fotografer'])->name('admin.validasi-foto');
     Route::put('/fotografer/reject/{id}', [AdminFotograferController::class, 'fotografer_reject'])->name('admin.reject-foto');
+    Route::get('/pembayaran', [AdminFotograferController::class, 'pembayaran'])->name('admin.pembayaran-foto');
+
     // });
 });
 

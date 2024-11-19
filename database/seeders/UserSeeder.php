@@ -82,17 +82,17 @@ class UserSeeder extends Seeder
         $user->assignRole('user');
 
         $users = [
-            ['name' => 'Ridho', 'email' => 'ridho@gmail.com', 'nowa' => '08123456781', 'is_user' => true, 'foto_depan' => 'foto_user/ridho.png'],
-            ['name' => 'Fathur', 'email' => 'fathur@gmail.com', 'nowa' => '08123456782', 'is_user' => true, 'foto_depan' => 'foto_user/fathur.png'],
-            ['name' => 'Restu', 'email' => 'restu@gmail.com', 'nowa' => '08123456783', 'is_user' => true, 'foto_depan' => 'foto_user/restu.png'],
-            ['name' => 'Bagus', 'email' => 'bagus@gmail.com', 'nowa' => '08123456784', 'is_user' => true, 'foto_depan' => 'foto_user/bagus.png'],
-            ['name' => 'Seto', 'email' => 'seto@gmail.com', 'nowa' => '08123456785', 'is_user' => true, 'foto_depan' => 'foto_user/seto.png'],
-            ['name' => 'Viki', 'email' => 'viki@gmail.com', 'nowa' => '08123456786', 'is_user' => true, 'foto_depan' => 'foto_user/viki.png'],
-            ['name' => 'Adi', 'email' => 'adi@gmail.com', 'nowa' => '08123456787', 'is_user' => true, 'foto_depan' => 'foto_user/adi.png'],
-            ['name' => 'Yanu', 'email' => 'yanu@gmail.com', 'nowa' => '08123456788', 'is_user' => true, 'foto_depan' => 'foto_user/yanu.png'],
-            ['name' => 'Yosi', 'email' => 'yosi@gmail.com', 'nowa' => '08123456789', 'is_user' => true, 'foto_depan' => 'foto_user/yosi.png'],
-            ['name' => 'Moko', 'email' => 'moko@gmail.com', 'nowa' => '08123456780', 'is_user' => true, 'foto_depan' => 'foto_user/moko.png'],
-            ['name' => 'Regina', 'email' => 'regina@gmail.com', 'nowa' => '08123456790', 'is_user' => true, 'foto_depan' => 'foto_user/regina.png'],
+            ['name' => 'Ridho', 'email' => 'ridho@gmail.com', 'nowa' => '08123456781', 'is_user' => true, 'foto_depan' => 'foto_user/ridho.jpg'],
+            ['name' => 'Fathur', 'email' => 'fathur@gmail.com', 'nowa' => '08123456782', 'is_user' => true, 'foto_depan' => 'foto_user/fathur.jpg'],
+            ['name' => 'Restu', 'email' => 'restu@gmail.com', 'nowa' => '08123456783', 'is_user' => true, 'foto_depan' => 'foto_user/restu.jpg'],
+            ['name' => 'Bagus', 'email' => 'bagus@gmail.com', 'nowa' => '08123456784', 'is_user' => true, 'foto_depan' => 'foto_user/bagus.jpg'],
+            ['name' => 'Seto', 'email' => 'seto@gmail.com', 'nowa' => '08123456785', 'is_user' => true, 'foto_depan' => 'foto_user/seto.jpg'],
+            ['name' => 'Viki', 'email' => 'viki@gmail.com', 'nowa' => '08123456786', 'is_user' => true, 'foto_depan' => 'foto_user/viki.jpg'],
+            ['name' => 'Adi', 'email' => 'adi@gmail.com', 'nowa' => '08123456787', 'is_user' => true, 'foto_depan' => 'foto_user/adi.jpg'],
+            ['name' => 'Yanu', 'email' => 'yanu@gmail.com', 'nowa' => '08123456788', 'is_user' => true, 'foto_depan' => 'foto_user/yanu.jpg'],
+            ['name' => 'Yosi', 'email' => 'yosi@gmail.com', 'nowa' => '08123456789', 'is_user' => true, 'foto_depan' => 'foto_user/yosi.jpg'],
+            ['name' => 'Moko', 'email' => 'moko@gmail.com', 'nowa' => '08123456780', 'is_user' => true, 'foto_depan' => 'foto_user/moko.jpg'],
+            ['name' => 'Regina', 'email' => 'regina@gmail.com', 'nowa' => '08123456790', 'is_user' => true, 'foto_depan' => 'foto_user/regina.jpg'],
         ];       
 
         foreach ($users as $user_data) {

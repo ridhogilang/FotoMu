@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\DaftarFotografer;
 use App\Models\Fotografer;
+use App\Models\Withdrawal;
 
 class AdminFotograferController extends Controller
 {
@@ -72,4 +73,15 @@ class AdminFotograferController extends Controller
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Data event berhasil ditolak!');
     }
+
+    public function pembayaran()
+    {
+        $pembayaran = Withdrawal::all();
+
+        return view('admin.pembayaran', [
+            "title" => "Pembayaran",
+            "pembayaran" => $pembayaran,
+        ]);
+    }
+
 }

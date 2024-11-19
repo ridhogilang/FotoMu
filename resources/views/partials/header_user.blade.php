@@ -26,8 +26,7 @@
         <ul class="topbar-menu d-flex align-items-center">
             <!-- Topbar Search Form -->
             @php
-                // Check if the authenticated user is already in DaftarFotografer
-                $isFotografer = \App\Models\DaftarFotografer::where('user_id', Auth::id())->exists();
+                $isFotografer = \App\Models\Fotografer::where('user_id', Auth::id())->exists();
             @endphp
 
             @if (!$isFotografer)

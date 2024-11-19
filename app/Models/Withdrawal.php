@@ -12,11 +12,13 @@ class Withdrawal extends Model
     protected $table = 'withdrawal';
 
     protected $fillable = [
-        'fotografer_id',
+        'fotografer_id', 
         'rekening_id',
         'jumlah',
         'saldo',
         'status',
+        'bukti_foto',
+        'pesan',
         'requested_at',
         'processed_at',
     ];

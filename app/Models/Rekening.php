@@ -24,6 +24,6 @@ class Rekening extends Model
 
     public function fotografer()
     {
-        return $this->belongsTo(Fotografer::class, 'fotografer_id');
+        return $this->hasOne(Fotografer::class, 'rekening_id', 'id');
     }
 }

@@ -288,8 +288,13 @@
                                                 @foreach ($penarikan as $penarikanItem)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $penarikanItem->rekening->nama }} -
-                                                            {{ $penarikanItem->rekening->nama_bank }}</td>
+                                                        <td>
+                                                            @if($penarikanItem->rekening_id)
+                                                                {{ $penarikanItem->rekening->nama }} - {{ $penarikanItem->rekening->nama_bank }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>                                                        
                                                         <td>Rp.
                                                             {{ number_format($penarikanItem->jumlah, 0, ',', '.') }}
                                                         </td>
@@ -394,7 +399,7 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-center">
-                            <p>Masukkan OTP yang dikirim ke <br><strong>rid********se@g****l.com</strong></p>
+                            <p>Masukkan OTP yang dikirim ke <br><strong>{{$maskedEmail}}</strong></p>
 
                             <!-- Tambahkan Form untuk OTP -->
                             <form id="otpForm" method="POST" action="{{ route('bank.verifyOtp') }}">

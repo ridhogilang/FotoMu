@@ -189,6 +189,10 @@
             // Optional
             onSuccess: function(result) {
                 window.location.href = '{{ route('checkout.success', $pesanan->id) }}';
+
+                setTimeout(function() {
+                    window.location.href = '{{ route('user.pesanan') }}';
+                }, 2000);
             },
             // Optional
             onPending: function(result) {

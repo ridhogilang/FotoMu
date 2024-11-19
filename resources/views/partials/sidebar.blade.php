@@ -107,6 +107,11 @@
                                 <span class="menu-text">Fotografer Aktif</span>
                             </a>
                         </li>
+                        <li class="menu-item">
+                            <a href="{{ route('admin.pembayaran-foto') }}" class="menu-link">
+                                <span class="menu-text">Pembayaran</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
