@@ -124,13 +124,13 @@
                 <div class="collapse" id="Pemesanan-Item">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="ecommerce-dashboard.php" class="menu-link">
+                            <a href="{{ route('admin.riwayat-pemesanan') }}" class="menu-link">
                                 <span class="menu-text">Riwayat Pemesanan</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="ecommerce-dashboard.php" class="menu-link">
-                                <span class="menu-text">Jumlah Pembelian</span>
+                            <a href="{{ route('admin.akumulasi-pemesanan') }}" class="menu-link">
+                                <span class="menu-text">Akumulasi Pemesanan</span>
                             </a>
                         </li>
                     </ul>
@@ -145,12 +145,12 @@
                 <div class="collapse" id="Pengguna">
                     <ul class="sub-menu">
                         <li class="menu-item">
-                            <a href="ecommerce-dashboard.php" class="menu-link">
+                            <a href="{{ route('admin.pengguna') }}" class="menu-link">
                                 <span class="menu-text">Daftar Pengguna</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="ecommerce-dashboard.php" class="menu-link">
+                            <a href="{{ route('admin.tambah-pengguna') }}" class="menu-link">
                                 <span class="menu-text">Tambah Admin</span>
                             </a>
                         </li>

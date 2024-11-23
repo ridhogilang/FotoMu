@@ -6,6 +6,8 @@ use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminFotograferController;
+use App\Http\Controllers\Admin\AdminPemesananController;
+use App\Http\Controllers\Admin\AdminPenggunaController;
 use App\Http\Controllers\Admin\FotomuAdminController;
 use App\Http\Controllers\User\ProdukController;
 use App\Http\Controllers\Foto\FotograferController;
@@ -56,7 +58,16 @@ Route::prefix('admin')->group(function () {
     Route::put('/daftar-fotografer/proses/{id}', [AdminFotograferController::class, 'setujui_fotografer'])->name('admin.validasi-foto');
     Route::put('/fotografer/reject/{id}', [AdminFotograferController::class, 'fotografer_reject'])->name('admin.reject-foto');
     Route::get('/pembayaran', [AdminFotograferController::class, 'pembayaran'])->name('admin.pembayaran-foto');
+    Route::put('/pembayaran/proses/{id}', [AdminFotograferController::class, 'pembayaran_proses'])->name('admin.proses-pembayaran');
+    Route::put('/fotografer/update-status/{id}', [AdminFotograferController::class, 'updateStatusFotografer'])->name('admin.update-statusfoto');
 
+    Route::get('/riwayat-pemesanan', [AdminPemesananController::class, 'riwayat'])->name('admin.riwayat-pemesanan');
+    Route::get('/akumulasi-pemesanan', [AdminPemesananController::class, 'akumulasi'])->name('admin.akumulasi-pemesanan');
+    
+    Route::get('/daftar-pengguna', [AdminPenggunaController::class, 'pengguna'])->name('admin.pengguna');
+    Route::put('/user/update-active/{id}', [AdminPenggunaController::class, 'updateStatusActive'])->name('admin.pengguna-update');
+    Route::get('/tambah-admin', [AdminPenggunaController::class, 'tambah'])->name('admin.tambah-pengguna');
+    Route::post('/tambah-admin', [AdminPenggunaController::class, 'store_user'])->name('admin.store-pengguna');
     // });
 });
 

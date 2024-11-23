@@ -61,6 +61,20 @@
         document.documentElement.setAttribute('data-topbar-color', 'light');
         document.documentElement.setAttribute('data-layout', 'vertical');
     </script>
+     <script>
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                html: `
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                `,
+                showConfirmButton: true,
+            });
+        @endif
+    </script>
     @stack('footer')
 </body>
 

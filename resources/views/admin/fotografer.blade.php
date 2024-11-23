@@ -34,16 +34,17 @@
                             <h4 class="header-title mb-4">Fotografer Aktif</h4>
 
                             <div class="table-responsive">
-                                <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
-                                    id="tickets-table">
+                                <table class="table table-hover m-0 table-centered nowrap w-100" id="tickets-table">
                                     <thead>
                                         <tr>
                                             <th>
                                                 No.
                                             </th>
                                             <th>Nama</th>
+                                            <th>Alamat</th>
                                             <th>No. Whatsapp</th>
-                                            <th>Pesan</th>
+                                            <th>Detail Rekening</th>
+                                            <th>Active</th>
                                             <th class="hidden-sm">Action</th>
                                         </tr>
                                     </thead>
@@ -53,25 +54,45 @@
                                             <tr>
                                                 <td><b>{{ $loop->iteration }}</b></td>
                                                 <td>{{ $fotograferItem->nama }}</td>
+                                                <td class="text-start"
+                                                    style="max-width: 300px; min-width: 200px; white-space: normal; word-wrap: break-word;">
+                                                    {{ $fotograferItem->alamat }}
+                                                </td>
                                                 <td>{{ $fotograferItem->nowa }}</td>
-                                                <td>{{ $fotograferItem->pesan }}</td>
+                                                @if ($fotograferItem->rekening_id)
+                                                    <td>{{ $fotograferItem->rekening->nama_bank }} -
+                                                        {{ $fotograferItem->rekening->rekening }}
+                                                        ({{ $fotograferItem->rekening->nama }})
+                                                    </td>
+                                                @else
+                                                    <td>rekening tidak tersedia</td>
+                                                @endif
+                                                <td>
+                                                    <div class="form-check form-switch">
+                                                        <input type="checkbox"
+                                                            class="form-check-input update-status-checkbox"
+                                                            id="customSwitch{{ $fotograferItem->user->id }}"
+                                                            data-id="{{ $fotograferItem->user->id }}"
+                                                            {{ $fotograferItem->user->is_foto ? 'checked' : '' }}>
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#edit-modal-{{ $fotograferItem->id }}"
-                                                        class="btn btn-xs btn-light edit-event-btn"
+                                                        class="action-icon"
                                                         data-id="{{ $fotograferItem->id }}">
-                                                        <i class="mdi mdi-pencil"></i>
+                                                        <i class="mdi mdi-eye"></i>
                                                     </a>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal untuk setiap event -->
-                                            <div id="edit-modal-{{ $fotograferItem->id }}" class="modal fade" tabindex="-1"
-                                                role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog">
+                                            <div id="edit-modal-{{ $fotograferItem->id }}" class="modal fade"
+                                                tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header bg-light">
-                                                            <h4 class="modal-title">Edit Event</h4>
+                                                            <h4 class="modal-title">Detail Fotografer</h4>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-hidden="true"></button>
                                                         </div>
@@ -81,84 +102,135 @@
                                                                 method="POST" class="px-3">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <div class="mb-3">
-                                                                    <label for="event" class="form-label">Nama
-                                                                        Event</label>
-                                                                    <input class="form-control" name="event"
-                                                                        type="text" value="{{ $fotograferItem->event }}"
-                                                                        required="">
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="event" class="form-label">Nama
+                                                                            Fotografer</label>
+                                                                        <input class="form-control" name="nama"
+                                                                            type="text"
+                                                                            value="{{ $fotograferItem->nama }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="event" class="form-label">No.
+                                                                            Whatsapp</label>
+                                                                        <input class="form-control" name="nama"
+                                                                            type="text"
+                                                                            value="{{ $fotograferItem->nowa }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
                                                                 </div>
                                                                 <div class="mb-3">
-                                                                    <label for="tanggal" class="form-label">Date</label>
-                                                                    <input class="form-control" id="tanggal"
-                                                                        name="tanggal" type="date"
-                                                                        value="{{ \Carbon\Carbon::parse($fotograferItem->tanggal)->format('Y-m-d') }}">
-
+                                                                    <label for="tanggal" class="form-label">Alamat</label>
+                                                                    <input class="form-control" name="nama"
+                                                                        type="text"
+                                                                        value="{{ $fotograferItem->alamat }}"
+                                                                        required="" readonly
+                                                                        style="border: none; background-color: transparent;">
                                                                 </div>
-                                                                <div class="mb-3">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="is_private" value="0"
-                                                                        id="customradio-public-{{ $fotograferItem->id }}"
-                                                                        {{ $fotograferItem->is_private == 0 ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="customradio-public-{{ $fotograferItem->id }}">Public</label>
-
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="is_private" value="1"
-                                                                        id="customradio-private-{{ $fotograferItem->id }}"
-                                                                        {{ $fotograferItem->is_private == 1 ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="customradio-private-{{ $fotograferItem->id }}">Private</label>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="event" class="form-label">Nama
+                                                                            User</label>
+                                                                        <input class="form-control" name="nama"
+                                                                            type="text"
+                                                                            value="{{ $fotograferItem->user->name }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="event" class="form-label">Email
+                                                                            User</label>
+                                                                        <input class="form-control" name="nama"
+                                                                            type="text"
+                                                                            value="{{ $fotograferItem->user->email }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
                                                                 </div>
-
-                                                                <div class="mb-3"
-                                                                    id="password-section-{{ $fotograferItem->id }}"
-                                                                    style="{{ $fotograferItem->is_private == 0 ? 'display: none;' : '' }}">
-                                                                    <label for="password"
-                                                                        class="form-label">Password</label>
-                                                                    <div class="input-group input-group-merge">
-                                                                        <input type="password" id="password"
-                                                                            class="form-control"
-                                                                            placeholder="Enter your password"
-                                                                            name="password">
-                                                                        <div class="input-group-text" data-password="false">
-                                                                            <span class="password-eye"
-                                                                                onclick="togglePassword()"></span>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="event"
+                                                                            class="form-label">Rekening</label>
+                                                                        @if ($fotograferItem->rekening_id)
+                                                                            <input class="form-control" name="nama"
+                                                                                type="text"
+                                                                                value="{{ $fotograferItem->rekening->rekening }} - {{ $fotograferItem->rekening->nama }}"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        @else
+                                                                            <input class="form-control" name="nama"
+                                                                                type="text"
+                                                                                value="Rekening tidak tersedia"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="event"
+                                                                            class="form-label">Bank</label>
+                                                                        @if ($fotograferItem->rekening_id)
+                                                                            <input class="form-control" name="nama"
+                                                                                type="text"
+                                                                                value="{{ $fotograferItem->rekening->nama_bank }}"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        @else
+                                                                            <input class="form-control" name="nama"
+                                                                                type="text"
+                                                                                value="Rekening tidak tersedia"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="event"
+                                                                            class="form-label">Saldo</label>
+                                                                        <input class="form-control" name="nama"
+                                                                            type="text"
+                                                                            value="{{ 'Rp. ' . number_format($fotograferItem->jumlah, 0, ',', '.') }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="event" class="form-label">Foto
+                                                                            KTP</label>
+                                                                        <div class="col-lg-12">
+                                                                            <div>
+                                                                                <img src="{{ Storage::url($fotograferItem->foto_ktp) }}"
+                                                                                    alt="image"
+                                                                                    class="img-fluid rounded"
+                                                                                    width="200" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Deskripsi</label>
-                                                                    <textarea class="form-control" name="deskripsi" rows="3">{{ $fotograferItem->deskripsi }}</textarea>
-                                                                </div>
-
-                                                                <!-- Map container with unique ID for each event -->
-                                                                <div id="map-{{ $fotograferItem->id }}"
-                                                                    style="height: 300px;"></div>
-                                                                <input type="hidden" name="lokasi"
-                                                                    id="lokasi-{{ $fotograferItem->id }}"
-                                                                    value="{{ $fotograferItem->lokasi }}">
-                                                                <div class="mb-2 text-center">
-                                                                    <button class="btn rounded-pill btn-primary"
-                                                                        type="submit">Update Event</button>
-                                                                </div>
-                                                            </form>
                                                         </div>
+                                                        <!-- Map container with unique ID for each event -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    </tbody>
-                                </table>
                             </div>
+                            @endforeach
+                            </tbody>
+                            </table>
                         </div>
                     </div>
-                </div><!-- end col -->
-            </div>
-            <!-- end row -->
+                </div>
+            </div><!-- end col -->
+        </div>
+        <!-- end row -->
 
-        </div> <!-- container -->
+    </div> <!-- container -->
 
     </div>
 @endsection
@@ -169,4 +241,74 @@
     <script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.update-status-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function(event) {
+                    const userId = this.dataset.id; // Ambil ID user dari data-id
+                    const isChecked = this.checked; // Periksa apakah checkbox dicentang
+
+                    // Simpan checkbox asli untuk mengembalikan nilai jika dibatalkan
+                    const originalCheckbox = this;
+
+                    // Tampilkan konfirmasi menggunakan SweetAlert
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: `Anda akan mengubah status fotografer menjadi ${isChecked ? 'aktif' : 'nonaktif'}.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, ubah!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Kirim permintaan AJAX jika pengguna mengkonfirmasi
+                            fetch(`/admin/fotografer/update-status/${userId}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').content
+                                    },
+                                    body: JSON.stringify({
+                                        is_foto: isChecked
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: data.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    } else {
+                                        throw new Error('Gagal memperbarui status');
+                                    }
+                                })
+                                .catch(error => {
+                                    // Tampilkan error jika terjadi kesalahan
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'Terjadi kesalahan saat memperbarui status, coba lagi.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                    // Kembalikan checkbox ke nilai awal
+                                    originalCheckbox.checked = !isChecked;
+                                });
+                        } else {
+                            // Jika batal, kembalikan checkbox ke nilai awal
+                            originalCheckbox.checked = !isChecked;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endpush

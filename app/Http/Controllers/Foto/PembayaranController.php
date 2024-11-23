@@ -24,7 +24,6 @@ class PembayaranController extends Controller
 
         $fotograferId = Auth::user()->fotografer->id;
 
-        // Ambil total uang masuk per hari (Pendapatan)
         $uangMasukPerHari = DB::table('earning')
             ->select(
                 DB::raw('DATE(created_at) as date'),
@@ -46,16 +45,28 @@ class PembayaranController extends Controller
         // Gabungkan data ke dalam satu hasil
         $uangMasukPerHari->transform(function ($item) use ($saldoAkhirPerHari) {
             $item->saldo_akhir = optional($saldoAkhirPerHari->get($item->date))->jumlah;  // Ambil saldo akhir berdasarkan tanggal
+            $item->type = 'Pendapatan'; // Tambahkan tipe untuk identifikasi
             return $item;
         });
 
-        // Uang keluar dari penarikan yang disetujui
+        // Query untuk uang keluar
         $uangKeluar = Earning::where('fotografer_id', $fotograferId)
             ->where('status', 'Penarikan')
             ->whereNotNull('uang_keluar')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $item->type = 'Penarikan'; // Tambahkan tipe untuk identifikasi
+                $item->date = $item->created_at->format('Y-m-d'); // Format tanggal untuk konsistensi
+                return $item;
+            });
 
-        $penarikan = Withdrawal::where('fotografer_id', $fotograferId)->get();
+        // Gabungkan dan urutkan berdasarkan tanggal terbaru
+        $semuaTransaksi = $uangMasukPerHari->concat($uangKeluar)->sortByDesc('date');
+
+        $penarikan = Withdrawal::where('fotografer_id', $fotograferId)
+            ->orderByRaw("FIELD(status, 'Pending') DESC")
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan tanggal terbaru setelah Pending
+            ->get();
 
         $userEmail = Auth::user()->email;
         $maskedEmail = $this->maskEmail($userEmail);
@@ -66,6 +77,7 @@ class PembayaranController extends Controller
             "uangMasukPerHari" => $uangMasukPerHari,
             "uangKeluar" => $uangKeluar,
             "penarikan" => $penarikan,
+            "semuaTransaksi" => $semuaTransaksi,
             "maskedEmail" => $maskedEmail,
         ]);
     }
@@ -216,16 +228,25 @@ class PembayaranController extends Controller
     {
         // Validasi input
         $request->validate([
-            'jumlah' => 'required|numeric|min:1',
+            'jumlah' => 'required|numeric|min:100000',
             'rekening_id' => 'required|exists:rekening,id',  // pastikan rekening_id ada di tabel rekening
+        ], [
+            'jumlah.min' => 'Jumlah minimal penarikan adalah Rp. 100.000.',
         ]);
 
         // Dapatkan ID fotografer yang sedang login
         $fotograferId = Auth::user()->fotografer->id;
 
+        $pendingWithdrawal = Withdrawal::where('fotografer_id', $fotograferId)
+            ->where('status', 'Pending')
+            ->exists();
+
+        if ($pendingWithdrawal) {
+            return redirect()->back()->with('toast_error', 'Anda tidak dapat mengajukan penarikan baru karena masih ada penarikan sebelumnya yang belum disetujui.');
+        }
+
         // Ambil saldo terbaru dari tabel 'earning'
         $saldo = Earning::where('fotografer_id', $fotograferId)
-            ->where('status', 'Pendapatan')
             ->orderBy('created_at', 'desc')  // Dapatkan record terbaru
             ->orderBy('id', 'desc')          // Dapatkan id terbesar untuk menghindari konflik
             ->value('jumlah');               // Ambil saldo

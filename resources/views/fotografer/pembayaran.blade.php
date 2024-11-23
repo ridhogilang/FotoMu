@@ -60,13 +60,13 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Fotografer</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pembayaran</a>
                                 </li>
-                                <li class="breadcrumb-item active">Checkout</li>
+                                <li class="breadcrumb-item active">Pembayaran</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Checkout</h4>
+                        <h4 class="page-title">Pembayaran</h4>
                     </div>
                 </div>
             </div>
@@ -243,7 +243,7 @@
                                                                 <label for="jumlah" class="form-label">Penarikan <span
                                                                         class="text-danger">*</span></label>
                                                                 <input type="text" id="jumlah" class="form-control"
-                                                                    placeholder="Masukkan jumlah penarikan">
+                                                                    placeholder="Masukkan jumlah penarikan" min="100000" >
                                                                 <input type="hidden" name="jumlah" id="jumlah-hidden">
                                                                 <!-- Hidden input untuk menyimpan nilai tanpa format Rp. -->
                                                             </div>
@@ -264,8 +264,7 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-light"
                                                                 data-bs-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Save
-                                                                changes</button>
+                                                            <button type="submit" class="btn btn-primary">Ajukan Pembayaran</button>
                                                         </div>
                                                     </form>
                                                 </div><!-- /.modal-content -->
@@ -289,12 +288,13 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>
-                                                            @if($penarikanItem->rekening_id)
-                                                                {{ $penarikanItem->rekening->nama }} - {{ $penarikanItem->rekening->nama_bank }}
+                                                            @if ($penarikanItem->rekening_id)
+                                                                {{ $penarikanItem->rekening->nama }} -
+                                                                {{ $penarikanItem->rekening->nama_bank }}
                                                             @else
                                                                 -
                                                             @endif
-                                                        </td>                                                        
+                                                        </td>
                                                         <td>Rp.
                                                             {{ number_format($penarikanItem->jumlah, 0, ',', '.') }}
                                                         </td>
@@ -304,13 +304,13 @@
                                                         @switch($penarikanItem->status)
                                                             @case('Pending')
                                                                 <td><span
-                                                                        class="badge label-table bg-success">{{ $penarikanItem->status }}</span>
+                                                                        class="badge label-table bg-warning">{{ $penarikanItem->status }}</span>
                                                                 </td>
                                                             @break
 
                                                             @case('Approved')
                                                                 <td><span
-                                                                        class="badge label-table bg-secondary text-light">{{ $penarikanItem->status }}</span>
+                                                                        class="badge label-table bg-success">{{ $penarikanItem->status }}</span>
                                                                 </td>
                                                             @break
 
@@ -328,10 +328,126 @@
                                                                     <i class="mdi mdi-delete"></i>
                                                                 </a>
                                                             @else
-                                                                -
+                                                                <a href="#" data-bs-toggle="modal"
+                                                                    data-bs-target="#view-modal-{{ $penarikanItem->id }}"
+                                                                    class="action-icon"
+                                                                    data-id="{{ $penarikanItem->id }}">
+                                                                    <i class="mdi mdi-eye"></i>
+                                                                </a>
                                                             @endif
-                                                        </td>                                                        
+                                                        </td>
                                                     </tr>
+                                                    <div id="view-modal-{{ $penarikanItem->id }}" class="modal fade"
+                                                        tabindex="-1" role="dialog" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header bg-light">
+                                                                    <h4 class="modal-title">Status Pembayaran</h4>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-hidden="true"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form>
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <div class="mb-3">
+                                                                            <label for="nama" class="form-label">Nama
+                                                                                Fotografer</label>
+                                                                            <input class="form-control" name="nama"
+                                                                                type="text"
+                                                                                value="{{ $penarikanItem->fotografer->nama }}"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="rekening"
+                                                                                class="form-label">Detail
+                                                                                Rekening</label>
+                                                                            <input class="form-control" name="rekening"
+                                                                                type="text"
+                                                                                value="{{ $penarikanItem->rekening->nama_bank }} - {{ $penarikanItem->rekening->rekening }} ({{ $penarikanItem->rekening->nama }})"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        </div>
+                                                                        <div class="mb-3 row">
+                                                                            <div class="col-md-6">
+                                                                                <label for="jumlah"
+                                                                                    class="form-label">Jumlah
+                                                                                    Penarikan</label>
+                                                                                <input class="form-control" name="jumlah"
+                                                                                    type="text"
+                                                                                    value="{{ 'Rp. ' . number_format($penarikanItem->jumlah, 0, ',', '.') }}"
+                                                                                    required="" readonly
+                                                                                    style="border: none; background-color: transparent;">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label for="saldo"
+                                                                                    class="form-label">Sisa
+                                                                                    Saldo</label>
+                                                                                <input class="form-control" name="saldo"
+                                                                                    type="text"
+                                                                                    value="{{ 'Rp. ' . number_format($penarikanItem->saldo, 0, ',', '.') }}"
+                                                                                    required="" readonly
+                                                                                    style="border: none; background-color: transparent;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="mb-3 row">
+                                                                            <div class="col-md-6"> <label for="status"
+                                                                                    class="form-label">Status</label>
+                                                                                <input class="form-control" name="status"
+                                                                                    type="text"
+                                                                                    value="{{ $penarikanItem->status }}"
+                                                                                    required readonly
+                                                                                    style="border: none; background-color: transparent; 
+                                                                                   color: 
+                                                                                   @if ($penarikanItem->status == 'Pending') orange 
+                                                                                   @elseif ($penarikanItem->status == 'Approved') green 
+                                                                                   @else red @endif;">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label for="saldo"
+                                                                                    class="form-label">Processed
+                                                                                    at</label>
+                                                                                <input class="form-control" name="saldo"
+                                                                                    type="text"
+                                                                                    value="{{ \Carbon\Carbon::parse($penarikanItem->processed_at)->format('d M Y H:i') }}"
+                                                                                    required readonly
+                                                                                    style="border: none; background-color: transparent;">
+                                                                            </div>
+                                                                        </div>
+
+                                                                        @if ($penarikanItem->status != 'Rejected')
+                                                                            <div class="mb-3">
+                                                                                <label for="bukti_foto"
+                                                                                    class="form-label">Foto
+                                                                                    Bukti
+                                                                                    Transfer :</label>
+                                                                                <div class="col-lg-12">
+                                                                                    <div>
+                                                                                        <img src="{{ Storage::url($penarikanItem->bukti_foto) }}"
+                                                                                            alt="image"
+                                                                                            class="img-fluid rounded"
+                                                                                            width="200" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
+
+                                                                        <div class="mb-3">
+                                                                            <label for="nama"
+                                                                                class="form-label">Pesan</label>
+                                                                            <input class="form-control" name="nama"
+                                                                                type="text"
+                                                                                value="{{ $penarikanItem->pesan }}"
+                                                                                required="" readonly
+                                                                                style="border: none; background-color: transparent;">
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -353,31 +469,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($uangMasukPerHari as $index => $earning)
+                                                @foreach ($semuaTransaksi as $index => $transaksi)
                                                     <tr>
                                                         <td>{{ $index + 1 }}</td>
-                                                        <td>Rp.
-                                                            {{ number_format($earning->total_uang_masuk, 0, ',', '.') }}
-                                                        </td>
-                                                        <td>-</td> <!-- Tidak ada uang keluar di sini -->
-                                                        <td>Pendapatan
-                                                            ({{ \Carbon\Carbon::parse($earning->date)->format('d M Y') }})
-                                                        </td>
-                                                        <td>Rp. {{ number_format($earning->saldo_akhir, 0, ',', '.') }}
-                                                        </td> <!-- Saldo akhir -->
+                                                        @if ($transaksi->type === 'Pendapatan')
+                                                            <td>Rp. {{ number_format($transaksi->total_uang_masuk, 0, ',', '.') }}</td>
+                                                            <td>-</td> <!-- Tidak ada uang keluar di sini -->
+                                                            <td>Pendapatan ({{ \Carbon\Carbon::parse($transaksi->date)->format('d M Y') }})</td>
+                                                            <td>Rp. {{ number_format($transaksi->saldo_akhir, 0, ',', '.') }}</td> <!-- Saldo akhir -->
+                                                        @elseif ($transaksi->type === 'Penarikan')
+                                                            <td>-</td> <!-- Tidak ada uang masuk di sini -->
+                                                            <td>Rp. {{ number_format($transaksi->uang_keluar, 0, ',', '.') }}</td>
+                                                            <td>Penarikan ({{ \Carbon\Carbon::parse($transaksi->date)->format('d M Y') }})</td>
+                                                            <td>Rp. {{ number_format($transaksi->jumlah, 0, ',', '.') }}</td> <!-- Saldo akhir -->
+                                                        @endif
                                                     </tr>
                                                 @endforeach
-                                                @foreach ($uangKeluar as $index => $withdrawal)
-                                                    <tr>
-                                                        <td>{{ $index + 1 + count($uangMasukPerHari) }}</td>
-                                                        <td>-</td> <!-- Tidak ada uang masuk di baris ini -->
-                                                        <td>Rp. {{ number_format($withdrawal->uang_keluar, 0, ',', '.') }}
-                                                        </td>
-                                                        <td>Penarikan ({{ $withdrawal->created_at->format('d M Y') }})</td>
-                                                        <td>Rp. {{ number_format($withdrawal->jumlah, 0, ',', '.') }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
+                                            </tbody>                                            
                                         </table>
                                     </div>
                                 </div> <!-- end col-->
@@ -399,7 +507,7 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-center">
-                            <p>Masukkan OTP yang dikirim ke <br><strong>{{$maskedEmail}}</strong></p>
+                            <p>Masukkan OTP yang dikirim ke <br><strong>{{ $maskedEmail }}</strong></p>
 
                             <!-- Tambahkan Form untuk OTP -->
                             <form id="otpForm" method="POST" action="{{ route('bank.verifyOtp') }}">
@@ -429,6 +537,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>

@@ -25,7 +25,7 @@ class Withdrawal extends Model
 
     public function fotografer()
     {
-        return $this->belongsTo(User::class, 'fotografer_id');
+        return $this->belongsTo(Fotografer::class, 'fotografer_id');
     }
 
     public function rekening()

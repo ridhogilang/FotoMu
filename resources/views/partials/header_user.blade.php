@@ -26,7 +26,7 @@
         <ul class="topbar-menu d-flex align-items-center">
             <!-- Topbar Search Form -->
             @php
-                $isFotografer = \App\Models\Fotografer::where('user_id', Auth::id())->exists();
+                $isFotografer = Auth::user()->is_foto;
             @endphp
 
             @if (!$isFotografer)

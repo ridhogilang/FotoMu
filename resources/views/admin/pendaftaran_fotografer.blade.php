@@ -55,23 +55,24 @@
                                                 <td>{{ $daftarItem->nama }}</td>
                                                 <td>{{ $daftarItem->nowa }}</td>
                                                 <td>{{ $daftarItem->pesan }}</td>
-                                                <td>
+                                                <td class="d-flex justify-content-start align-items-center gap-1">
+                                                    <!-- Tombol Edit -->
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#edit-modal-{{ $daftarItem->id }}"
                                                         class="btn btn-xs btn-light edit-event-btn"
                                                         data-id="{{ $daftarItem->id }}">
                                                         <i class="mdi mdi-pencil"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.reject-foto', $daftarItem->id) }}"
-                                                        method="POST">
+                                                
+                                                    <!-- Tombol Hapus -->
+                                                    <form action="{{ route('admin.reject-foto', $daftarItem->id) }}" method="POST" class="m-0">
                                                         @csrf
                                                         @method('PUT')
-                                                        <button class="btn btn-xs btn-danger edit-event-btn"
-                                                            data-id="{{ $daftarItem->id }}">
+                                                        <button class="btn btn-xs btn-danger edit-event-btn" data-id="{{ $daftarItem->id }}">
                                                             <i class="mdi mdi-trash-can-outline"></i>
                                                         </button>
                                                     </form>
-                                                </td>
+                                                </td>                                                                                              
                                             </tr>
 
                                             <!-- Modal untuk setiap event -->

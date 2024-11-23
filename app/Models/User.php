@@ -28,6 +28,7 @@ class User extends Authenticatable
         'is_admin',
         'is_foto',
         'is_user',
+        'is_active',
     ];
 
     /**
@@ -76,6 +77,18 @@ class User extends Authenticatable
 
     public function detailPesanan()
     {
-      return $this->hasMany(DetailPesanan::class, 'foto_id');
+        return $this->hasMany(DetailPesanan::class, 'foto_id');
+    }
+
+    public function pesananSelesai()
+    {
+        return $this->hasManyThrough(
+            Pesanan::class, // Model tujuan
+            DetailPesanan::class, // Model perantara
+            'user_id', // Foreign key pada `DetailPesanan`
+            'id', // Foreign key pada `Pesanan`
+            'id', // Primary key pada `User`
+            'pesanan_id' // Foreign key pada `DetailPesanan`
+        )->where('status', 'Selesai'); // Hanya pesanan dengan status 'Selesai'
     }
 }
