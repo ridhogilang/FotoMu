@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('event');
             $table->string('lokasi');
             $table->string('tanggal');
+            $table->string('foto_cover');
             $table->boolean('is_private')->default(false); 
             $table->string('password')->nullable();
             $table->text('deskripsi')->nullable();

@@ -185,7 +185,7 @@
                                 <div class="card product-box">
                                     <div class="card-body">
                                         <div class="bg-light">
-                                            <img src="{{ asset('images/products/product-1.png') }}" alt="product-pic"
+                                            <img src="{{ Storage::url($eventItem->foto_cover) }}" alt="{{ $eventItem->event }}"
                                                 class="img-fluid" />
 
                                             @if ($eventItem->is_private)

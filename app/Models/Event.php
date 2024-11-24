@@ -15,6 +15,7 @@ class Event extends Model
         'event',
         'lokasi',
         'tanggal',
+        'foto_cover',
         'is_private',
         'password',
         'deskripsi',

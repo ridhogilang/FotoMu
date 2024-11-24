@@ -11,13 +11,13 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Fotomu</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('user.produk') }}">Event</a>
                                 </li>
-                                <li class="breadcrumb-item active">Products</li>
+                                <li class="breadcrumb-item active">{{ $event->event }}</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Products</h4>
+                        <h4 class="page-title">{{ $event->event }}</h4>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                                 <div class="col-auto">
                                     <div class="d-flex align-items-start">
                                         <img class="d-flex align-self-center me-3 rounded-circle"
-                                            src="{{ asset('images/companies/amazon.png') }}" alt="Generic placeholder image"
+                                            src="{{ Storage::url($event->foto_cover) }}" alt="{{ $event->event }}"
                                             height="64">
                                         <div class="w-100 ms-3">
                                             <h4 class="mt-0 mb-2 font-16">{{ $event->event }}</h4>
@@ -70,11 +70,6 @@
                                     <li class="nav-item">
                                         <a href="#profile-b3" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
                                             Galeri
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#messages-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                                            Messages
                                         </a>
                                     </li>
                                 </ul>

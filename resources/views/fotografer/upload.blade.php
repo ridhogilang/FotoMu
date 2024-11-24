@@ -3,6 +3,7 @@
 @push('header')
     <link href="{{ asset('libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/dropify/css/dropify.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/quill/quill.core.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/quill/quill.snow.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -73,7 +74,8 @@
                                 <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Foto</h5>
 
                                 <small id="ImageHelp" class="form-text text-muted"><span
-                                    class="text-danger">*</span>Pastikan event sudah tersedia sebelum mengupload gambar</small>
+                                        class="text-danger">*</span>Pastikan event sudah tersedia sebelum mengupload
+                                    gambar</small>
                                 <div class="dropzone" id="myAwesomeDropzone">
                                     <div class="fallback">
                                         <input name="file" type="file" multiple />
@@ -168,7 +170,8 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="text-center mb-3">
-                            <a href="#" id="cancel-button" class="btn btn-outline-danger waves-effect waves-light">Cancel</a>
+                            <a href="#" id="cancel-button"
+                                class="btn btn-outline-danger waves-effect waves-light">Cancel</a>
                             <button type="button" class="btn w-sm btn-success waves-effect waves-light" id="save-button"
                                 disabled>Save</button>
                         </div>
@@ -205,61 +208,86 @@
                 </div>
             </div>
             <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-light">
                             <h4 class="modal-title" id="myCenterModalLabel">Tambah Event</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-hidden="true"></button>
                         </div>
                         <div class="modal-body">
 
-                            <form action="{{ route('event.store') }}" class="px-3" method="POST">
+                            <form action="{{ route('event.store') }}" class="px-3" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <div class="mb-3">
-                                    <label for="event" class="form-label">Nama Event</label>
-                                    <input class="form-control" name="event" type="text" required=""
-                                        placeholder="Masukkan nama acara/event">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="tanggal" class="form-label">Date</label>
-                                    <input class="form-control" id="tanggal" name="tanggal" type="date"
-                                        name="date">
-                                </div>
-
-                                <div class="mb-3">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                        value="false" id="customradio-public" checked>
-                                    <label class="form-check-label" for="customradio-public"
-                                        style="margin-right: 10px;">Public</label>
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                        value="true" id="customradio-private">
-                                    <label class="form-check-label" for="customradio-private"
-                                        style="margin-right: 10px;">Private</label>
-                                </div>
-
-                                <div class="mb-3" id="password-section">
-                                    <label for="password" class="form-label">Password</label>
-                                    <div class="input-group input-group-merge">
-                                        <input type="password" id="password" class="form-control"
-                                            placeholder="Enter your password" name="password">
-                                        <div class="input-group-text" data-password="false">
-                                            <span class="password-eye" onclick="togglePassword()"></span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="event" class="form-label">Nama Event</label>
+                                            <input class="form-control" name="event" type="text" required
+                                                placeholder="Masukkan nama acara/event">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="tanggal" class="form-label">Date</label>
+                                            <input class="form-control" id="tanggal" name="tanggal" type="date">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Deskripsi</label>
-                                    <textarea class="form-control" name="deskripsi" rows="3" placeholder="Deskripsikan eventmu"></textarea>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                value="false" id="customradio-public" checked>
+                                            <label class="form-check-label" for="customradio-public"
+                                                style="margin-right: 10px;">Public</label>
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                value="true" id="customradio-private">
+                                            <label class="form-check-label" for="customradio-private"
+                                                style="margin-right: 10px;">Private</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="mb-3" id="password-section">
+                                            <label for="password" class="form-label">Password</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="password" id="password" class="form-control"
+                                                    placeholder="Enter your password" name="password">
+                                                <div class="input-group-text" data-password="false">
+                                                    <span class="password-eye" onclick="togglePassword()"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Deskripsi</label>
+                                            <textarea class="form-control" name="deskripsi" rows="9" placeholder="Deskripsikan eventmu"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Foto Cover</label>
+                                            <div class="">
+                                                <input type="file" name="foto_cover" data-plugins="dropify" accept=".jpeg,.jpg,.png"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div id="map"></div>
                                 <input type="hidden" name="lokasi" id="lokasi">
 
                                 <br>
                                 <div class="mb-2 text-center">
-                                    <button class="btn rounded-pill btn-primary" type="submit">Tambah Event</button>
+                                    <button class="btn rounded-pill btn-primary" type="submit">Tambah
+                                        Event</button>
                                 </div>
 
                             </form>
@@ -275,6 +303,7 @@
 @push('footer')
     <script src="{{ asset('libs/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('libs/dropzone/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('libs/dropify/js/dropify.min.js') }}"></script>
     <script src="{{ asset('libs/quill/quill.min.js') }}"></script>
     <script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
     <script src="{{ asset('js/pages/add-product.init.js') }}"></script>
@@ -283,8 +312,8 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
-         // Function to handle the radio button change event
-         function handleRadioChange() {
+        // Function to handle the radio button change event
+        function handleRadioChange() {
             const passwordSection = document.getElementById('password-section');
             const publicRadio = document.getElementById('customradio-public');
             const privateRadio = document.getElementById('customradio-private');
@@ -306,7 +335,7 @@
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const passwordEye = document.querySelector('.password-eye');
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 passwordEye.parentElement.classList.add('show-password');
@@ -664,10 +693,10 @@
             document.getElementById('harga-jual').textContent = formatRupiah(hargaJual.toFixed(0));
         }
     </script>
-     <script>
+    <script>
         document.getElementById('cancel-button').addEventListener('click', function(event) {
             event.preventDefault();
-            
+
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Data Anda tidak akan tersimpan.",
