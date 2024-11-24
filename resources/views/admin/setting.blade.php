@@ -1,4 +1,4 @@
-@extends('layout.user')
+@extends('layout.admin')
 
 @push('header')
     <style>
@@ -97,108 +97,14 @@
                         <div class="card-body">
                             <ul class="nav nav-pills nav-fill navtab-bg">
                                 <li class="nav-item">
-                                    <a href="#aboutme" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                                        Pesanan
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#timeline" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
-                                        Favorit
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#settings" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                    <a href="#settings" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
                                         Settings
                                     </a>
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane show active" id="aboutme">
 
-                                    <h5 class="mb-4 text-uppercase"><i class="mdi mdi-briefcase me-1"></i>
-                                        Pesanan Anda</h5>
-
-                                    <div class="table-responsive">
-                                        <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
-                                            id="tickets-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        No.
-                                                    </th>
-                                                    <th>Invoice</th>
-                                                    <th>Total Harga</th>
-                                                    <th>Catatan</th>
-                                                    <th>Status</th>
-                                                    <th class="hidden-sm">Action</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                                @foreach ($pesanan as $pesananItem)
-                                                    <tr>
-                                                        <td><b>{{ $loop->iteration }}</b></td>
-                                                        <td>
-                                                            #0000{{ $pesananItem->id }}
-                                                        </td>
-
-                                                        <td>{{ 'Rp. ' . number_format($pesananItem->totalharga, 0, ',', '.') }}
-                                                        </td>
-
-
-                                                        <td>
-                                                            {{ $pesananItem->catatan }}
-                                                        </td>
-
-                                                        <td>
-                                                            <span
-                                                                class="badge bg-success">{{ $pesananItem->status }}</span>
-                                                        </td>
-
-                                                        <td>
-                                                            <div class="btn-group dropdown">
-                                                                <a href="javascript: void(0);"
-                                                                    class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                                        class="mdi mdi-dots-horizontal"></i></a>
-                                                                <div class="dropdown-menu dropdown-menu-end">
-                                                                    <a class="dropdown-item"
-                                                                        href="{{ route('user.invoice', ['id' => Crypt::encryptString($pesananItem->id)]) }}"><i
-                                                                            class="mdi mdi-pencil me-2 text-muted font-18 vertical-middle"></i>Bayar
-                                                                        Sekarang</a>
-                                                                    <a class="dropdown-item" href="#"><i
-                                                                            class="mdi mdi-check-all me-2 text-muted font-18 vertical-middle"></i>Batalkan</a>
-                                                                    <a class="dropdown-item" href="#"><i
-                                                                            class="mdi mdi-delete me-2 text-muted font-18 vertical-middle"></i>Download</a>
-                                                                    <a class="dropdown-item" href="#"><i
-                                                                            class="mdi mdi-star me-2 font-18 text-muted vertical-middle"></i>Invoice</a>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div> <!-- end tab-pane -->
-                                <!-- end about me section content -->
-
-                                <div class="tab-pane" id="timeline">
-
-                                    <h5 class="mb-4 text-uppercase"><i class="mdi mdi-briefcase me-1"></i>
-                                        Foto Favoritmu</h5>
-
-                                    <div class="photo-gallery">
-                                        @foreach ($foto as $fotoItem)
-                                            <img src="{{ Storage::url($fotoItem->foto->foto) }}" alt="Image 1">
-                                        @endforeach
-
-                                    </div>
-
-                                </div>
-                                <!-- end timeline content-->
-
-                                <div class="tab-pane" id="settings">
+                                <div class="tab-pane show active" id="settings">
                                     <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>
                                         Personal Info</h5>
                                     <form action="">

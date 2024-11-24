@@ -193,4 +193,27 @@ class PemesananController extends Controller
             "pesanan" => $pesanan,
         ]);
     }
+
+    public function cancelOrder($id)
+    {
+        try {
+            // Temukan pesanan berdasarkan ID
+            $order = Pesanan::findOrFail($id);
+
+            // Ubah status menjadi dibatalkan
+            $order->status = 'Dibatalkan';
+            $order->is_selesai = true;
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesanan berhasil dibatalkan.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membatalkan pesanan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

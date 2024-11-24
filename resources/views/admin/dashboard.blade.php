@@ -32,9 +32,7 @@
 
         #sales-analytics1 {
             width: 100%;
-            /* Sesuaikan lebar agar memenuhi card */
             height: 100%;
-            /* Sesuaikan tinggi agar memenuhi card */
         }
     </style>
 @endpush
@@ -239,7 +237,8 @@
                             <h4 class="header-title mb-3">Pendapatan</h4>
 
                             <div class="table-responsive">
-                                <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100" style="table-layout: fixed;">
+                                <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100"
+                                    style="table-layout: fixed;">
                                     <thead>
                                         <tr class="table-light">
                                             <th style="width: 10px; overflow: hidden;">No. </th>
@@ -253,7 +252,8 @@
                                         @foreach ($detailPesanan as $pesanan)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($pesanan['created_at'])->format('j M y') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pesanan['created_at'])->format('j M y') }}
+                                                </td>
                                                 <td>#0000{{ $pesanan['id_pesanan'] }}</td>
                                                 <td>{{ $pesanan['event'] }}</td>
                                                 <td>Rp {{ number_format($pesanan['pendapatan'], 0, ',', '.') }}</td>
@@ -262,7 +262,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                                                   
+
                         </div>
                     </div>
                 </div> <!-- end col -->
@@ -270,174 +270,38 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
+                            <div class=" float-end">
+                                <a href="{{ route('admin.pembayaran-foto') }}" class="btn btn-primary btn-sm">
+                                    Proses Pembayaran
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Revenue History</h4>
+                            <h4 class="header-title mb-3">Permohonan Pembayaran</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-nowrap table-hover table-centered m-0">
 
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Marketplaces</th>
-                                            <th>Date</th>
-                                            <th>Payouts</th>
+                                            <th>Nama</th>
+                                            <th>Jumlah</th>
+                                            <th>Sisa Saldo</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Tanggal</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Themes Market</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 15, 2018
-                                            </td>
-
-                                            <td>
-                                                $5848.68
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-warning text-warning">Upcoming</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Freelance</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 12, 2018
-                                            </td>
-
-                                            <td>
-                                                $1247.25
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-success text-success">Paid</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Share Holding</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 10, 2018
-                                            </td>
-
-                                            <td>
-                                                $815.89
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-success text-success">Paid</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Envato's Affiliates</h5>
-                                            </td>
-
-                                            <td>
-                                                Oct 03, 2018
-                                            </td>
-
-                                            <td>
-                                                $248.75
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-danger text-danger">Overdue</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Marketing Revenue</h5>
-                                            </td>
-
-                                            <td>
-                                                Sep 21, 2018
-                                            </td>
-
-                                            <td>
-                                                $978.21
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-warning text-warning">Upcoming</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <h5 class="m-0 fw-normal">Advertise Revenue</h5>
-                                            </td>
-
-                                            <td>
-                                                Sep 15, 2018
-                                            </td>
-
-                                            <td>
-                                                $358.10
-                                            </td>
-
-                                            <td>
-                                                <span class="badge bg-soft-success text-success">Paid</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i
-                                                        class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr>
-
+                                        @foreach ($pembayaran as $pembayaranItem)
+                                            <tr>
+                                                <td>{{ $pembayaranItem->fotografer->nama }}</td>
+                                                <td>{{ 'Rp. ' . number_format($pembayaranItem->jumlah, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($pembayaranItem->saldo, 0, ',', '.') }}</td>
+                                                <td><span
+                                                        class="badge label-table bg-warning">{{ $pembayaranItem->status }}</span>
+                                                </td>
+                                                <td>{{ $pembayaranItem->created_at->format('d M Y') }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div> <!-- end .table-responsive-->
@@ -468,51 +332,7 @@
     <script src="{{ asset('libs/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ asset('libs/pdfmake/build/vfs_fonts.js') }}"></script>
     <script src="{{ asset('js/pages/datatables.init.js') }}"></script>
-    <script>
-        // Total pendapatan hari ini
-        var totalRevenueToday = {{ $totalPembelianBersih }}; // Pendapatan Rp 178,000
-        var totalTarget = 1000000; // Total penuh adalah Rp 1,000,000 (1 juta rupiah)
-
-        // Hitung persentase dari total pendapatan hari ini
-        var percentageRevenue = (totalRevenueToday / totalTarget) * 100;
-
-        var options = {
-            chart: {
-                type: 'radialBar',
-                height: 250,
-                width: 300,
-            },
-            series: [percentageRevenue], // Persentase pendapatan hari ini
-            labels: ['Revenue'],
-            plotOptions: {
-                radialBar: {
-                    dataLabels: {
-                        name: {
-                            fontSize: '22px',
-                        },
-                        value: {
-                            fontSize: '16px',
-                            formatter: function(val) {
-                                return parseFloat(val).toFixed(0) + "%"; // Menampilkan persentase
-                            }
-                        },
-                        total: {
-                            show: true,
-                            label: 'Target',
-                            formatter: function() {
-                                return 'Rp. 1jt'; // Nilai total yang ditampilkan
-                            }
-                        }
-                    }
-                }
-            },
-            colors: ['#f1556c'], // Warna lingkaran
-        }
-
-        var chart = new ApexCharts(document.querySelector("#total-revenue1"), options);
-        chart.render();
-    </script>
-    <script>
+      <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log("Script is running");
 
@@ -533,7 +353,7 @@
                     height: 330,
                     width: 850,
                     type: 'line',
-                    stacked: false
+                    stacked: false,
                 },
                 stroke: {
                     width: [0, 2],
@@ -593,4 +413,49 @@
             });
         });
     </script>
+    <script>
+        // Total pendapatan hari ini
+        var totalRevenueToday = {{ $totalPembelianBersih }}; // Pendapatan Rp 178,000
+        var totalTarget = 1000000; // Total penuh adalah Rp 1,000,000 (1 juta rupiah)
+
+        // Hitung persentase dari total pendapatan hari ini
+        var percentageRevenue = (totalRevenueToday / totalTarget) * 100;
+
+        var options = {
+            chart: {
+                type: 'radialBar',
+                height: 250,
+                width: 300,
+            },
+            series: [percentageRevenue], // Persentase pendapatan hari ini
+            labels: ['Revenue'],
+            plotOptions: {
+                radialBar: {
+                    dataLabels: {
+                        name: {
+                            fontSize: '22px',
+                        },
+                        value: {
+                            fontSize: '16px',
+                            formatter: function(val) {
+                                return parseFloat(val).toFixed(0) + "%"; // Menampilkan persentase
+                            }
+                        },
+                        total: {
+                            show: true,
+                            label: 'Target',
+                            formatter: function() {
+                                return 'Rp. 1jt'; // Nilai total yang ditampilkan
+                            }
+                        }
+                    }
+                }
+            },
+            colors: ['#f1556c'], // Warna lingkaran
+        }
+
+        var chart = new ApexCharts(document.querySelector("#total-revenue1"), options);
+        chart.render();
+    </script>
+  
 @endpush

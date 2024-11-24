@@ -73,8 +73,8 @@
                                         </div>
                                         <div class="form-floating mb-3">
                                             <select class="form-select" id="floatingSelect" name="role" aria-label="Floating label select example">
-                                                <option value="" disabled selected>Pilih Role</option>
-                                                <option value="Admin">Admin</option>
+                                                <option value="" disabled>Pilih Role</option>
+                                                <option value="Admin" selected>Admin</option>
                                                 <option value="Fotografer">Fotografer</option>
                                                 <option value="User">User</option>
                                             </select>

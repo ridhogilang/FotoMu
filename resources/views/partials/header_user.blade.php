@@ -120,7 +120,7 @@
             </li>
             {{-- Wishlist Icon --}}
             <li class="notification-list">
-                <a class="nav-link waves-effect waves-light" href="#">
+                <a class="nav-link waves-effect waves-light" href="{{ route('user.wishlist') }}">
                     <i class="fe-heart font-22"></i>
                     @php
                         $wishlistCount = Auth::user()->wishlist()->count();
@@ -177,7 +177,7 @@
                         <span>RoboMu</span>
                     </a>
 
-                    @if (\App\Models\Fotografer::where('user_id', Auth::id())->exists())
+                    @if (Auth::user()->is_foto)
                         <a href="{{ route('foto.dashboard') }}" class="dropdown-item notify-item">
                             <i class="mdi mdi-view-dashboard"></i>
                             <span>Dashboard Fotografer</span>

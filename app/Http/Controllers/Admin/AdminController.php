@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\DetailPesanan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
+use App\Models\Withdrawal;
 
 class AdminController extends Controller
 {
@@ -23,7 +23,9 @@ class AdminController extends Controller
         $currentYear = Carbon::now()->year;
 
         // Menghitung jumlah foto yang terjual dalam bulan berjalan
-        $jmlFotoTerjual = DetailPesanan::whereBetween('created_at', [$startOfMonth, $endOfMonth])
+        $jmlFotoTerjual = DetailPesanan::whereHas('pesanan', function ($query) {
+            $query->where('status', 'Selesai'); // Filter berdasarkan status di tabel Pesanan
+        })->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->count('foto_id');
 
         $totalPenghasilan = Pesanan::where('status', 'Selesai')
@@ -39,26 +41,30 @@ class AdminController extends Controller
 
         $fotoAktif = Foto::where('is_hapus', false)->count();
 
-        $detailPesanan = DetailPesanan::whereDate('created_at', Carbon::today())->get();
+        $detailPesanan = DetailPesanan::whereHas('pesanan', function ($query) {
+            $query->where('status', 'Selesai'); // Filter pesanan dengan status Selesai
+        })->whereDate('created_at', Carbon::today())->get();
+        
         $totalPembelianBersih = 0;
+        
         foreach ($detailPesanan->groupBy('pesanan_id') as $pesananId => $pesananGroup) {
             // Hitung biaya admin, ditambahkan hanya sekali per pesanan
             $biayaAdmin = 2000;
             $totalPerPesanan = $biayaAdmin;
-
+        
             foreach ($pesananGroup as $detail) {
                 // Ambil harga dari tabel foto berdasarkan foto_id
                 $foto = Foto::find($detail->foto_id);
                 $harga = (float) $foto->harga;
-
+        
                 // Hitung 11% dari harga dan 10% dari harga
                 $potongan11 = 0.11 * $harga;
                 $potongan10 = 0.10 * $harga;
-
+        
                 // Tambahkan potongan ke total per pesanan
                 $totalPerPesanan += $potongan11 + $potongan10;
             }
-
+        
             // Tambahkan total per pesanan ke total keseluruhan
             $totalPembelianBersih += $totalPerPesanan;
         }
@@ -71,6 +77,7 @@ class AdminController extends Controller
             ->whereYear('pesanan.created_at', $currentYear)    // Tahun berjalan
             ->groupBy(DB::raw('DAY(pesanan.created_at)'))
             ->get();
+
 
         // Ambil jumlah transaksi harian
         $dailySales = DetailPesanan::select(DB::raw('DAY(created_at) as day'), DB::raw('COUNT(*) as sales'))
@@ -125,6 +132,7 @@ class AdminController extends Controller
                 ];
             });
 
+        $pembayaran = Withdrawal::where('status', 'Pending')->get();
 
         return view('admin.dashboard', [
             "title" => "Dashboard Admin",
@@ -137,6 +145,17 @@ class AdminController extends Controller
             "revenueData" => $revenueData,  // Data pendapatan harian
             "salesData" => $salesData,
             "detailPesanan" => $detailPesanan,
+            "pembayaran" => $pembayaran,
+        ]);
+    }
+
+    public function setting()
+    {
+        $user = auth()->user();
+
+        return view('admin.setting', [
+            "title" => "Setting",
+            "user" => $user,
         ]);
     }
 }

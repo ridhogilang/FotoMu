@@ -158,7 +158,7 @@
                 </div>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('admin.setting') }}" class="menu-link">
                     <span class="menu-icon"><i data-feather="settings"></i></span>
                     <span class="menu-text"> Setting </span>
                 </a>

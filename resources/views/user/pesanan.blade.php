@@ -18,9 +18,8 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tickets</a></li>
-                                <li class="breadcrumb-item active">Ticket List</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pemesanan</a></li>
+                                <li class="breadcrumb-item active">Pesanan List</li>
                             </ol>
                         </div>
                         <h4 class="page-title">Pesanan</h4>
@@ -68,15 +67,30 @@
                                                 <td>
                                                     {{ $pesananItem->catatan }}
                                                 </td>
-
-                                                <td>
-                                                    <span class="badge bg-success">{{ $pesananItem->status }}</span>
-                                                </td>
-
+                                                @if ($pesananItem->status == 'Selesai')
+                                                    <td>
+                                                        <span class="badge bg-success">{{ $pesananItem->status }}</span>
+                                                    </td>
+                                                @elseif ($pesananItem->status == 'Menunggu Pembayaran')
+                                                    <td>
+                                                        <span class="badge bg-warning">{{ $pesananItem->status }}</span>
+                                                    </td>
+                                                @elseif ($pesananItem->status == 'Dibatalkan')
+                                                    <td>
+                                                        <span class="badge bg-danger">{{ $pesananItem->status }}</span>
+                                                    </td>
+                                                @else
+                                                    <td>
+                                                        <span class="badge bg-warning">{{ $pesananItem->status }}</span>
+                                                    </td>
+                                                @endif
                                                 @switch($pesananItem->status)
                                                     @case('Diproses')
                                                         <td>
-                                                            -
+                                                            <a class="dropdown-item"
+                                                            href="{{ route('user.invoice', ['id' => Crypt::encryptString($pesananItem->id)]) }}"><i
+                                                                class="mdi mdi-bank-transfer me-2 text-muted font-18 vertical-middle"></i>Bayar
+                                                            Sekarang</a>
                                                         </td>
                                                     @break
 
@@ -92,19 +106,29 @@
                                                                         href="{{ route('user.invoice', ['id' => Crypt::encryptString($pesananItem->id)]) }}"><i
                                                                             class="mdi mdi-bank-transfer me-2 text-muted font-18 vertical-middle"></i>Bayar
                                                                         Sekarang</a>
-                                                                    <a class="dropdown-item" href="#"><i
-                                                                            class="mdi mdi-cancel me-2 text-muted font-18 vertical-middle"></i>Batalkan</a>
+                                                                    <a class="dropdown-item btn-cancel-order" href="#"
+                                                                        data-order-id="{{ $pesananItem->id }}">
+                                                                        <i
+                                                                            class="mdi mdi-cancel me-2 text-muted font-18 vertical-middle"></i>Batalkan
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     @break
 
                                                     @case('Selesai')
-                                                        <td> - </td>
+                                                        <td> 
+                                                            <a href="{{ route('user.invoice', ['id' => Crypt::encryptString($pesananItem->id)]) }}" class="action-icon">
+                                                                <i class="mdi mdi-file-document-outline"></i>
+                                                            </a> 
+                                                        </td>
                                                     @break
 
                                                     @case('Dibatalkan')
-                                                        <td> - </td>
+                                                        <td> 
+                                                            <a href="{{ route('user.invoice', ['id' => Crypt::encryptString($pesananItem->id)]) }}" class="action-icon">
+                                                            <i class="mdi mdi-file-document-outline"></i>
+                                                        </a> </td>
                                                     @break
                                                 @endswitch
                                             </tr>
@@ -129,4 +153,69 @@
     <script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+    // Delegasikan event untuk menangkap klik tombol pembatalan
+    document.body.addEventListener('click', function (e) {
+        if (e.target.closest('.btn-cancel-order')) { // Tangkap elemen dengan class btn-cancel-order
+            e.preventDefault();
+
+            const button = e.target.closest('.btn-cancel-order'); // Elemen tombol yang diklik
+            const orderId = button.getAttribute('data-order-id'); // Ambil data-order-id
+
+            // Tampilkan SweetAlert konfirmasi
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Pesanan akan dibatalkan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, batalkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Kirim request pembatalan
+                    fetch(`/pelanggan/pesanan/dibatalkan/${orderId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire(
+                                'Dibatalkan!',
+                                'Pesanan berhasil dibatalkan.',
+                                'success'
+                            );
+                            // Reload halaman atau lakukan tindakan lain
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                data.message || 'Gagal membatalkan pesanan.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Terjadi Kesalahan!',
+                            'Tidak dapat membatalkan pesanan.',
+                            'error'
+                        );
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        }
+    });
+});
+
+    </script>
 @endpush

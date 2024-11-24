@@ -46,6 +46,7 @@ Route::post('/update-password', [AuthController::class, 'updatePassword'])->name
 Route::prefix('admin')->group(function () {
     // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/setting', [AdminController::class, 'setting'])->name('admin.setting');
 
     Route::get('/foto-kontrol', [FotomuAdminController::class, 'fotomu_kontrol'])->name('admin.fotokontrol');
     Route::get('/foto-kontrol/event/{id}', [FotomuAdminController::class, 'foto'])->name('admin.fotoevent');
@@ -131,6 +132,7 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/invoice/{id}', [PemesananController::class, 'invoice'])->name('user.invoice');
     Route::get('/checkout/success/{id}', [PemesananController::class, 'success'])->name('checkout.success');
     Route::get('/download', [PemesananController::class, 'download'])->name('user.download');
+    Route::post('/pesanan/dibatalkan/{id}', [PemesananController::class, 'cancelOrder'])->name('user.pesanan-dibatalkan');
 
     //user
     Route::get('/profil', [UserController::class, 'profile'])->name('user.profil');

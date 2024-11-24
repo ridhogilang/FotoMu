@@ -62,13 +62,6 @@ class AuthController extends Controller
             if ($user->is_admin) {
                 // Redirect ke admin dashboard jika is_admin true
                 return redirect()->route('admin.dashboard')->with('success', 'Halo selamat datang ' . $user->name);
-            } elseif ($user->is_user) {
-                // Jika is_user true, cek foto_depan
-                if (is_null($user->foto_depan)) {
-                    return redirect()->route('user.formfotodepan')->with('warning', 'Silakan lengkapi foto depan Anda.');
-                } else {
-                    return redirect()->route('user.produk')->with('success', 'Halo selamat datang ' . $user->name);
-                }
             } elseif ($user->is_foto) {
                 // Jika is_foto true, cek apakah user_id sudah ada di tabel fotografer
                 $fotografer = Fotografer::where('user_id', $user->id)->first();
@@ -77,6 +70,13 @@ class AuthController extends Controller
                     return redirect()->route('foto.upload')->with('warning', 'Silakan lengkapi data fotografer Anda.');
                 } else {
                     return redirect()->route('foto.profil')->with('success', 'Halo selamat datang ' . $user->name);
+                }
+            } elseif ($user->is_user) {
+                // Jika is_user true, cek foto_depan
+                if (is_null($user->foto_depan)) {
+                    return redirect()->route('user.formfotodepan')->with('warning', 'Silakan lengkapi foto depan Anda.');
+                } else {
+                    return redirect()->route('user.produk')->with('success', 'Halo selamat datang ' . $user->name);
                 }
             }
 

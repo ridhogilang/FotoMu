@@ -342,10 +342,119 @@
                                                             <i class="mdi mdi-delete"></i>
                                                         </a>
                                                     @else
-                                                        -
+                                                        <a href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#view-modal-{{ $penarikanItem->id }}"
+                                                             class="action-icon"
+                                                            data-id="{{ $penarikanItem->id }}">
+                                                            <i class="mdi mdi-eye"></i>
+                                                        </a>
                                                     @endif
                                                 </td>
                                             </tr>
+                                            <div id="view-modal-{{ $penarikanItem->id }}" class="modal fade"
+                                                tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-light">
+                                                            <h4 class="modal-title">Status Pembayaran</h4>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-hidden="true"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form>
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <div class="mb-3">
+                                                                    <label for="nama" class="form-label">Nama
+                                                                        Fotografer</label>
+                                                                    <input class="form-control" name="nama"
+                                                                        type="text"
+                                                                        value="{{ $penarikanItem->fotografer->nama }}"
+                                                                        required="" readonly
+                                                                        style="border: none; background-color: transparent;">
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="rekening" class="form-label">Detail
+                                                                        Rekening</label>
+                                                                    <input class="form-control" name="rekening"
+                                                                        type="text"
+                                                                        value="{{ $penarikanItem->rekening->nama_bank }} - {{ $penarikanItem->rekening->rekening }} ({{ $penarikanItem->rekening->nama }})"
+                                                                        required="" readonly
+                                                                        style="border: none; background-color: transparent;">
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="jumlah" class="form-label">Jumlah
+                                                                            Penarikan</label>
+                                                                        <input class="form-control" name="jumlah"
+                                                                            type="text"
+                                                                            value="{{ 'Rp. ' . number_format($penarikanItem->jumlah, 0, ',', '.') }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="saldo" class="form-label">Sisa
+                                                                            Saldo</label>
+                                                                        <input class="form-control" name="saldo"
+                                                                            type="text"
+                                                                            value="{{ 'Rp. ' . number_format($penarikanItem->saldo, 0, ',', '.') }}"
+                                                                            required="" readonly
+                                                                            style="border: none; background-color: transparent;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6"> <label for="status"
+                                                                            class="form-label">Status</label>
+                                                                        <input class="form-control" name="status"
+                                                                            type="text"
+                                                                            value="{{ $penarikanItem->status }}" required
+                                                                            readonly
+                                                                            style="border: none; background-color: transparent; 
+                                                                           color: 
+                                                                           @if ($penarikanItem->status == 'Pending') orange 
+                                                                           @elseif ($penarikanItem->status == 'Approved') green 
+                                                                           @else red @endif;">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="saldo" class="form-label">Processed
+                                                                            at</label>
+                                                                            <input class="form-control" name="saldo"
+                                                                            type="text"
+                                                                            value="{{ \Carbon\Carbon::parse($penarikanItem->processed_at)->format('d M Y H:i') }}"
+                                                                            required readonly
+                                                                            style="border: none; background-color: transparent;">                                                                     
+                                                                    </div>
+                                                                </div>
+
+                                                                @if ($penarikanItem->status != 'Rejected')
+                                                                    <div class="mb-3">
+                                                                        <label for="bukti_foto" class="form-label">Foto
+                                                                            Bukti
+                                                                            Transfer :</label>
+                                                                        <div class="col-lg-12">
+                                                                            <div>
+                                                                                <img src="{{ Storage::url($penarikanItem->bukti_foto) }}"
+                                                                                    alt="image"
+                                                                                    class="img-fluid rounded"
+                                                                                    width="200" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+
+                                                                <div class="mb-3">
+                                                                    <label for="nama" class="form-label">Pesan</label>
+                                                                    <input class="form-control" name="nama"
+                                                                        type="text"
+                                                                        value="{{ $penarikanItem->pesan }}"
+                                                                        required="" readonly
+                                                                        style="border: none; background-color: transparent;">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
