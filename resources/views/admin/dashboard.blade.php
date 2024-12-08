@@ -314,6 +314,7 @@
 @endsection
 
 @push('footer')
+    <script src="{{ asset('js/pages/dashboard-1.init.js') }}"></script>
     <script src="{{ asset('libs/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('libs/selectize/js/standalone/selectize.min.js') }}"></script>
@@ -332,7 +333,7 @@
     <script src="{{ asset('libs/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ asset('libs/pdfmake/build/vfs_fonts.js') }}"></script>
     <script src="{{ asset('js/pages/datatables.init.js') }}"></script>
-      <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log("Script is running");
 
@@ -457,5 +458,4 @@
         var chart = new ApexCharts(document.querySelector("#total-revenue1"), options);
         chart.render();
     </script>
-  
 @endpush

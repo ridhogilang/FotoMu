@@ -30,6 +30,18 @@ class FotoFotograferController extends Controller
         ]);
     }
 
+    public function tambahtree()
+    {
+        $user = Auth::user();
+        $event = Event::all();
+
+        return view('fotografer.tambahtree', [
+            "title" => "Tambah Tree",
+            "user" => $user,
+            "event" => $event,
+        ]);
+    }
+
     public function upload_foto(Request $request)
     {
         // Validasi file yang diupload

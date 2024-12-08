@@ -41,6 +41,7 @@ class FotograferController extends Controller
 
     public function event_tambah(Request $request)
     {
+        dd($request);
         // Validasi input
         $rules = [
             'event' => 'required|string|max:255',

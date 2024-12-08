@@ -41,6 +41,13 @@
                         </li>
 
                         <li class="menu-item">
+                            <a href="{{ route('foto.tambahtree') }}" class="menu-link">
+                                <span class="menu-icon"><i data-feather="plus-square"></i></span>
+                                <span class="menu-text"> Tambah Event </span>
+                            </a>
+                        </li>
+
+                        <li class="menu-item">
                             <a href="{{ route('foto.filemanager') }}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="message-square"></i></span>
                                 <span class="menu-text"> File Manager </span>

@@ -210,8 +210,8 @@
                                                         @endif
                                                     </h5>
                                                     <div class="text-warning mb-2 font-13">
-                                                        <p>{{ $eventItem->deskripsi }}</p>
-                                                    </div>
+                                                        <p>{{ \Str::words($eventItem->deskripsi, 10, '...') }}</p>
+                                                    </div>                                                    
                                                     <h5 class="m-0"> <span class="text-muted"> Jumlah :
                                                             {{ $eventItem->foto_count }} Foto</span>
                                                     </h5>

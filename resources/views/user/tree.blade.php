@@ -237,35 +237,12 @@
             });
     </script>
 
-
-
-    <script>
-        // Tambahkan kontrol "Semua" dan "Kamera Live" di peta
-        var buttonControlsDiv = document.createElement('div');
-        buttonControlsDiv.className = 'button-controls';
-        buttonControlsDiv.innerHTML = `
-           <div class="btn-group mb-2">
-                                                    <button type="button" class="btn btn-light">Left</button>
-                                                    <button type="button" class="btn btn-light">Middle</button>
-                                                    <button type="button" class="btn btn-light">Right</button>
-                                                </div>
-        `;
-        map.getContainer().appendChild(buttonControlsDiv); // Menggunakan map.getContainer() agar sesuai dengan elemen peta
-
-        // Tambahkan kontrol "Tanam FotoTree" di peta
-        var plantButtonDiv = document.createElement('div');
-        plantButtonDiv.className = 'plant-button';
-        plantButtonDiv.innerHTML =
-            '<button style="background-color: purple; color: white; padding: 10px; border: none; border-radius: 5px;">+ Tanam FotoTree</button>';
-        map.getContainer().appendChild(plantButtonDiv); // Menggunakan map.getContainer() agar sesuai dengan elemen peta
-    </script>
-
     <script>
         // Tambahkan tombol zoom ke lokasi saya di atas tombol "Tanam FotoTree"
         var zoomButtonDiv = document.createElement('div');
         zoomButtonDiv.className = 'zoom-location-button';
         zoomButtonDiv.innerHTML =
-            '<img src="https://cdn-icons-png.flaticon.com/512/7184/7184546.png" alt="zoom to location" width="30">';
+        '<i class="mdi mdi-map-marker" style="font-size: 30px; color: #6a1b9a;"></i>';
         zoomButtonDiv.addEventListener('click', function() {
             if (userLocation) {
                 // Zoom ke lokasi pengguna dan pusatkan peta

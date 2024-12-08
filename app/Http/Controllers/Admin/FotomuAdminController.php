@@ -10,6 +10,7 @@ use App\Models\DetailPesanan;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class FotomuAdminController extends Controller
@@ -59,23 +60,23 @@ class FotomuAdminController extends Controller
     public function foto($id)
     {
         $encryptId = Crypt::decryptString($id);
-    
+
         // Fetch event name
         $event = Event::where('id', $encryptId)->pluck('event')->first();
-    
+
         // Fetch photos related to the event without filtering by fotografer_id
         $foto = Foto::where('event_id', $encryptId)->paginate(15);
-    
+
         // Fetch all events for dropdown or other use in the view
         $eventAll = Event::all();
-    
+
         // Calculate total storage for all photos (no filter by fotografer_id)
         $totalStorage = Foto::sum('file_size');
         $maxStorage = 50 * 1024 * 1024 * 1024; // 50 GB in bytes
         $percentageUsed = ($totalStorage / $maxStorage) * 100;
         $totalStorageFormatted = $this->formatSizeUnits($totalStorage);
         $maxStorageFormatted = $this->formatSizeUnits($maxStorage);
-    
+
         // Return the view with all data
         return view('admin.fotoevent', [
             "title" => "Foto - $event",
@@ -88,7 +89,7 @@ class FotomuAdminController extends Controller
             "maxStorageFormatted" => $maxStorageFormatted,
         ]);
     }
-    
+
     public function AdmindeleteSelectedPhotos(Request $request)
     {
         $request->validate([
@@ -103,10 +104,10 @@ class FotomuAdminController extends Controller
 
         foreach ($fotos as $foto) {
             Log::info('Memproses foto dengan ID:', ['foto_id' => $foto->id, 'foto' => $foto->foto, 'fotowatermark' => $foto->fotowatermark]);
-        
+
             // Cek apakah foto_id ada di DetailPesanan
             $isInPesanan = DetailPesanan::where('foto_id', $foto->id)->exists();
-        
+
             if ($isInPesanan) {
                 // Jika ada di DetailPesanan, update kolom is_hapus menjadi true
                 $foto->update(['is_hapus' => true]);
@@ -115,7 +116,7 @@ class FotomuAdminController extends Controller
                 if ($foto->foto && Storage::disk('public')->exists($foto->foto)) {
                     Storage::disk('public')->delete($foto->foto);
                 }
-        
+
                 if ($foto->fotowatermark && Storage::disk('public')->exists($foto->fotowatermark)) {
                     Storage::disk('public')->delete($foto->fotowatermark);
                 }
@@ -125,6 +126,48 @@ class FotomuAdminController extends Controller
         }
 
         return response()->json(['message' => 'Foto Sudah berhasil dihapus'], 200);
+    }
+
+    public function getFoto($id)
+    {
+        // Cari foto berdasarkan ID
+        $foto = Foto::find($id);
+
+        // Jika foto tidak ditemukan, kembalikan respon 404
+        if (!$foto) {
+            return response()->json(['error' => 'Foto tidak ditemukan.'], 404);
+        }
+
+        // Kembalikan hanya ID
+        return response()->json([
+            'id' => $foto->id,
+        ]);
+    }
+
+    public function updateSelectedPhotos(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'foto_ids' => 'required',
+            'event_id' => 'required',
+            'harga' => 'required',
+            'deskripsi' => 'string',
+        ]);
+
+        // Ambil semua ID foto yang dipilih
+        $fotoIds = $request->input('foto_ids');
+
+        $harga = preg_replace('/[^\d]/', '', $request->input('harga'));
+
+        // Update data untuk semua foto yang dipilih
+        Foto::whereIn('id', $fotoIds)->update([
+            'event_id' => $request->input('event_id'),
+            'harga' => $harga,
+            'deskripsi' => $request->input('deskripsi'),
+        ]);
+
+        // Kembalikan respon sukses
+        return response()->json(['message' => 'Foto berhasil diupdate.'], 200);
     }
 
     public function event()
@@ -140,7 +183,7 @@ class FotomuAdminController extends Controller
     public function event_update(Request $request, $id)
     {
         $event = Event::findOrFail($id);
-    
+
         // Validasi input dengan kondisi khusus
         $rules = [
             'event' => 'required|string|max:255',
@@ -148,37 +191,105 @@ class FotomuAdminController extends Controller
             'is_private' => 'required|boolean',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'required|string',
+            'foto_cover' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ];
-    
+
         // Tambahkan aturan validasi untuk password hanya jika event bersifat private
         if ($request->input('is_private') == 1) {
             $rules['password'] = 'required|string|min:6';
         }
-    
+
         // Validasi data input
         $validatedData = $request->validate($rules);
-    
+
         // Set data event dengan input yang telah divalidasi
         $event->event = $validatedData['event'];
         $event->tanggal = Carbon::parse($validatedData['tanggal']);
         $event->is_private = $validatedData['is_private'];
         $event->deskripsi = $validatedData['deskripsi'] ?? null; // Deskripsi opsional
         $event->lokasi = $validatedData['lokasi'];
-    
+
+        if ($request->hasFile('foto_cover')) {
+            // Hapus foto lama jika ada
+            if ($event->foto_cover) {
+                Storage::delete('public/' . $event->foto_cover);
+            }
+
+            // Ambil file foto baru dan buat instance gambar
+            $fotoCover = $request->file('foto_cover');
+            $image = Image::make($fotoCover->getPathname());
+
+            // Crop gambar menjadi 355x355
+            $image->fit(355, 355);
+
+            // Buat path baru untuk foto cover yang sudah diproses
+            $fotoCoverPath = 'foto_covers/' . uniqid() . '.' . $fotoCover->getClientOriginalExtension();
+
+            // Simpan gambar yang sudah di-crop ke folder storage/public/foto_covers
+            $image->save(public_path('storage/' . $fotoCoverPath), 80); // Simpan dengan kualitas 80
+
+            // Simpan path foto cover ke event
+            $event->foto_cover = $fotoCoverPath;
+        }
+
         // Simpan password hanya jika event bersifat private
         if ($validatedData['is_private'] == 1) {
             $event->password = bcrypt($validatedData['password']);
         } else {
             $event->password = null; // Jika event public, password dihapus
         }
-    
+
         // Simpan perubahan pada event ke dalam database
         $event->save();
-    
+
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Event berhasil diperbarui!');
     }
-    
+
+    public function event_delete(Request $request, $id)
+    {
+        // Temukan event berdasarkan ID
+        $event = Event::findOrFail($id);
+
+        // Ambil foto-foto terkait dengan event
+        $fotos = Foto::where('event_id', $event->id)->get();
+
+        // Proses setiap foto
+        foreach ($fotos as $foto) {
+            Log::info('Memproses foto dengan ID:', ['foto_id' => $foto->id, 'foto' => $foto->foto, 'fotowatermark' => $foto->fotowatermark]);
+
+            // Cek apakah foto_id ada di DetailPesanan
+            $isInPesanan = DetailPesanan::where('foto_id', $foto->id)->exists();
+
+            if ($isInPesanan) {
+                // Jika ada di DetailPesanan, update kolom is_hapus menjadi true
+                $foto->update(['is_hapus' => true]);
+            } else {
+                // Jika tidak ada di DetailPesanan, hapus foto fisik dan database record
+                if ($foto->foto && Storage::disk('public')->exists($foto->foto)) {
+                    Storage::disk('public')->delete($foto->foto);
+                }
+
+                if ($foto->fotowatermark && Storage::disk('public')->exists($foto->fotowatermark)) {
+                    Storage::disk('public')->delete($foto->fotowatermark);
+                }
+
+                // Hapus foto dari database
+                $foto->delete();
+            }
+        }
+
+        // Jika ada foto cover pada event, hapus file foto cover terkait
+        if ($event->foto_cover && Storage::exists('public/' . $event->foto_cover)) {
+            Storage::delete('public/' . $event->foto_cover);
+        }
+
+        // Hapus event dari database
+        $event->delete();
+
+        // Redirect kembali ke halaman event dengan pesan sukses
+        return redirect()->back()->with('success', 'Event dan foto terkait berhasil dihapus.');
+    }
 
     private function formatSizeUnits($bytes)
     {

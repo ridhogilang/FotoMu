@@ -1,6 +1,8 @@
 @extends('layout.admin')
 
 @push('header')
+    <link href="{{ asset('libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('libs/dropify/css/dropify.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
         type="text/css" />
@@ -31,9 +33,8 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tickets</a></li>
-                                <li class="breadcrumb-item active">Ticket List</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Fotomu</a></li>
+                                <li class="breadcrumb-item active">Event</li>
                             </ol>
                         </div>
                         <h4 class="page-title">Event</h4>
@@ -80,20 +81,30 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $eventItem->deskripsi }}</td>
-                                                <td>
+                                                <td class="d-flex justify-content-start align-items-center gap-1">
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#edit-modal-{{ $eventItem->id }}"
                                                         class="btn btn-xs btn-light edit-event-btn"
                                                         data-id="{{ $eventItem->id }}">
                                                         <i class="mdi mdi-pencil"></i>
                                                     </a>
+                                                    <form action="{{ route('admin.event-delete', $eventItem->id) }}"
+                                                        method="POST" class="m-0">
+                                                        @csrf
+                                                        @method('put')
+                                                        <button class="btn btn-xs btn-danger edit-event-btn"
+                                                            id="delete-event-btn-{{ $eventItem->id }}"
+                                                            data-id="{{ $eventItem->id }}">
+                                                            <i class="mdi mdi-trash-can-outline"></i>
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal untuk setiap event -->
                                             <div id="edit-modal-{{ $eventItem->id }}" class="modal fade" tabindex="-1"
                                                 role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header bg-light">
                                                             <h4 class="modal-title">Edit Event</h4>
@@ -103,60 +114,89 @@
                                                         <div class="modal-body">
                                                             <form
                                                                 action="{{ route('admin.event-update', $eventItem->id) }}"
-                                                                method="POST" class="px-3">
+                                                                method="POST" enctype="multipart/form-data">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <div class="mb-3">
-                                                                    <label for="event" class="form-label">Nama
-                                                                        Event</label>
-                                                                    <input class="form-control" name="event"
-                                                                        type="text" value="{{ $eventItem->event }}"
-                                                                        required="">
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label for="tanggal" class="form-label">Date</label>
-                                                                    <input class="form-control" id="tanggal"
-                                                                        name="tanggal" type="date"
-                                                                        value="{{ \Carbon\Carbon::parse($eventItem->tanggal)->format('Y-m-d') }}">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <label for="event" class="form-label">Nama
+                                                                                Event</label>
+                                                                            <input class="form-control" name="event"
+                                                                                type="text"
+                                                                                value="{{ $eventItem->event }}"
+                                                                                required="">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <label for="tanggal"
+                                                                                class="form-label">Date</label>
+                                                                            <input class="form-control" id="tanggal"
+                                                                                name="tanggal" type="date"
+                                                                                value="{{ \Carbon\Carbon::parse($eventItem->tanggal)->format('Y-m-d') }}">
 
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="is_private" value="0"
-                                                                        id="customradio-public-{{ $eventItem->id }}"
-                                                                        {{ $eventItem->is_private == 0 ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="customradio-public-{{ $eventItem->id }}">Public</label>
-
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="is_private" value="1"
-                                                                        id="customradio-private-{{ $eventItem->id }}"
-                                                                        {{ $eventItem->is_private == 1 ? 'checked' : '' }}>
-                                                                    <label class="form-check-label"
-                                                                        for="customradio-private-{{ $eventItem->id }}">Private</label>
-                                                                </div>
-
-                                                                <div class="mb-3"
-                                                                    id="password-section-{{ $eventItem->id }}"
-                                                                    style="{{ $eventItem->is_private == 0 ? 'display: none;' : '' }}">
-                                                                    <label for="password"
-                                                                        class="form-label">Password</label>
-                                                                    <div class="input-group input-group-merge">
-                                                                        <input type="password" id="password"
-                                                                            class="form-control"
-                                                                            placeholder="Enter your password"
-                                                                            name="password">
-                                                                        <div class="input-group-text"
-                                                                            data-password="false">
-                                                                            <span class="password-eye"
-                                                                                onclick="togglePassword()"></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="is_private" value="0"
+                                                                                id="customradio-public-{{ $eventItem->id }}"
+                                                                                {{ $eventItem->is_private == 0 ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="customradio-public-{{ $eventItem->id }}">Public</label>
 
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">Deskripsi</label>
-                                                                    <textarea class="form-control" name="deskripsi" rows="3">{{ $eventItem->deskripsi }}</textarea>
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="is_private" value="1"
+                                                                                id="customradio-private-{{ $eventItem->id }}"
+                                                                                {{ $eventItem->is_private == 1 ? 'checked' : '' }}>
+                                                                            <label class="form-check-label"
+                                                                                for="customradio-private-{{ $eventItem->id }}">Private</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+
+                                                                        <div class="mb-3"
+                                                                            id="password-section-{{ $eventItem->id }}"
+                                                                            style="{{ $eventItem->is_private == 0 ? 'display: none;' : '' }}">
+                                                                            <label for="password"
+                                                                                class="form-label">Password</label>
+                                                                            <div class="input-group input-group-merge">
+                                                                                <input type="password" id="password"
+                                                                                    class="form-control"
+                                                                                    placeholder="Enter your password"
+                                                                                    name="password">
+                                                                                <div class="input-group-text"
+                                                                                    data-password="false">
+                                                                                    <span class="password-eye"
+                                                                                        onclick="togglePassword()"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <label class="form-label">Deskripsi</label>
+                                                                            <textarea class="form-control" name="deskripsi" rows="9">{{ $eventItem->deskripsi }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <label class="form-label">Foto Cover</label>
+                                                                            <div class="">
+                                                                                <input type="file" name="foto_cover"
+                                                                                    accept=".jpeg,.jpg,.png" />
+                                                                            </div>
+                                                                            <img class="mt-2"
+                                                                                src="{{ Storage::url($eventItem->foto_cover) }}"
+                                                                                alt="" width="160">
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
 
                                                                 <!-- Map container with unique ID for each event -->
@@ -190,6 +230,9 @@
 @endsection
 
 @push('footer')
+    <script src="{{ asset('libs/dropzone/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('libs/dropify/js/dropify.min.js') }}"></script>
+    <script src="{{ asset('js/pages/form-fileuploads.init.js') }}"></script>
     <script src="{{ asset('libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -198,6 +241,32 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        document.querySelectorAll('[id^="delete-event-btn-"]').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); // Menghentikan form untuk submit langsung
+
+                const eventId = this.getAttribute('data-id'); // Mengambil ID event
+                const form = this.closest('form'); // Mendapatkan form terdekat
+
+                // Menampilkan SweetAlert konfirmasi
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Event ini beserta foto terkaitnya akan dihapus!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Jika user memilih konfirmasi, kirim form
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
             const locationCells = document.querySelectorAll('td[data-lokasi]');

@@ -16,35 +16,35 @@ class EventSeeder extends Seeder
     {
         Event::create([
             "event" => "Dieng Janabdra",
-            "foto_cover" => "file penyimapan",
+            "foto_cover" => "foto_covers/67433729da588.jpg",
             "lokasi" => "-7.7916167880215195, 110.36704796292844",
             "tanggal" => Carbon::now()
         ]);
 
         Event::create([
             "event" => "Malioboro Running",
-            "foto_cover" => "file penyimapan",
+            "foto_cover" => "foto_covers/67433729da588.jpg",
             "lokasi" => "-7.7916167880215195, 110.36704796292844",
             "tanggal" => Carbon::now()
         ]);
 
         Event::create([
             "event" => "Nikahan Angga",
-            "foto_cover" => "file penyimapan",
+            "foto_cover" => "foto_covers/67433729da588.jpg",
             "lokasi" => "-7.7916167880215195, 110.36704796292844",
             "tanggal" => Carbon::now()
         ]);
 
         Event::create([
             "event" => "Wisuda Janabadra",
-            "foto_cover" => "file penyimapan",
+            "foto_cover" => "foto_covers/67433729da588.jpg",
             "lokasi" => "-7.7916167880215195, 110.36704796292844",
             "tanggal" => Carbon::now()
         ]);
 
         Event::create([
             "event" => "Fadkhera Futsal",
-            "foto_cover" => "file penyimapan",
+            "foto_cover" => "foto_covers/67433729da588.jpg",
             "lokasi" => "-7.7916167880215195, 110.36704796292844",
             "tanggal" => Carbon::now()
         ]);

@@ -13,8 +13,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 class UserSeeder extends Seeder
 {
     private $permissions = [
-
-        //Stok Barang
         'update-user'
     ];
 

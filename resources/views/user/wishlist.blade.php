@@ -139,7 +139,6 @@
                                 1); // Kurangi 1 dari jumlah wishlist
                         }
 
-                        // Periksa jumlah wishlist setelah di-update
                         currentCount = parseInt(countElement.text());
                         if (currentCount > 0) {
                             countElement.show();
@@ -160,10 +159,9 @@
                                     .resumeTimer)
                             }
                         }).fire({
-                            icon: response.added ? 'success' : 'info',
+                            icon: response.added ? 'success' : 'success',
                             title: response.success
                         }).then(() => {
-                            // Reload halaman setelah toast selesai
                             window.location.reload();
                         });
                     },

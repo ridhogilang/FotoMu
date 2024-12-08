@@ -31,25 +31,24 @@
                                         <img class="d-flex align-self-center me-3 rounded-circle"
                                             src="{{ Storage::url($event->foto_cover) }}" alt="{{ $event->event }}"
                                             height="64">
-                                        <div class="w-100 ms-3">
-                                            <h4 class="mt-0 mb-2 font-16">{{ $event->event }}</h4>
-                                            <p class="mb-1"><b>Jumlah :</b> {{ $event->foto_count }} Foto</p>
-                                            <p class="mb-0"><b>Tanggal :</b>
+                                        <div style="flex: 0 0 auto; padding-right: 15px; margin-right: 15px; width: auto;">
+                                            <p class="mb-1" style="margin-bottom: 5px;"><b>Jumlah:</b>
+                                                {{ $event->foto_count }} Foto</p>
+                                            <p class="mb-0" style="margin-bottom: 5px;"><b>Tanggal:</b>
                                                 {{ \Carbon\Carbon::parse($event->created_at)->translatedFormat('d F Y') }}
                                             </p>
                                         </div>
-                                        <div class="w-100 ms-2">
-                                            <p class="mb-1"><b>Deskripsi:</b> {{ $event->deskripsi }}</p>
+
+                                        <!-- Description Section -->
+                                        <div style="flex: 1 1 auto; text-align: left; max-width: 800px;">
+                                            <p class="mb-1" style="margin-bottom: 5px;"><b>Deskripsi:</b>
+                                                {{ $event->deskripsi }}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-auto d-flex align-items-center">
                                     <div class="text-lg-end my-1 my-lg-0">
-                                        <button type="button" class="btn btn-success waves-effect waves-light me-1">
-                                            <i class="mdi mdi-cog"></i>
-                                        </button>
-                                        <a href="{{ route('event.tree') }}"
-                                            class="btn btn-danger waves-effect waves-light">
+                                        <a href="{{ route('event.tree') }}" class="btn btn-danger waves-effect waves-light">
                                             <i class="mdi mdi-map-marker me-1"></i> Lihat Lokasi
                                         </a>
                                     </div>
@@ -111,14 +110,20 @@
                                                 <div class="col-12">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
-                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto" title="Klik jika foto tidak sesuai denganMu!" tabindex="0" data-plugin="tippy" data-tippy-interactive="true" data-foto-id="{{ $similar->id }}"><i
-                                                                class="mdi mdi-close-circle"></i></span>
+                                                            <span class="btn btn-danger waves-effect waves-light hapus-foto"
+                                                                title="Klik jika foto tidak sesuai denganMu!" tabindex="0"
+                                                                data-plugin="tippy" data-tippy-interactive="true"
+                                                                data-foto-id="{{ $similar->id }}"><i
+                                                                    class="mdi mdi-close-circle"></i></span>
                                                         </div>
                                                         <div>
-                                                            <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                            <form action="{{ route('cart.buyNow') }}" method="POST"
+                                                                class="d-inline">
                                                                 @csrf
-                                                                <input type="hidden" name="foto_id" value="{{ $similar->id }}">
-                                                                <button type="submit" class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                <input type="hidden" name="foto_id"
+                                                                    value="{{ $similar->id }}">
+                                                                <button type="submit"
+                                                                    class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
                                                                     Beli Sekarang
                                                                 </button>
                                                             </form>
@@ -186,10 +191,13 @@
                                                             </button>
                                                         </div>
                                                         <div>
-                                                            <form action="{{ route('cart.buyNow') }}" method="POST" class="d-inline">
+                                                            <form action="{{ route('cart.buyNow') }}" method="POST"
+                                                                class="d-inline">
                                                                 @csrf
-                                                                <input type="hidden" name="foto_id" value="{{ $FotoAll->id }}">
-                                                                <button type="submit" class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
+                                                                <input type="hidden" name="foto_id"
+                                                                    value="{{ $FotoAll->id }}">
+                                                                <button type="submit"
+                                                                    class="btn btn-outline-info rounded-pill waves-effect waves-light me-2">
                                                                     Beli Sekarang
                                                                 </button>
                                                             </form>
@@ -246,28 +254,28 @@
         $(document).ready(function() {
             // Simpan tab aktif hanya di halaman /foto/event
             var currentPath = window.location.pathname;
-    
+
             if (currentPath.startsWith('/pelanggan/foto/event')) {
                 // Simpan tab aktif ke localStorage ketika tab berubah
                 $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
                     localStorage.setItem('activeTab', $(e.target).attr('href'));
                 });
-    
+
                 // Cek apakah ada parameter active_tab di URL
                 var urlParams = new URLSearchParams(window.location.search);
                 var activeTab = localStorage.getItem('activeTab');
-    
+
                 // Jika ada active_tab di URL (misalnya dari pagination), gunakan itu sebagai activeTab
                 if (urlParams.has('active_tab')) {
                     activeTab = '#' + urlParams.get('active_tab');
                     localStorage.setItem('activeTab', activeTab); // Simpan di localStorage
                 }
-    
+
                 // Set tab default ke #home-b3 jika tidak ada activeTab di localStorage atau URL
                 if (!activeTab || activeTab === '#') {
-                    activeTab = '#home-b3';  // Tab default adalah home-b3
+                    activeTab = '#home-b3'; // Tab default adalah home-b3
                 }
-    
+
                 // Aktifkan tab sesuai activeTab
                 $('a[href="' + activeTab + '"]').tab('show');
             } else {
@@ -276,7 +284,7 @@
             }
         });
     </script>
-    
+
     <script>
         $(document).ready(function() {
             $('.toggle-wishlist').click(function() {
@@ -327,8 +335,10 @@
                                     .resumeTimer)
                             }
                         }).fire({
-                            icon: response.added ? 'success' : 'info',
+                            icon: response.added ? 'success' : 'success',
                             title: response.success
+                        }).then(() => {
+                            window.location.reload();
                         });
                     },
                     error: function(xhr) {

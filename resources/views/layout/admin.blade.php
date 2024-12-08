@@ -33,7 +33,6 @@
 
     <script src="{{ asset('js/vendor.min.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
-    <script src="{{ asset('js/pages/dashboard-1.init.js') }}"></script>
     @include('sweetalert::alert')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

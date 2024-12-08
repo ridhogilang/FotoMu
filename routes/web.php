@@ -44,15 +44,18 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/update-password', [AuthController::class, 'updatePassword'])->name('user.pass-update');
 
 Route::prefix('admin')->group(function () {
-    // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
+    Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/setting', [AdminController::class, 'setting'])->name('admin.setting');
 
     Route::get('/foto-kontrol', [FotomuAdminController::class, 'fotomu_kontrol'])->name('admin.fotokontrol');
     Route::get('/foto-kontrol/event/{id}', [FotomuAdminController::class, 'foto'])->name('admin.fotoevent');
-    Route::get('/admin-fotohapus', [FotomuAdminController::class, 'AdmindeleteSelectedPhotos'])->name('admin.hapusfoto');
+    Route::delete('/admin-fotohapus', [FotomuAdminController::class, 'AdmindeleteSelectedPhotos'])->name('admin.hapusfoto');
+    Route::get('/get-foto/{id}', [FotomuAdminController::class, 'getFoto'])->name('admin.getfoto');
+    Route::post('/update-selected-photos', [FotomuAdminController::class, 'updateSelectedPhotos'])->name('admin.update-selectfoto');
     Route::get('/event', [FotomuAdminController::class, 'event'])->name('admin.event');
     Route::put('/event/update/{id}', [FotomuAdminController::class, 'event_update'])->name('admin.event-update');
+    Route::put('/event/delete/{id}', [FotomuAdminController::class, 'event_delete'])->name('admin.event-delete');
 
     Route::get('/daftar-fotografer', [AdminFotograferController::class, 'pendaftaran_fotografer'])->name('admin.daftar-foto');
     Route::get('/fotografer', [AdminFotograferController::class, 'fotografer'])->name('admin.fotografer');
@@ -69,11 +72,11 @@ Route::prefix('admin')->group(function () {
     Route::put('/user/update-active/{id}', [AdminPenggunaController::class, 'updateStatusActive'])->name('admin.pengguna-update');
     Route::get('/tambah-admin', [AdminPenggunaController::class, 'tambah'])->name('admin.tambah-pengguna');
     Route::post('/tambah-admin', [AdminPenggunaController::class, 'store_user'])->name('admin.store-pengguna');
-    // });
+    });
 });
 
 Route::prefix('fotografer')->group(function () {
-    // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
+    Route::group(['middleware' => ['web', 'auth', 'role:foto']], function () {
 
     //dashboard
     Route::get('/dashboard', [DashFotograferController::class, 'index'])->name('foto.dashboard');
@@ -81,6 +84,7 @@ Route::prefix('fotografer')->group(function () {
  
     //Upload Foto
     Route::get('/upload', [FotoFotograferController::class, 'upload'])->name('foto.upload');
+    Route::get('/tambah-tree', [FotoFotograferController::class, 'tambahtree'])->name('foto.tambahtree');
     Route::post('/foto/upload', [FotoFotograferController::class, 'upload_foto'])->name('photos.upload');
     Route::post('/foto/store', [FotoFotograferController::class, 'store'])->name('photos.store');
     Route::post('/event/store', [FotograferController::class, 'event_tambah'])->name('event.store');
@@ -104,11 +108,11 @@ Route::prefix('fotografer')->group(function () {
     Route::post('/penarikan', [PembayaranController::class, 'withdrawal_store'])->name('bank.penarikan');
     Route::delete('/penarikan/{id}', [PembayaranController::class, 'withdrawal_destroy'])->name('bank.penarikan-hapus');
 
-    // });
+    });
 });
 
 Route::prefix('pelanggan')->group(function () {
-    // Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
+    Route::group(['middleware' => ['web', 'auth', 'role:user']], function () {
     //Produk
     Route::get('/foto', [ProdukController::class, 'produk'])->name('user.produk');
     Route::get('/foto/event/{id}', [ProdukController::class, 'event'])->name('user.event');
@@ -153,5 +157,5 @@ Route::prefix('pelanggan')->group(function () {
     Route::get('/events', [ProdukController::class, 'getEvents']);
 
 
-    // });
+    });
 });
