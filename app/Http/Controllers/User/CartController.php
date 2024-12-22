@@ -7,6 +7,7 @@ use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Models\DetailPesanan;
 use App\Http\Controllers\Controller;
+use App\Models\DaftarFotografer;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller

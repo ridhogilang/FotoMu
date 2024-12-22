@@ -47,6 +47,7 @@ Route::prefix('admin')->group(function () {
     Route::group(['middleware' => ['web', 'auth', 'role:admin']], function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/setting', [AdminController::class, 'setting'])->name('admin.setting');
+    Route::put('/update/personal-info', [AdminController::class, 'update_user'])->name('admin.update-personalinfo');
 
     Route::get('/foto-kontrol', [FotomuAdminController::class, 'fotomu_kontrol'])->name('admin.fotokontrol');
     Route::get('/foto-kontrol/event/{id}', [FotomuAdminController::class, 'foto'])->name('admin.fotoevent');
@@ -60,7 +61,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/daftar-fotografer', [AdminFotograferController::class, 'pendaftaran_fotografer'])->name('admin.daftar-foto');
     Route::get('/fotografer', [AdminFotograferController::class, 'fotografer'])->name('admin.fotografer');
     Route::put('/daftar-fotografer/proses/{id}', [AdminFotograferController::class, 'setujui_fotografer'])->name('admin.validasi-foto');
-    Route::put('/fotografer/reject/{id}', [AdminFotograferController::class, 'fotografer_reject'])->name('admin.reject-foto');
+    Route::put('/reject-fotografer/{id}', [AdminFotograferController::class, 'fotografer_reject'])->name('admin.reject-foto');
     Route::get('/pembayaran', [AdminFotograferController::class, 'pembayaran'])->name('admin.pembayaran-foto');
     Route::put('/pembayaran/proses/{id}', [AdminFotograferController::class, 'pembayaran_proses'])->name('admin.proses-pembayaran');
     Route::put('/fotografer/update-status/{id}', [AdminFotograferController::class, 'updateStatusFotografer'])->name('admin.update-statusfoto');
@@ -76,7 +77,7 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('fotografer')->group(function () {
-    Route::group(['middleware' => ['web', 'auth', 'role:foto']], function () {
+    Route::group(['middleware' => ['web', 'auth', 'role:foto|admin']], function () {
 
     //dashboard
     Route::get('/dashboard', [DashFotograferController::class, 'index'])->name('foto.dashboard');
@@ -96,6 +97,7 @@ Route::prefix('fotografer')->group(function () {
 
     //profil
     Route::get('/profil', [FotograferController::class, 'profil'])->name('foto.profil');
+    Route::put('/update/personal-info', [FotograferController::class, 'update_user'])->name('foto.update-personalinfo');
     Route::get('/tree', [FotograferController::class, 'tree'])->name('foto.tree');
 
     //Pembayaran
@@ -112,7 +114,7 @@ Route::prefix('fotografer')->group(function () {
 });
 
 Route::prefix('pelanggan')->group(function () {
-    Route::group(['middleware' => ['web', 'auth', 'role:user']], function () {
+    Route::group(['middleware' => ['web', 'auth', 'role:user|admin|foto']], function () {
     //Produk
     Route::get('/foto', [ProdukController::class, 'produk'])->name('user.produk');
     Route::get('/foto/event/{id}', [ProdukController::class, 'event'])->name('user.event');
@@ -140,6 +142,7 @@ Route::prefix('pelanggan')->group(function () {
 
     //user
     Route::get('/profil', [UserController::class, 'profile'])->name('user.profil');
+    Route::put('/update/personal-info', [UserController::class, 'update_user'])->name('user.update-personalinfo');
     Route::get('/form-fotodepan', [UserController::class, 'formfoto_depan'])->name('user.formfotodepan');
     Route::get('/retake', [UserController::class, 'retake'])->name('user.retake');
     Route::get('/robomu', [UserController::class, 'robomu'])->name('user.robomu');

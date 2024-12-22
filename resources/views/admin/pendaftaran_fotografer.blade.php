@@ -63,16 +63,19 @@
                                                         data-id="{{ $daftarItem->id }}">
                                                         <i class="mdi mdi-pencil"></i>
                                                     </a>
-                                                
+
                                                     <!-- Tombol Hapus -->
-                                                    <form action="{{ route('admin.reject-foto', $daftarItem->id) }}" method="POST" class="m-0">
+                                                    <form action="{{ route('admin.reject-foto', $daftarItem->id) }}"
+                                                        method="POST" class="m-0">
                                                         @csrf
                                                         @method('PUT')
-                                                        <button class="btn btn-xs btn-danger edit-event-btn" data-id="{{ $daftarItem->id }}">
-                                                            <i class="mdi mdi-trash-can-outline"></i>
+                                                        <button id="reject-btn-{{ $daftarItem->id }}"
+                                                            class="btn btn-xs btn-danger reject-event-btn-fotografer"
+                                                            data-id="{{ $daftarItem->id }}">
+                                                            <i class="mdi mdi-close"></i>
                                                         </button>
                                                     </form>
-                                                </td>                                                                                              
+                                                </td>
                                             </tr>
 
                                             <!-- Modal untuk setiap event -->
@@ -169,50 +172,74 @@
     <script src="{{ asset('libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('js/pages/tickets.js') }}"></script>
-    <script>
-        $(document).on('click', '.reject-event-btn', function(e) {
-            e.preventDefault();
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Delegasikan event untuk menangkap klik tombol pembatalan
+            document.body.addEventListener('click', function(e) {
+                if (e.target.closest(
+                        '.reject-event-btn-fotografer'
+                        )) { // Tangkap elemen dengan class reject-event-btn-fotografer
+                    e.preventDefault();
 
-            var id = $(this).data('id'); // Ambil ID dari data attribute
-            var url = "/admin/fotografer/reject/" + id; // URL dengan ID
+                    const button = e.target.closest(
+                        '.reject-event-btn-fotografer'); // Elemen tombol yang diklik
+                    const dataId = button.getAttribute('data-id'); // Ambil data-order-id
 
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Anda tidak akan bisa mengembalikan aksi ini!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, tolak!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        type: 'PUT',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                'content') // Mengambil token dari meta tag
-                        },
-                        success: function(response) {
-                            Swal.fire(
-                                'Ditolak!',
-                                'Data telah berhasil ditolak.',
-                                'success'
-                            ).then(() => {
-                                location
-                                    .reload(); // Reload halaman setelah alert ditutup
-                            });
-                        },
-                        error: function(xhr) {
-                            Swal.fire(
-                                'Gagal!',
-                                'Terjadi kesalahan, coba lagi.',
-                                'error'
-                            );
+                    // Tampilkan SweetAlert konfirmasi
+                    Swal.fire({
+                        title: 'Apakah Anda yakin, ingin menolak fotografer ini?',
+                        text: "Anda tidak akan bisa mengembalikan aksi ini!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, batalkan!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/admin/reject-fotografer/${dataId}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire(
+                                            'Berhasil!',
+                                            'Fotografer sudah di tolak',
+                                            'success'
+                                        );
+                                        // Reload halaman atau lakukan tindakan lain
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        Swal.fire(
+                                            'Gagal!',
+                                            data.message || 'Gagal Menolak Fotografer.',
+                                            'error'
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire(
+                                        'Terjadi Kesalahan!',
+                                        'Tidak dapat menolak fotografer.',
+                                        'error'
+                                    );
+                                    console.error('Error:', error);
+                                });
+                                
+
                         }
                     });
                 }
             });
         });
-    </script>
+    </script> --}}
 @endpush

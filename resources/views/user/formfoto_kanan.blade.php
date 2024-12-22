@@ -126,20 +126,6 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Forms</a></li>
-                            <li class="breadcrumb-item active">Basic Elements</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Basic Elements</h4>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
                 <div class="card" id="camera-denied-row" style="display: none; height: 70vh;">
                     <div class="card-body d-flex justify-content-center align-items-center" style="height: 100%;">
                         <div class="camera-denied text-center" style="padding: 550px;">
@@ -166,25 +152,31 @@
                             </div>
                         </div>
                         <div class="instructions" onclick="hideInstructions()">
-                            <h1>Ikuti instruksi saat kamu memulai</h1>
-                            <p>Ketuk layar untuk melanjutkan</p>
-                            <h2>Contoh Yang Benar & Salah:</h2>
-                            <div class="example-images">
-                                <div>
-                                    <img src="path/to/image1.jpg" alt="Benar 1">
-                                    <p>✔ Benar</p>
+                            <h1 style="color: white; font-weight: bold;">Ikuti instruksi saat kamu memulai</h1>
+                            <p style="color: white; font-weight: bold;">Ketuk layar untuk melanjutkan</p>
+                            <h2 style="color: white; font-weight: bold;">Contoh Yang Benar & Salah:</h2>
+                            <div class="example-images" style="display: flex; justify-content: space-around; gap: 20px;">
+                                <div style="text-align: center; margin-bottom: 10px;">
+                                    <img src="{{ asset('foto/salah.png') }}" alt="Salah 1"
+                                        style="display: block; margin: 0 auto;">
+                                    <p
+                                        style="margin-top: 20px; font-size: 16px; display: inline-block; padding: 10px 20px; background-color: #ff4d4f; color: white; border-radius: 8px; border: 1px solid #ff7875; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); text-align: center; cursor: default;">
+                                        ✘ Salah
+                                    </p>
                                 </div>
-                                <div>
-                                    <img src="path/to/image2.jpg" alt="Salah 1">
-                                    <p>✘ Salah</p>
+                                <div style="text-align: center; margin-bottom: 10px;">
+                                    <img src="{{ asset('foto/benar1.png') }}" alt="Benar 1"
+                                        style="display: block; margin: 0 auto;">
+                                    <p
+                                        style="margin-top: 20px; font-size: 16px; display: inline-block; padding: 10px 20px; background-color: #28ab0e; color: white; border-radius: 8px; border: 1px solid #156505; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); text-align: center; cursor: default;">
+                                        ✔ Benar</p>
                                 </div>
-                                <div>
-                                    <img src="path/to/image3.jpg" alt="Benar 2">
-                                    <p>✔ Benar</p>
-                                </div>
-                                <div>
-                                    <img src="path/to/image4.jpg" alt="Benar 3">
-                                    <p>✔ Benar</p>
+                                <div style="text-align: center; margin-bottom: 10px;">
+                                    <img src="{{ asset('foto/benar2.png') }}" alt="Benar 2"
+                                        style="display: block; margin: 0 auto;">
+                                    <p
+                                        style="margin-top: 20px; font-size: 16px; display: inline-block; padding: 10px 20px; background-color: #28ab0e; color: white; border-radius: 8px; border: 1px solid #28ab0e; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); text-align: center; cursor: default;">
+                                        ✔ Benar</p>
                                 </div>
                             </div>
                         </div>
@@ -327,7 +319,7 @@
                             }).then(() => {
                                 // Redirect setelah menutup notifikasi
                                 window.location.href = data
-                                .redirect_url; // Redirect ke URL yang diterima dari server
+                                    .redirect_url; // Redirect ke URL yang diterima dari server
                             });
                         } else {
                             alert("Foto gagal diupload."); // Tangani jika upload gagal

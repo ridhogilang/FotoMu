@@ -39,9 +39,30 @@ class FotograferController extends Controller
         ]);
     }
 
+    public function update_user(Request $request)
+    {
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'nowa' => 'required|numeric',
+        ]);
+
+        // Get the currently authenticated user
+        $user = Auth::user();
+
+        // Update the user's data
+        $user->name = $validated['name'];
+        $user->nowa = $validated['nowa'];
+
+        // Save the updated user
+        $user->save();
+
+        // Redirect with a success message
+        return redirect()->back()->with('success', 'Data updated successfully');
+    }
+
     public function event_tambah(Request $request)
     {
-        dd($request);
         // Validasi input
         $rules = [
             'event' => 'required|string|max:255',

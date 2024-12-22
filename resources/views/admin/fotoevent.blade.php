@@ -297,7 +297,7 @@
                 const fotoId = selectedPhotos[0].value;
 
                 // Buat permintaan ke server untuk mendapatkan ID foto berdasarkan ID
-                fetch(`/fotografer/get-foto/${fotoId}`)
+                fetch(`/admin/get-foto/${fotoId}`)
                     .then(response => response.json())
                     .then(data => {
                         // Logika jika hanya ID yang diterima
@@ -377,6 +377,100 @@
                     icon: 'info',
                     confirmButtonText: 'OK'
                 });
+            }
+        });
+    </script>
+     {{-- js untuk skema harga fotografer --}}
+     <script>
+        document.getElementById('harga').addEventListener('input', function() {
+            let nilaiAsli = this.value.replace(/\D/g, '');
+            let nilaiFormatted = formatRupiah(nilaiAsli);
+
+            this.value = nilaiFormatted;
+            document.getElementById('harga-hidden').value = nilaiAsli;
+
+            updateDetailHarga(nilaiAsli);
+        });
+
+        function formatRupiah(angka, prefix = 'Rp. ') {
+            let numberString = angka.replace(/[^,\d]/g, '').toString(),
+                split = numberString.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix + rupiah;
+        }
+
+        function updateDetailHarga(nilaiAsli) {
+            const harga = parseFloat(nilaiAsli) || 0;
+
+            const netKreator = harga * 0.90;
+            const biayaFotoYu = harga * 0.10;
+            const biayaHost = harga * 0.00;
+            const hargaDasar = harga * 0.90;
+            const biayaLayanan = harga * 0.00;
+            const hargaJual = harga;
+
+            document.getElementById('net-kreator').textContent = formatRupiah(netKreator.toFixed(0));
+            document.getElementById('biaya-fotoyu').textContent = formatRupiah(biayaFotoYu.toFixed(0));
+            document.getElementById('biaya-host').textContent = formatRupiah(biayaHost.toFixed(0));
+            document.getElementById('harga-dasar').textContent = formatRupiah(hargaDasar.toFixed(0));
+            document.getElementById('biaya-layanan').textContent = formatRupiah(biayaLayanan.toFixed(0));
+            document.getElementById('harga-jual').textContent = formatRupiah(hargaJual.toFixed(0));
+        }
+    </script>
+    {{-- js untuk update data foto --}}
+    <script>
+        document.getElementById('save-changes').addEventListener('click', function() {
+            // Ambil semua checkbox yang dipilih
+            const selectedPhotos = Array.from(document.querySelectorAll('.checkbox-foto:checked')).map(checkbox =>
+                checkbox.value);
+
+            if (selectedPhotos.length > 0) {
+                // Data yang akan dikirim ke server
+                const data = {
+                    foto_ids: selectedPhotos,
+                    event_id: document.getElementById('event').value,
+                    harga: document.getElementById('harga').value,
+                    deskripsi: document.querySelector('textarea[name="deskripsi"]').value,
+                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content') // Laravel CSRF token
+                };
+
+                // Kirimkan permintaan untuk memperbarui semua data foto yang dipilih
+                fetch('/admin/update-selected-photos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': data._token
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire(
+                            'Terupdate!',
+                            'Data Foto berhasil diperbaharui', // Pesan statis yang langsung ditulis
+                            'success'
+                        ).then(() => {
+                            // Reload halaman setelah alert swal ditutup
+                            location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        // Tampilkan pesan error jika terjadi kesalahan
+                        Swal.fire('Gagal!', 'Terjadi kesalahan saat memperbarui data.', 'error');
+                    });
+            } else {
+                // Jika tidak ada foto yang dipilih, tampilkan peringatan
+                Swal.fire('Tidak ada foto yang dipilih!', 'Silakan pilih foto terlebih dahulu.', 'warning');
             }
         });
     </script>

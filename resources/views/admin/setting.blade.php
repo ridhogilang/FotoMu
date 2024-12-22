@@ -103,31 +103,32 @@
                                 <div class="tab-pane show active" id="settings">
                                     <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>
                                         Personal Info</h5>
-                                    <form action="">
+                                    <form action="{{ route('admin.update-personalinfo') }}" method="POST">
                                         @csrf
+                                        @method('PUT')
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="firstname" class="form-label">Nama</label>
-                                                    <input type="text" class="form-control" id="firstname"
+                                                    <label for="name" class="form-label">Nama</label>
+                                                    <input type="text" class="form-control" id="name" name="name"
                                                         value="{{ $user->name }}" placeholder="Enter first name">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="lastname" class="form-label">No. Whatsapp</label>
-                                                    <input type="number" class="form-control" id="lastname"
+                                                    <label for="nowa" class="form-label">No. Whatsapp</label>
+                                                    <input type="number" class="form-control" id="nowa" name="nowa"
                                                         value="{{ $user->nowa }}" placeholder="Enter last name">
                                                 </div>
-                                            </div> <!-- end col -->
-                                        </div> <!-- end row -->
+                                            </div> 
+                                        </div> 
 
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="useremail" class="form-label">Email
+                                                    <label for="email" class="form-label">Email
                                                         Address</label>
-                                                    <input type="email" class="form-control" id="useremail"
+                                                    <input type="email" class="form-control" id="email" name="email"
                                                         placeholder="Enter email" value="{{ $user->email }}" disabled>
                                                     <span class="form-text text-muted"><small>If you want to
                                                             change email please <a href="javascript: void(0);">click</a>

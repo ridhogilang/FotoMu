@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DaftarFotografer extends Model
 {
@@ -25,6 +26,12 @@ class DaftarFotografer extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function isUserRegistered($userId = null)
+    {
+        $userId = $userId ?? Auth::id();
+        return self::where('user_id', $userId)->exists();
     }
 
 }

@@ -136,18 +136,28 @@ class PembayaranController extends Controller
         }
 
         // Temukan fotografer yang memiliki rekening ini
+        $withdrawalpending = Withdrawal::where('rekening_id', $rekening->id)->where('status', 'Pending')->first();
+        $withdrawal = Withdrawal::where('rekening_id', $rekening->id)->first();
         $fotografer = Fotografer::where('rekening_id', $rekening->id)->first();
+        if ($withdrawalpending) {
+            return response()->json([
+                'message' => 'rekening tidak bisa di hapus karena masih ada status pengajuan yang belum selesai',
+                'status' => 'error',
+            ], 400);
+        } else {
 
-        if ($fotografer) {
-            // Set rekening_id menjadi null pada tabel Fotografer
             $fotografer->rekening_id = null;
-            $fotografer->save();
+             $fotografer->save();
+
+            if ($withdrawal) {
+                $rekening->is_hapus = true;
+                $rekening->save();
+            } else {
+                $rekening->delete();
+            }
+
+            return response()->json(['message' => 'Rekening berhasil dihapus dan Fotografer diperbarui.']);
         }
-
-        // Hapus rekening dari database
-        $rekening->delete();
-
-        return response()->json(['message' => 'Rekening berhasil dihapus dan Fotografer diperbarui.']);
     }
 
     public function verifyOtp(Request $request)
@@ -229,6 +239,7 @@ class PembayaranController extends Controller
         // Validasi input
         $request->validate([
             'jumlah' => 'required|numeric|min:100000',
+            // 'jumlah' => 'required|numeric',
             'rekening_id' => 'required|exists:rekening,id',  // pastikan rekening_id ada di tabel rekening
         ], [
             'jumlah.min' => 'Jumlah minimal penarikan adalah Rp. 100.000.',

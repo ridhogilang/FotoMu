@@ -61,8 +61,6 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Fotografer</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pembayaran</a>
-                                </li>
                                 <li class="breadcrumb-item active">Pembayaran</li>
                             </ol>
                         </div>
@@ -243,7 +241,8 @@
                                                                 <label for="jumlah" class="form-label">Penarikan <span
                                                                         class="text-danger">*</span></label>
                                                                 <input type="text" id="jumlah" class="form-control"
-                                                                    placeholder="Masukkan jumlah penarikan" min="100000" >
+                                                                    placeholder="Masukkan jumlah penarikan"
+                                                                    min="100000">
                                                                 <input type="hidden" name="jumlah" id="jumlah-hidden">
                                                                 <!-- Hidden input untuk menyimpan nilai tanpa format Rp. -->
                                                             </div>
@@ -264,7 +263,8 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-light"
                                                                 data-bs-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Ajukan Pembayaran</button>
+                                                            <button type="submit" class="btn btn-primary">Ajukan
+                                                                Pembayaran</button>
                                                         </div>
                                                     </form>
                                                 </div><!-- /.modal-content -->
@@ -473,19 +473,30 @@
                                                     <tr>
                                                         <td>{{ $index + 1 }}</td>
                                                         @if ($transaksi->type === 'Pendapatan')
-                                                            <td>Rp. {{ number_format($transaksi->total_uang_masuk, 0, ',', '.') }}</td>
+                                                            <td>Rp.
+                                                                {{ number_format($transaksi->total_uang_masuk, 0, ',', '.') }}
+                                                            </td>
                                                             <td>-</td> <!-- Tidak ada uang keluar di sini -->
-                                                            <td>Pendapatan ({{ \Carbon\Carbon::parse($transaksi->date)->format('d M Y') }})</td>
-                                                            <td>Rp. {{ number_format($transaksi->saldo_akhir, 0, ',', '.') }}</td> <!-- Saldo akhir -->
+                                                            <td>Pendapatan
+                                                                ({{ \Carbon\Carbon::parse($transaksi->date)->format('d M Y') }})
+                                                            </td>
+                                                            <td>Rp.
+                                                                {{ number_format($transaksi->saldo_akhir, 0, ',', '.') }}
+                                                            </td> <!-- Saldo akhir -->
                                                         @elseif ($transaksi->type === 'Penarikan')
                                                             <td>-</td> <!-- Tidak ada uang masuk di sini -->
-                                                            <td>Rp. {{ number_format($transaksi->uang_keluar, 0, ',', '.') }}</td>
-                                                            <td>Penarikan ({{ \Carbon\Carbon::parse($transaksi->date)->format('d M Y') }})</td>
-                                                            <td>Rp. {{ number_format($transaksi->jumlah, 0, ',', '.') }}</td> <!-- Saldo akhir -->
+                                                            <td>Rp.
+                                                                {{ number_format($transaksi->uang_keluar, 0, ',', '.') }}
+                                                            </td>
+                                                            <td>Penarikan
+                                                                ({{ \Carbon\Carbon::parse($transaksi->date)->format('d M Y') }})
+                                                            </td>
+                                                            <td>Rp. {{ number_format($transaksi->jumlah, 0, ',', '.') }}
+                                                            </td> <!-- Saldo akhir -->
                                                         @endif
                                                     </tr>
                                                 @endforeach
-                                            </tbody>                                            
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div> <!-- end col-->
@@ -759,11 +770,23 @@
                                 });
                             },
                             error: function(xhr) {
-                                Swal.fire(
-                                    'Error!',
-                                    'Terjadi kesalahan, silakan coba lagi.',
-                                    'error'
-                                );
+                                // Mengecek apakah error memiliki respons JSON dengan status 'error'
+                                if (xhr.responseJSON && xhr.responseJSON.status ===
+                                    'error') {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: xhr.responseJSON
+                                            .message // Menampilkan pesan error dari server
+                                    });
+                                } else {
+                                    // Jika error tidak sesuai status 'error', tampilkan error umum
+                                    Swal.fire(
+                                        'Error!',
+                                        'Terjadi kesalahan, silakan coba lagi.',
+                                        'error'
+                                    );
+                                }
                             }
                         });
                     }

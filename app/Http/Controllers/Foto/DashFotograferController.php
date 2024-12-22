@@ -17,7 +17,17 @@ class DashFotograferController extends Controller
 {
     public function index()
     {
-        $photographerId = Auth::id();
+        $user = Auth::user();
+
+        $fotografer = $user->fotografer;
+
+        if ($fotografer) {
+            $photographerId = $fotografer->id;
+        } else {
+            // Tindakan jika user belum terdaftar sebagai fotografer
+            $photographerId = null;
+        }
+
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
 
@@ -63,29 +73,30 @@ class DashFotograferController extends Controller
         })->join('foto', 'detail_pesanan.foto_id', '=', 'foto.id')
             ->sum(DB::raw('foto.harga * 0.90'));  // Mengurangi pajak 11%
 
-        // Data tambahan: Perhitungan penjualan per hari dalam bulan ini
+        // Data tambahan: Perhitungan penjualan per hari dalam bulan ini berdasarkan fotografer_id
         $dailyRevenue = DetailPesanan::select(DB::raw('DAY(pesanan.created_at) as day'), DB::raw('SUM(foto.harga * 0.90) as revenue'))
             ->join('foto', 'detail_pesanan.foto_id', '=', 'foto.id')
-            ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id')  // Join ke pesanan
+            ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id') // Join ke pesanan
             ->where('pesanan.status', 'Selesai')
+            ->where('foto.fotografer_id', $photographerId) // Filter berdasarkan fotografer_id
             ->whereMonth('pesanan.created_at', $currentMonth)
             ->whereYear('pesanan.created_at', $currentYear)
             ->groupBy(DB::raw('DAY(pesanan.created_at)'))
             ->get();
 
-
-        // Ambil jumlah transaksi harian
-        $dailySales = DetailPesanan::select(DB::raw('DAY(created_at) as day'), DB::raw('COUNT(*) as sales'))
-            ->whereHas('pesanan', function ($query) use ($currentMonth, $currentYear) {
-                $query->where('status', 'Selesai')
-                    ->whereMonth('created_at', $currentMonth)
-                    ->whereYear('created_at', $currentYear);
-            })
-            ->groupBy(DB::raw('DAY(created_at)'))
+        // Ambil jumlah transaksi harian berdasarkan fotografer_id
+        $dailySales = DetailPesanan::select(DB::raw('DAY(pesanan.created_at) as day'), DB::raw('COUNT(*) as sales'))
+            ->join('foto', 'detail_pesanan.foto_id', '=', 'foto.id')
+            ->join('pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id') // Join ke pesanan
+            ->where('pesanan.status', 'Selesai')
+            ->where('foto.fotografer_id', $photographerId) // Filter berdasarkan fotografer_id
+            ->whereMonth('pesanan.created_at', $currentMonth)
+            ->whereYear('pesanan.created_at', $currentYear)
+            ->groupBy(DB::raw('DAY(pesanan.created_at)'))
             ->get();
 
         // Format data untuk dikirim ke frontend
-        $days = range(1, Carbon::now()->daysInMonth);  // Semua hari dalam bulan ini
+        $days = range(1, Carbon::now()->daysInMonth); // Semua hari dalam bulan ini
         $revenueData = [];
         $salesData = [];
 
@@ -121,6 +132,17 @@ class DashFotograferController extends Controller
 
         $withdrawal = Withdrawal::where('fotografer_id', $photographerId)
             ->whereYear('created_at', Carbon::now()->year)->get();
+
+        $totalPembelianBersih = 0;
+
+        $totalPembelianBersih = DetailPesanan::whereHas('foto', function ($query) use ($photographerId) {
+            $query->where('fotografer_id', $photographerId);
+        })->whereHas('pesanan', function ($query) {
+            $query->where('status', 'Selesai')
+                ->whereDate('created_at', Carbon::today());
+        })->join('foto', 'detail_pesanan.foto_id', '=', 'foto.id')
+            ->sum(DB::raw('foto.harga * 0.90'));
+            
         // Kirim semua data ke view
         return view('fotografer.dashboard', [
             "title" => "Dashboard Fotografer",
@@ -134,6 +156,7 @@ class DashFotograferController extends Controller
             "salesData" => $salesData,  // Data transaksi harian
             "detailPesanan" => $detailPesanan, // Data tabel detail pesanan yang ditampilkan
             "withdrawal" => $withdrawal,
+            "totalPembelianBersih" => $totalPembelianBersih,
         ]);
     }
 
@@ -249,6 +272,31 @@ class DashFotograferController extends Controller
         $withdrawal = Withdrawal::where('fotografer_id', $photographerId)
             ->whereYear('created_at', Carbon::now()->year)->get();
 
+
+        $totalPembelianBersih = 0;
+
+        foreach ($detailPesanan->groupBy('pesanan_id') as $pesananId => $pesananGroup) {
+            // Hitung biaya admin, ditambahkan hanya sekali per pesanan
+            $biayaAdmin = 2000;
+            $totalPerPesanan = $biayaAdmin;
+
+            foreach ($pesananGroup as $detail) {
+                // Ambil harga dari tabel foto berdasarkan foto_id
+                $foto = Foto::find($detail->foto_id);
+                $harga = (float) $foto->harga;
+
+                // Hitung 11% dari harga dan 10% dari harga
+                $potongan11 = 0.11 * $harga;
+                $potongan10 = 0.10 * $harga;
+
+                // Tambahkan potongan ke total per pesanan
+                $totalPerPesanan += $potongan11 + $potongan10;
+            }
+
+            // Tambahkan total per pesanan ke total keseluruhan
+            $totalPembelianBersih += $totalPerPesanan;
+        }
+
         // Kirim semua data ke view
         return view('fotografer.dashboard', [
             "title" => "Dashboard Fotografer",
@@ -262,6 +310,7 @@ class DashFotograferController extends Controller
             "salesData" => $salesData,
             "detailPesanan" => $detailPesanan,
             "withdrawal" => $withdrawal,
+            "totalPembelianBersih" => $totalPembelianBersih,
         ]);
     }
 }

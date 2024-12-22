@@ -58,6 +58,11 @@ class AuthController extends Controller
                 return redirect()->back()->with('toast_error', 'Silahkan verifikasi akun via email.');
             }
 
+            if ($user->is_active === 0) {
+                Auth::logout();
+                return redirect()->back()->with('toast_error', 'Akun anda sedang dibekukan, silahkan hubungi admin');
+            }            
+
             // Logika redirect berdasarkan tipe user
             if ($user->is_admin) {
                 // Redirect ke admin dashboard jika is_admin true

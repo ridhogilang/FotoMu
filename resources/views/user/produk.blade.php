@@ -439,7 +439,7 @@
                     error: function(xhr) {
                         var response = xhr.responseJSON;
                         var errorMessage =
-                            'Terjadi kesalahan saat memproses cart'; // Default error message
+                            'Foto sudah dibeli tidak bisa dimasukkan ke kerangjang'; // Default error message
 
                         if (xhr.status === 422 && response && response.error) {
                             // Show the specific error message if it exists

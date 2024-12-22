@@ -179,8 +179,10 @@ class UserController extends Controller
     public function profile()
     {
         $user = User::where('id', Auth::user()->id)->first();
-        $pesanan = Pesanan::where('user_id', Auth::user()->id)->get();
-
+        $pesanan = Pesanan::where('user_id', Auth::user()->id)
+        ->orderBy('created_at', 'desc') // Mengurutkan berdasarkan tanggal pembuatan secara descending
+        ->get();
+    
         $foto = Wishlist::where('user_id', Auth::user()->id)->get();
 
         return view('user.profil', [
@@ -191,19 +193,44 @@ class UserController extends Controller
         ]);
     }
 
+    public function update_user(Request $request)
+    {
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'nowa' => 'required|numeric',
+        ]);
+
+        // Get the currently authenticated user
+        $user = Auth::user();
+
+        // Update the user's data
+        $user->name = $validated['name'];
+        $user->nowa = $validated['nowa'];
+
+        // Save the updated user
+        $user->save();
+
+        // Redirect with a success message
+        return redirect()->back()->with('success', 'Data updated successfully');
+    }
+
     public function become()
     {
         $user = User::where('id', Auth::user()->id)->first();
 
-        $existingFotografer = DaftarFotografer::where('user_id',  Auth::user()->id)->first();
+        // $existingFotografer = DaftarFotografer::where('user_id',  Auth::user()->id)->first();
 
-        if ($existingFotografer) {
-            return redirect()->route('user.produk')->with('info', 'You are already registered as a photographer.');
-        }
+        // if ($existingFotografer) {
+        //     return redirect()->route('user.produk')->with('info', 'You are already registered as a photographer.');
+        // }
+
+        $daftar = DaftarFotografer::where('user_id', $user->id)->first();
 
         return view('user.become', [
             "title" => "Become Fotografer",
             "user" => $user,
+            "daftar" => $daftar,
         ]);
     }
 
@@ -231,10 +258,11 @@ class UserController extends Controller
             'nowa' => '62' . ltrim($request->input('nowa'), '0'), // Add 62 prefix, remove leading 0 if exists
             'foto_ktp' => $path, // File path must be present
             'pesan' => $request->input('pesan'),
-            'status' => 'Pengajuan', // Default status (can be changed according to your app logic)
+            'status' => 'Ditinjau', // Default status (can be changed according to your app logic)
         ]);
 
         // Redirect back with success message
-        return redirect()->back()->with('success', 'Pendaftaran berhasil, silakan tunggu konfirmasi!');
+        return redirect()->route('user.produk')->with('success', 'Pendaftaran berhasil, silakan tunggu konfirmasi!');
     }
 }
+ 

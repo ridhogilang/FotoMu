@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('nowa');
+            $table->string('nowa')->nullable();
             $table->string('foto_depan')->nullable();
             $table->string('foto_kanan')->nullable();
             $table->boolean('is_admin')->default(false);

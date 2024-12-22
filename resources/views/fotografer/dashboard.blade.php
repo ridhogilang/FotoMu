@@ -13,7 +13,30 @@
     <style>
         .btn {
             white-space: nowrap;
-            /* Pastikan konten di dalam tombol tidak dipisahkan menjadi dua baris */
+            
+        }
+        #total-revenue {
+            width: 100%;
+            height: 300px;
+            /* Sesuaikan dengan tinggi yang cukup */
+            max-width: 300px;
+            /* Batasi lebar agar grafik tidak terlalu besar */
+            margin: 0 auto;
+            /* Pastikan elemen berada di tengah */
+            display: block;
+        }
+
+        .widget-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        #sales-analytics1 {
+            width: 100%;
+            height: 100%;
         }
     </style>
 @endpush
@@ -88,7 +111,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-primary border-primary border">
-                                        <i class="fe-heart font-22 avatar-title text-primary"></i>
+                                        <i class="fe-shopping-bag font-22 avatar-title text-primary"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -109,7 +132,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-success border-success border">
-                                        <i class="fe-shopping-cart font-22 avatar-title text-success"></i>
+                                        <i class="fe-dollar-sign font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -131,7 +154,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-info border-info border">
-                                        <i class="fe-bar-chart-line- font-22 avatar-title text-info"></i>
+                                        <i class="fe-calendar font-22 avatar-title text-info"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -152,7 +175,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-warning border-warning border">
-                                        <i class="fe-eye font-22 avatar-title text-warning"></i>
+                                        <i class="fe-image font-22 avatar-title text-warning"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -194,13 +217,12 @@
 
                             <div class="widget-chart text-center" dir="ltr">
 
-                                <div id="total-revenue" class="mt-0" data-colors="#f1556c"></div>
+                                <div id="total-revenue1" class="mt-0" data-colors="#f1556c"></div>
 
-                                <h5 class="text-muted mt-0">Total sales made today</h5>
+                                <h5 class="text-muted mt-0">Total penjualan hari ini</h5>
                                 <h2>Rp {{ number_format($totalPendapatanHarian, 0, ',', '.') }}</h2><br>
 
-                                <p class="text-muted w-75 mx-auto sp-line-2">Traditional heading elements are
-                                    designed to work best in the meat of your page content.</p><br>
+                                <p class="text-muted w-75 mx-auto sp-line-2">Penjualan hari ini akan dikalkulasikan dengan target harian untuk mendapatkan prasentasenya.</p><br>
 
                             </div>
                         </div>
@@ -641,5 +663,49 @@
                 $(this).val(''); // Kosongkan input jika user batal
             });
         });
+    </script>
+      <script>
+        // Total pendapatan hari ini
+        var totalRevenueToday = {{ $totalPembelianBersih }}; // Pendapatan Rp 178,000
+        var totalTarget = 1000000; // Total penuh adalah Rp 1,000,000 (1 juta rupiah)
+
+        // Hitung persentase dari total pendapatan hari ini
+        var percentageRevenue = (totalRevenueToday / totalTarget) * 100;
+
+        var options = {
+            chart: {
+                type: 'radialBar',
+                height: 250,
+                width: 300,
+            },
+            series: [percentageRevenue], // Persentase pendapatan hari ini
+            labels: ['Revenue'],
+            plotOptions: {
+                radialBar: {
+                    dataLabels: {
+                        name: {
+                            fontSize: '22px',
+                        },
+                        value: {
+                            fontSize: '16px',
+                            formatter: function(val) {
+                                return parseFloat(val).toFixed(0) + "%"; // Menampilkan persentase
+                            }
+                        },
+                        total: {
+                            show: true,
+                            label: 'Target',
+                            formatter: function() {
+                                return 'Rp. 1jt'; // Nilai total yang ditampilkan
+                            }
+                        }
+                    }
+                }
+            },
+            colors: ['#f1556c'], // Warna lingkaran
+        }
+
+        var chart = new ApexCharts(document.querySelector("#total-revenue1"), options);
+        chart.render();
     </script>
 @endpush

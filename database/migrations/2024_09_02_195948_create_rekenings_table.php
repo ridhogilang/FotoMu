@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('rekening');
             $table->string('nama_bank');
+            $table->boolean('is_hapus')->default(false);
             $table->timestamps();
         });
     }

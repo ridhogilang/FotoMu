@@ -58,11 +58,7 @@
                                 <div class="col-md-6">
                                     <div class="mt-3">
                                         <p><b>Hello, {{ Auth::user()->name }}</b></p>
-                                        <p class="text-muted">Thanks a lot because you keep purchasing our
-                                            products. Our company
-                                            promises to provide high quality products for you as well as
-                                            outstanding
-                                            customer service for every transaction. </p>
+                                        <p class="text-muted">Terima kasih atas kepercayaan Anda menggunakan layanan kami untuk membeli foto acara/event. Kami berkomitmen untuk menyediakan foto berkualitas tinggi dan layanan pelanggan terbaik di setiap transaksi Anda.</p>
                                     </div>
 
                                 </div><!-- end col -->
@@ -73,8 +69,21 @@
                                                 {{ \Carbon\Carbon::parse($pesanan->created_at)->format('d F Y') }}
                                             </span>
                                         </p>
-                                        <p><strong>Order Status : &nbsp;</strong> <span class="float-end"><span
-                                                    class="badge bg-danger">{{ $pesanan->status }}</span></span></p>
+                                        <p><strong>Order Status : &nbsp;</strong> 
+                                            <span class="float-end">
+                                                @if($pesanan->status == 'Diproses')
+                                                    <span class="badge bg-warning">{{ $pesanan->status }}</span>
+                                                @elseif($pesanan->status == 'Menunggu Pembayaran')
+                                                    <span class="badge bg-warning">{{ $pesanan->status }}</span>
+                                                @elseif($pesanan->status == 'Selesai')
+                                                    <span class="badge bg-success">{{ $pesanan->status }}</span>
+                                                @elseif($pesanan->status == 'Dibatalkan')
+                                                    <span class="badge bg-danger">{{ $pesanan->status }}</span>
+                                                @else
+                                                    <span class="badge bg-secondary">{{ $pesanan->status }}</span>
+                                                @endif
+                                            </span>
+                                        </p>                                        
                                         <p><strong>Order No. : </strong> <span class="float-end">0000{{ $pesanan->id }}
                                             </span></p>
                                     </div>
@@ -141,11 +150,7 @@
                                         <h6 class="text-muted">Notes:</h6>
 
                                         <small class="text-muted">
-                                            All accounts are to be paid within 7 days from receipt of
-                                            invoice. To be paid by cheque or credit card or direct payment
-                                            online. If account is not paid within 7 days the credits details
-                                            supplied as confirmation of work undertaken will be charged the
-                                            agreed quoted fee noted above.
+                                            Semua tagihan harus dibayarkan dalam waktu 7 hari sejak penerimaan faktur. Pembayaran dapat dilakukan melalui cek, kartu kredit, atau transfer langsung secara online. Jika tagihan tidak dibayarkan dalam 7 hari, rincian kredit yang diberikan sebagai konfirmasi pekerjaan akan dikenakan biaya sesuai dengan tarif yang telah disepakati di atas.
                                         </small>
                                     </div>
                                 </div> <!-- end col -->

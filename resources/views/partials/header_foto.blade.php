@@ -33,7 +33,7 @@
             </li>
 
             <!-- Notofication dropdown -->
-            <li class="dropdown notification-list">
+            {{-- <li class="dropdown notification-list">
                 <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none" data-bs-toggle="dropdown"
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     <i class="fe-bell font-22"></i>
@@ -180,7 +180,7 @@
                     </a>
 
                 </div>
-            </li>
+            </li> --}}
 
             <!-- Light/Dark Mode Toggle Button -->
             <li class="d-none d-sm-inline-block">

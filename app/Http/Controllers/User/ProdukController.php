@@ -208,7 +208,7 @@ class ProdukController extends Controller
             $similarFoto->is_hapus = true;
             $similarFoto->save();
 
-            return response()->json(['success' => 'Foto berhasil dihapus dari similar_foto.']);
+            return response()->json(['success' => 'Foto berhasil dihapus dari FotoMu.']);
         } else {
             return response()->json(['error' => 'Foto tidak ditemukan.'], 404);
         }

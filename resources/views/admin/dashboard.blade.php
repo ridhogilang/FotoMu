@@ -71,7 +71,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-primary border-primary border">
-                                        <i class="fe-heart font-22 avatar-title text-primary"></i>
+                                        <i class="fe-shopping-bag font-22 avatar-title text-primary"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -92,7 +92,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-success border-success border">
-                                        <i class="fe-shopping-cart font-22 avatar-title text-success"></i>
+                                        <i class="fe-dollar-sign font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -114,7 +114,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-info border-info border">
-                                        <i class="fe-bar-chart-line- font-22 avatar-title text-info"></i>
+                                        <i class="fe-calendar font-22 avatar-title text-info"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -135,7 +135,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="avatar-lg rounded-circle bg-soft-warning border-warning border">
-                                        <i class="fe-eye font-22 avatar-title text-warning"></i>
+                                        <i class="fe-image font-22 avatar-title text-warning"></i>
                                     </div>
                                 </div>
                                 <div class="col-6">

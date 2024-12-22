@@ -15,12 +15,11 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Apps</a></li>
-                                <li class="breadcrumb-item active">File Manager</li>
+                                <li class="breadcrumb-item"><a href="{{ route('foto.filemanager') }}">File Manager</a></li>
+                                <li class="breadcrumb-item active">Foto Event</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">File Manager</h4>
+                        <h4 class="page-title">Foto Event</h4>
                     </div>
                 </div>
             </div>
@@ -37,28 +36,8 @@
                                     <a href="{{ route('foto.filemanager') }}" class="btn btn-secondary waves-effect"><i
                                             class="fe-arrow-left"></i>Kembali</a>
                                 </div>
-                                <div class="mail-list mt-3">
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-folder-outline font-18 align-middle me-2"></i>My
-                                        Files</a>
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-google-drive font-18 align-middle me-2"></i>Google
-                                        Drive</a>
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-dropbox font-18 align-middle me-2"></i>Dropbox</a>
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-share-variant font-18 align-middle me-2"></i>Share
-                                        with me</a>
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-clock-outline font-18 align-middle me-2"></i>Recent</a>
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-star-outline font-18 align-middle me-2"></i>Starred</a>
-                                    <a href="#" class="list-group-item border-0"><i
-                                            class="mdi mdi-delete font-18 align-middle me-2"></i>Deleted
-                                        Files</a>
-                                </div>
 
-                                <div class="mt-5">
+                                <div class="mt-4">
                                     <h4><span class="badge rounded-pill p-1 px-2 badge-soft-secondary">FREE</span>
                                     </h4>
                                     <h6 class="text-uppercase mt-3">Storage</h6>

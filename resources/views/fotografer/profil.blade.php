@@ -49,14 +49,12 @@
                             <h4 class="mb-0">{{ $getUser->fotografer->nama }}</h4>
                             <p class="text-muted">@fotografer</p>
 
-                            <a href="" class="btn btn-light btn-xs waves-effect mb-2 waves-light">Sunting</a>
                             <a href="{{ route('foto.upload') }}" class="btn btn-blue btn-xs waves-effect mb-2 waves-light">Unggah</a>
 
                             <div class="text-start mt-3">
                                 <h4 class="font-13 text-uppercase">About Me :</h4>
                                 <p class="text-muted font-13 mb-3">
-                                    Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since
-                                    the 1500s, when an unknown printer took a galley of type.
+                                    Halo, Saya adalah {{ $getUser->name }} dan saya adalah seorang fotografer handal bekerja secara lepas di website FotoMu.
                                 </p>
                                 <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ms-2">{{ $getUser->name }}</span></p>
 
@@ -131,20 +129,21 @@
                                 <div class="tab-pane" id="settings">
                                         <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>
                                             Personal Info</h5>
-                                            <form action="">
+                                            <form action="{{ route('foto.update-personalinfo') }}" method="POST">
                                                 @csrf
+                                                @method('PUT')
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
-                                                            <label for="firstname" class="form-label">Nama</label>
-                                                            <input type="text" class="form-control" id="firstname"
+                                                            <label for="name" class="form-label">Nama</label>
+                                                            <input type="text" class="form-control" id="name" name="name"
                                                                 value="{{ $getUser->name }}" placeholder="Enter first name">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
-                                                            <label for="lastname" class="form-label">No. Whatsapp</label>
-                                                            <input type="number" class="form-control" id="lastname"
+                                                            <label for="nowa" class="form-label">No. Whatsapp</label>
+                                                            <input type="number" class="form-control" id="nowa" name="nowa"
                                                                 value="{{ $getUser->nowa }}" placeholder="Enter last name">
                                                         </div>
                                                     </div> <!-- end col -->
@@ -153,9 +152,9 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
-                                                            <label for="useremail" class="form-label">Email
-                                                                Address</label>
-                                                            <input type="email" class="form-control" id="useremail"
+                                                            <label for="email" class="form-label">Email
+                                                                Address</label> 
+                                                            <input type="email" class="form-control" id="email" name="email"
                                                                 placeholder="Enter email" value="{{ $getUser->email }}" disabled>
                                                             <span class="form-text text-muted"><small>If you want to
                                                                     change email please <a href="javascript: void(0);">click</a>

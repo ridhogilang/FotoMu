@@ -177,16 +177,20 @@ class PemesananController extends Controller
         $user = Auth::user();
 
         $pesanan = DetailPesanan::with(['pesanan', 'user', 'foto']) // Sesuaikan dengan relasi yang ada
-            ->where('user_id', $user->id) // Filter berdasarkan id user
-            ->get()
-            ->groupBy(function ($item) {
-                // Kelompokkan berdasarkan tanggal (format hari/bulan/tahun)
-                return Carbon::parse($item->created_at)->format('d F Y');
-            })
-            ->sortByDesc(function ($items, $tanggal) {
-                // Urutkan tanggal secara descending
-                return Carbon::createFromFormat('d F Y', $tanggal)->timestamp;
-            });
+        ->where('user_id', $user->id) // Filter berdasarkan id user
+        ->whereHas('pesanan', function ($query) {
+            // Filter berdasarkan status pesanan yang 'Selesai'
+            $query->where('status', 'Selesai');
+        })
+        ->get()
+        ->groupBy(function ($item) {
+            // Kelompokkan berdasarkan tanggal (format hari/bulan/tahun)
+            return Carbon::parse($item->created_at)->format('d F Y');
+        })
+        ->sortByDesc(function ($items, $tanggal) {
+            // Urutkan tanggal secara descending
+            return Carbon::createFromFormat('d F Y', $tanggal)->timestamp;
+        });    
 
         return view('user.download', [
             "title" => "Download FotoMu",

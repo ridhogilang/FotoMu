@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nowa');
             $table->string('foto_ktp');
             $table->string('pesan');
-            $table->enum('status', ['Pengajuan', 'Diterima', 'Ditolak'])->default('Pengajuan');
+            $table->enum('status', ['Ditinjau', 'Diterima', 'Ditolak'])->default('Ditinjau');
             $table->boolean('is_validate')->default(false);
             $table->timestamps();
         });

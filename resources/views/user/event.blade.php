@@ -419,7 +419,7 @@
                             }
                         }).fire({
                             icon: 'error',
-                            title: 'Terjadi kesalahan saat memproses cart'
+                            title: 'Foto sudah dibeli tidak bisa dimasukkan ke kerangjang'
                         });
                     }
                 });

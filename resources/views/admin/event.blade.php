@@ -80,7 +80,10 @@
                                                         <span class="badge bg-danger">Tidak</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $eventItem->deskripsi }}</td>
+                                                <td>
+                                                    {{ implode(' ', array_slice(explode(' ', $eventItem->deskripsi), 0, 5)) }}
+                                                    ...
+                                                </td>
                                                 <td class="d-flex justify-content-start align-items-center gap-1">
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#edit-modal-{{ $eventItem->id }}"

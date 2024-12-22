@@ -18,8 +18,9 @@
 
 <body>
     <div id="wrapper">
-        @include('partials.sidebar_user')
-
+        @if (!isset($hideSidebar) || !$hideSidebar)
+            @include('partials.sidebar_user')
+        @endif
         <div class="content-page">
 
             @include('partials.header_user')
@@ -105,7 +106,7 @@
             });
         });
     </script>
-     <script>
+    <script>
         @if ($errors->any())
             Swal.fire({
                 icon: 'error',

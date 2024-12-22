@@ -43,8 +43,9 @@
                                             <th>Nama</th>
                                             <th>Email</th>
                                             <th>No. Whatsapp</th>
+                                            <th>Role</th>
+                                            <th>Verified</th>
                                             <th>Status</th>
-                                            <th>Active</th>
                                         </tr>
                                     </thead>
 
@@ -68,6 +69,13 @@
                                                 @elseif ($userItem->is_user == 1)
                                                     <td><span class="badge label-table bg-warning">User</span>
                                                     </td>
+                                                @endif
+                                                @if ($userItem->email_verified_at)
+                                                    <td><span class="badge label-table bg-info">Sudah</span>
+                                                    </td>
+                                                @else
+                                                <td><span class="badge label-table bg-danger">Belum</span>
+                                                </td>
                                                 @endif
                                                 <td>
                                                     <div class="form-check form-switch">
@@ -103,15 +111,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const activeCheckboxes = document.querySelectorAll('.update-status-checkbox');
-    
+
             activeCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const userId = this.dataset.id; // ID pengguna
                     const isChecked = this.checked; // Status checkbox
-                    
+
                     // Simpan referensi checkbox asli untuk rollback jika dibatalkan
                     const originalCheckbox = this;
-    
+
                     // SweetAlert konfirmasi
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
@@ -170,5 +178,4 @@
             });
         });
     </script>
-    
 @endpush
