@@ -41,7 +41,7 @@
                 <div class="col-lg-4 col-xl-4">
                     <div class="card text-center">
                         <div class="card-body">
-                            <img src="{{ asset('images/users/user-1.jpg') }}" class="rounded-circle avatar-lg img-thumbnail"
+                            <img src="{{ asset('iconrobot/user/user2.png') }}" class="rounded-circle avatar-lg img-thumbnail"
                                 alt="profile-image">
 
                             <h4 class="mb-0">{{ $user->name }}</h4>

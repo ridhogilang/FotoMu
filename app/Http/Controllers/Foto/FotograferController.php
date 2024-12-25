@@ -7,10 +7,12 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Fotografer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Jobs\ProcessWatermarkJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -125,8 +127,28 @@ class FotograferController extends Controller
 
     public function tree()
     {
+        // Ambil data event
+        $events = Event::all();
+        $encryptedEvents = [];
+
+        // Enkripsi ID untuk setiap event
+        foreach ($events as $event) {
+
+            $deskripsi = implode(' ', array_slice(explode(' ', $event->deskripsi), 0, 10));
+            $formattedTanggal = Carbon::parse($event->tanggal)->format('d F Y');
+
+            $encryptedEvents[] = [
+                'event' => $event->event,
+                'deskripsi' => $deskripsi,
+                'tanggal' => $formattedTanggal,
+                'lokasi' => $event->lokasi,
+                'id' => Crypt::encryptString($event->id),
+                'is_private' => $event->is_private,
+            ];
+        }
         return view('fotografer.tree', [
             "title" => "Tree",
+            "events" => $encryptedEvents,
         ]);
     }
 }

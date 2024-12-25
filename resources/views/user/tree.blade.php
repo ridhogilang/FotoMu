@@ -5,14 +5,11 @@
     <link href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css'
         rel='stylesheet' />
     <style>
-        /* Tambahkan styling untuk peta dan elemen lainnya */
         #map {
             height: 750px;
-            /* Mengurangi height peta */
             width: 100%;
             position: relative;
             margin-bottom: 60px;
-            /* Menambahkan margin di bawah peta untuk ruang ekstra */
         }
 
         .search-box {
@@ -46,7 +43,6 @@
             cursor: pointer;
         }
 
-        /* Styling untuk lokasi saat ini */
         .current-location-marker {
             width: 15px;
             height: 15px;
@@ -62,16 +58,60 @@
             background-color: rgba(128, 0, 128, 0.2);
         }
 
-        /* Styling untuk tombol zoom ke lokasi saya */
         .zoom-location-button {
             position: absolute;
-            bottom: 90px;
+            bottom: 40px;
             right: 30px;
             z-index: 1001;
             background-color: white;
             border-radius: 50%;
             padding: 10px;
             cursor: pointer;
+        }
+
+        .mapboxgl-popup {
+            padding-bottom: 50px;
+        }
+
+        .mapboxgl-popup-close-button {
+            display: none;
+        }
+
+        .mapboxgl-popup-content {
+            font:
+                400 15px/22px 'Source Sans Pro',
+                'Helvetica Neue',
+                sans-serif;
+            padding: 0;
+            /* width: 180px; */
+        }
+
+        .mapboxgl-popup-content h4 {
+            background: #91c949;
+            color: #fff;
+            margin: 0;
+            padding: 10px;
+            border-radius: 3px 3px 0 0;
+            font-weight: 700;
+            margin-top: -15px;
+        }
+
+        .mapboxgl-popup-content h5 {
+            margin: 0;
+            padding: 10px;
+            font-weight: 400;
+        }
+
+        .mapboxgl-popup-content div {
+            padding: 10px;
+        }
+
+        .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
+            margin-top: 15px;
+        }
+
+        .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
+            border-bottom-color: #91c949;
         }
     </style>
 @endpush
@@ -85,30 +125,19 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js'></script>
 
     <script>
+        // Data events dari Laravel (termasuk ID yang sudah terenkripsi)
+        const events = @json($events);
+
+        // Memuat peta Mapbox
         mapboxgl.accessToken =
             'pk.eyJ1IjoicmlkaG9naWxhbmciLCJhIjoiY2w5OWp2NndmM2hoZTNucGN4djZ4NnQwcCJ9.z7oCuzMyT0CJY70K1q6CIQ';
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11', // Gaya peta default
-            center: [110.370529, -7.797068], // Koordinat awal
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [110.370529, -7.797068],
             zoom: 11
         });
 
-        // Menambahkan kontrol search di map
-        var geocoder = new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            mapboxgl: mapboxgl,
-            placeholder: 'Cari daerah atau tempat',
-            bbox: [110.0, -8.0, 111.0, -7.0], // Batasi area pencarian
-            proximity: {
-                longitude: 110.370529,
-                latitude: -7.797068
-            }
-        });
-
-        map.addControl(geocoder, 'top-left');
-
-        // Menambahkan geolokasi pengguna saat ini
         var userLocation = null;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -142,107 +171,91 @@
             alert("Geolocation tidak didukung oleh browser ini.");
         }
 
-        // Fungsi untuk menambahkan marker dengan teks di atasnya dan event listener
+        var currentPopup = null;
+        var currentMarker = null;
+
+        // Fungsi untuk menambahkan marker ke peta
         function addMarkerToMap(event) {
-            // Buat elemen HTML untuk marker dan teks
             var el = document.createElement('div');
             el.className = 'marker';
 
-            // Isi HTML: teks judul event dan gambar marker
             el.innerHTML = `
-                <div style="text-align: center; color: red; font-weight: bold; margin-bottom: 5px;">${event.event}</div>
-                <div><img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" style="width: 30px; height: 30px;"></div>
+                <div style="text-align: center; color: #800080; font-weight: bold; margin-bottom: 5px;">${event.event}</div>
+                <div><img src="../foto/marker.png" style="width: 30px; height: 30px;"></div>
             `;
 
-            // Tambahkan marker ke peta
-            var marker = new mapboxgl.Marker(el)
+            var marker = new mapboxgl.Marker(el, {
+                    anchor: 'bottom'
+                })
                 .setLngLat([event.longitude, event.latitude])
                 .addTo(map);
 
-            // Tampilkan popup saat mouse masuk
+            // URL dengan ID terenkripsi
+            const baseUrl = "{{ url('/') }}";
+            const url = baseUrl + '/pelanggan/foto/event/' + event.id; // ID sudah terenkripsi
+
+            const eventButtonText = event.is_private ? 'Event ini private' : 'Lihat Event';
+            const buttonDisabledClass = event.is_private ? 'disabled' : '';
+
             var popup = new mapboxgl.Popup({
                     closeButton: false,
                     closeOnClick: false
                 })
                 .setHTML(`
-                    <div style="font-size: 12px;">
-                        <h4>${event.event}</h4>
-                        <p>${event.deskripsi}</p>
-                        <p><strong>Tanggal:</strong> ${event.tanggal}</p>
-                    </div>
-                `);
+                <div style="font-size: 12px;">
+                <button class="close-popup" style="position: absolute; top: 5px; right: 1px; margin-top: 6px; margin-bottom: 40px; margin-right: 6px; border: none; background: none; font-size: 16px; font-weight: bold; cursor: pointer;">&times;</button><br>
+                    <h4 style="margin-bottom: 10px;">${event.event}</h4>
+                    <p>${event.deskripsi}</p>
+                    <p><strong>Tanggal:</strong> ${event.tanggal}</p>
+                   <a href="${url}" class="btn btn-primary ${buttonDisabledClass}">
+            ${eventButtonText}
+        </a>
+                </div>
+            `);
 
-            marker.getElement().addEventListener('mouseenter', () => {
-                popup.setLngLat([event.longitude, event.latitude]).addTo(map);
-            });
-
-            // Sembunyikan popup saat mouse keluar
-            marker.getElement().addEventListener('mouseleave', () => {
-                popup.remove();
-            });
-
-            // Event listener untuk menampilkan modal saat marker diklik
             marker.getElement().addEventListener('click', () => {
-                // Buat modal dinamis untuk detail event
-                var modalHtml = `
-                    <div class="modal fade" id="eventModal-${event.id}" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">${event.event}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p><strong>Lokasi:</strong> ${event.lokasi}</p>
-                                    <p><strong>Tanggal:</strong> ${event.tanggal}</p>
-                                    <p>${event.deskripsi}</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                if (currentPopup && currentMarker !== marker) {
+                    currentPopup.remove();
+                    popup.setLngLat([event.longitude, event.latitude]).addTo(map);
+                    currentPopup = popup;
+                    currentMarker = marker;
+                } else if (!currentPopup) {
+                    popup.setLngLat([event.longitude, event.latitude]).addTo(map);
+                    currentPopup = popup;
+                    currentMarker = marker;
+                }
 
-                // Hapus modal sebelumnya jika ada
-                $(`#eventModal-${event.id}`).remove();
-
-                // Tambahkan modal ke body
-                $('body').append(modalHtml);
-
-                // Tampilkan modal
-                $(`#eventModal-${event.id}`).modal('show');
+                const closeButton = popup.getElement().querySelector('.close-popup');
+                closeButton.addEventListener('click', () => {
+                    popup.remove();
+                    currentPopup = null;
+                    currentMarker = null;
+                });
             });
         }
 
-        // Memuat data event dari backend
-        fetch('/pelanggan/events')
-            .then(response => response.json())
-            .then(events => {
-                events.forEach(event => {
-                    // Koordinat lokasi diambil dari string 'lokasi'
-                    var coords = event.lokasi.split(',');
-                    event.longitude = parseFloat(coords[1]);
-                    event.latitude = parseFloat(coords[0]);
+        var geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl
+        });
 
-                    // Tambahkan marker dengan teks di atasnya ke peta
-                    addMarkerToMap(event);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching events:', error);
-            });
+        map.addControl(new mapboxgl.NavigationControl());
+        map.addControl(geocoder, 'top-left');
+
+        // Memuat data event yang sudah terenkripsi
+        events.forEach(event => {
+            var coords = event.lokasi.split(',');
+            event.longitude = parseFloat(coords[1]);
+            event.latitude = parseFloat(coords[0]);
+            addMarkerToMap(event);
+        });
     </script>
-
     <script>
         // Tambahkan tombol zoom ke lokasi saya di atas tombol "Tanam FotoTree"
         var zoomButtonDiv = document.createElement('div');
         zoomButtonDiv.className = 'zoom-location-button';
         zoomButtonDiv.innerHTML =
-        '<i class="mdi mdi-map-marker" style="font-size: 30px; color: #6a1b9a;"></i>';
+            '<i class="mdi mdi-map-marker" style="font-size: 30px; color: #6a1b9a;"></i>';
         zoomButtonDiv.addEventListener('click', function() {
             if (userLocation) {
                 // Zoom ke lokasi pengguna dan pusatkan peta

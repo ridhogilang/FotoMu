@@ -5,16 +5,14 @@
                 <div>
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> © FotoMu - <a href="https://coderthemes.com/"
-                        target="_blank">fotomu.com</a>
+                    </script> © FotoMu - <a href="fotomu.my.id"
+                        target="_blank">fotomu.my.id</a>
                 </div>
             </div>
             <div class="col-md-6">
-                {{-- <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end footer-links">
-                    <a href="javascript: void(0);">About</a>
-                    <a href="javascript: void(0);">Support</a>
-                    <a href="javascript: void(0);">Contact Us</a>
-                </div> --}}
+                <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end footer-links">
+                    <a href="mailto:support@fotomu.my.id">Contact Us</a>
+                </div>
             </div>
         </div>
     </div>

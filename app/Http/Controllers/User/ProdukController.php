@@ -10,6 +10,7 @@ use App\Models\SimilarFoto;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Jobs\CompareFacesJob;
+use Illuminate\Support\Carbon;
 use App\Jobs\CompareEventFacesJob;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -235,8 +236,27 @@ class ProdukController extends Controller
 
     public function tree()
     {
+        $events = Event::all();
+        $encryptedEvents = [];
+
+        // Enkripsi ID untuk setiap event
+        foreach ($events as $event) {
+
+            $deskripsi = implode(' ', array_slice(explode(' ', $event->deskripsi), 0, 10));
+            $formattedTanggal = Carbon::parse($event->tanggal)->format('d F Y');
+
+            $encryptedEvents[] = [
+                'event' => $event->event,
+                'deskripsi' => $deskripsi,
+                'tanggal' => $formattedTanggal,
+                'lokasi' => $event->lokasi,
+                'id' => Crypt::encryptString($event->id),
+                'is_private' => $event->is_private,
+            ];
+        }
         return view('user.tree', [
             "title" => "Tree",
+            "events" => $encryptedEvents,
         ]);
     }
 

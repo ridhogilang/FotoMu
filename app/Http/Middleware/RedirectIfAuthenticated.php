@@ -32,7 +32,7 @@ class RedirectIfAuthenticated
                 }
 
                 // Default redirect if no role matches
-                return redirect('/home');
+                return redirect('/pelanggan/foto');
             }
         }
 

@@ -30,6 +30,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'encryption_key' => env('ENCRYPTION_KEY'),
 
     /*
     |--------------------------------------------------------------------------
