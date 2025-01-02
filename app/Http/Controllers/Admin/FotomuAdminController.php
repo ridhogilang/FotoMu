@@ -191,12 +191,17 @@ class FotomuAdminController extends Controller
             'is_private' => 'required|boolean',
             'deskripsi' => 'nullable|string',
             'lokasi' => 'required|string',
-            'foto_cover' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_cover' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Tidak lagi required secara default
         ];
 
         // Tambahkan aturan validasi untuk password hanya jika event bersifat private
         if ($request->input('is_private') == 1) {
             $rules['password'] = 'required|string|min:6';
+        }
+
+        // Periksa apakah event tidak memiliki foto_cover sebelumnya dan file baru tidak diupload
+        if (!$event->foto_cover && !$request->hasFile('foto_cover')) {
+            $rules['foto_cover'] = 'required|image|mimes:jpeg,png,jpg|max:2048'; // Required jika tidak ada foto sebelumnya
         }
 
         // Validasi data input
@@ -222,15 +227,22 @@ class FotomuAdminController extends Controller
             // Crop gambar menjadi 355x355
             $image->fit(355, 355);
 
+            // Tentukan path folder penyimpanan
+            $folderPath = storage_path('app/public/foto_covers'); // Path yang benar
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0755, true); // Buat folder jika belum ada
+            }
+
             // Buat path baru untuk foto cover yang sudah diproses
             $fotoCoverPath = 'foto_covers/' . uniqid() . '.' . $fotoCover->getClientOriginalExtension();
 
-            // Simpan gambar yang sudah di-crop ke folder storage/public/foto_covers
-            $image->save(public_path('storage/' . $fotoCoverPath), 80); // Simpan dengan kualitas 80
+            // Simpan gambar yang sudah di-crop ke folder penyimpanan
+            $image->save($folderPath . '/' . basename($fotoCoverPath), 80); // Simpan dengan kualitas 80
 
             // Simpan path foto cover ke event
             $event->foto_cover = $fotoCoverPath;
         }
+
 
         // Simpan password hanya jika event bersifat private
         if ($validatedData['is_private'] == 1) {
@@ -245,6 +257,7 @@ class FotomuAdminController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Event berhasil diperbarui!');
     }
+
 
     public function event_delete(Request $request, $id)
     {

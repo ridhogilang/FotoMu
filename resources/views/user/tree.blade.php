@@ -127,6 +127,7 @@
     <script>
         // Data events dari Laravel (termasuk ID yang sudah terenkripsi)
         const events = @json($events);
+        console.log(events);
 
         // Memuat peta Mapbox
         mapboxgl.accessToken =
@@ -234,6 +235,7 @@
             });
         }
 
+
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             mapboxgl: mapboxgl
@@ -244,10 +246,14 @@
 
         // Memuat data event yang sudah terenkripsi
         events.forEach(event => {
-            var coords = event.lokasi.split(',');
-            event.longitude = parseFloat(coords[1]);
-            event.latitude = parseFloat(coords[0]);
-            addMarkerToMap(event);
+            // Pastikan data latitude dan longitude ada
+            if (event.longitude && event.latitude) {
+                var coords = [event.longitude, event.latitude]; // Ambil koordinat
+                addMarkerToMap(event); // Panggil fungsi untuk menambahkan marker
+            } else {
+                console.warn('Event tidak memiliki koordinat yang valid:', event);
+                console.log(event.longitude, event.latitude);
+            }
         });
     </script>
     <script>

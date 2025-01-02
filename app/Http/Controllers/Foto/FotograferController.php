@@ -65,6 +65,7 @@ class FotograferController extends Controller
 
     public function event_tambah(Request $request)
     {
+        dd($request);
         // Validasi input
         $rules = [
             'event' => 'required|string|max:255',
@@ -99,14 +100,18 @@ class FotograferController extends Controller
         $fotoCoverPath = null;
         if ($request->hasFile('foto_cover')) {
             $fotoCover = $request->file('foto_cover');
-            $image = Image::make($fotoCover->getPathname()); // Buat instance gambar
-
-            // Crop gambar menjadi 355x355
+            $image = Image::make($fotoCover->getPathname());
+        
             $image->fit(355, 355);
-
-            // Simpan gambar yang sudah di-crop ke folder storage/public/foto_covers
+        
+            // Tentukan path penyimpanan
+            $folderPath = storage_path('app/public/foto_covers'); // Path yang benar
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0755, true); // Buat folder jika belum ada
+            }
+        
             $fotoCoverPath = 'foto_covers/' . uniqid() . '.' . $fotoCover->getClientOriginalExtension();
-            $image->save(public_path('storage/' . $fotoCoverPath), 80); // Simpan dengan kualitas 80
+            $image->save($folderPath . '/' . basename($fotoCoverPath), 80); // Simpan dengan kualitas 80
         }
 
         // Simpan data ke database

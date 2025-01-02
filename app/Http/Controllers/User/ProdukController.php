@@ -239,8 +239,10 @@ class ProdukController extends Controller
         $events = Event::all();
         $encryptedEvents = [];
 
-        // Enkripsi ID untuk setiap event
         foreach ($events as $event) {
+            $coords = explode(',', $event->lokasi);
+            $latitude = isset($coords[0]) ? floatval($coords[0]) : null;
+            $longitude = isset($coords[1]) ? floatval($coords[1]) : null;
 
             $deskripsi = implode(' ', array_slice(explode(' ', $event->deskripsi), 0, 10));
             $formattedTanggal = Carbon::parse($event->tanggal)->format('d F Y');
@@ -250,15 +252,19 @@ class ProdukController extends Controller
                 'deskripsi' => $deskripsi,
                 'tanggal' => $formattedTanggal,
                 'lokasi' => $event->lokasi,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'id' => Crypt::encryptString($event->id),
                 'is_private' => $event->is_private,
             ];
         }
+
         return view('user.tree', [
             "title" => "Tree",
             "events" => $encryptedEvents,
         ]);
     }
+
 
     public function getEvents()
     {
