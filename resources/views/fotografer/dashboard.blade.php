@@ -13,8 +13,9 @@
     <style>
         .btn {
             white-space: nowrap;
-            
+
         }
+
         #total-revenue {
             width: 100%;
             height: 300px;
@@ -88,7 +89,7 @@
                                 <button type="submit" class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
                                     <i class="mdi mdi-filter-variant me-1"></i> Filter
                                 </button>
-                                
+
                                 @if ($formattedDate)
                                     <a href="{{ route('foto.dashboard') }}"
                                         class="btn btn-blue btn-sm ms-2 d-flex align-items-center">
@@ -222,7 +223,8 @@
                                 <h5 class="text-muted mt-0">Total penjualan hari ini</h5>
                                 <h2>Rp {{ number_format($totalPendapatanHarian, 0, ',', '.') }}</h2><br>
 
-                                <p class="text-muted w-75 mx-auto sp-line-2">Penjualan hari ini akan dikalkulasikan dengan target harian untuk mendapatkan prasentasenya.</p><br>
+                                <p class="text-muted w-75 mx-auto sp-line-2">Penjualan hari ini akan dikalkulasikan dengan
+                                    target harian untuk mendapatkan prasentasenya.</p><br>
 
                             </div>
                         </div>
@@ -340,13 +342,13 @@
                                                 @switch($penarikanItem->status)
                                                     @case('Pending')
                                                         <td><span
-                                                                class="badge label-table bg-success">{{ $penarikanItem->status }}</span>
+                                                                class="badge label-table bg-warning">{{ $penarikanItem->status }}</span>
                                                         </td>
                                                     @break
 
                                                     @case('Approved')
                                                         <td><span
-                                                                class="badge label-table bg-secondary text-light">{{ $penarikanItem->status }}</span>
+                                                                class="badge label-table bg-success">{{ $penarikanItem->status }}</span>
                                                         </td>
                                                     @break
 
@@ -366,8 +368,7 @@
                                                     @else
                                                         <a href="#" data-bs-toggle="modal"
                                                             data-bs-target="#view-modal-{{ $penarikanItem->id }}"
-                                                             class="action-icon"
-                                                            data-id="{{ $penarikanItem->id }}">
+                                                            class="action-icon" data-id="{{ $penarikanItem->id }}">
                                                             <i class="mdi mdi-eye"></i>
                                                         </a>
                                                     @endif
@@ -440,11 +441,11 @@
                                                                     <div class="col-md-6">
                                                                         <label for="saldo" class="form-label">Processed
                                                                             at</label>
-                                                                            <input class="form-control" name="saldo"
+                                                                        <input class="form-control" name="saldo"
                                                                             type="text"
                                                                             value="{{ \Carbon\Carbon::parse($penarikanItem->processed_at)->format('d M Y H:i') }}"
                                                                             required readonly
-                                                                            style="border: none; background-color: transparent;">                                                                     
+                                                                            style="border: none; background-color: transparent;">
                                                                     </div>
                                                                 </div>
 
@@ -664,7 +665,7 @@
             });
         });
     </script>
-      <script>
+    <script>
         // Total pendapatan hari ini
         var totalRevenueToday = {{ $totalPembelianBersih }}; // Pendapatan Rp 178,000
         var totalTarget = 1000000; // Total penuh adalah Rp 1,000,000 (1 juta rupiah)

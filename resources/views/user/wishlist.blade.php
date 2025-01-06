@@ -41,7 +41,7 @@
                                                 <div class="row align-items-center">
                                                     <div class="col">
                                                         <h5 class="font-16 mt-0 sp-line-1"><a
-                                                                href="ecommerce-product-detail.html" class="text-dark"><i
+                                                                href="#" class="text-dark"><i
                                                                     class="fas fa-map-marker-alt"></i>
                                                                 {{ $FotoAll->foto->event->event }}</a></h5>
                                                         <h5 class="m-0"> <span class="text-muted"> Fotografer :

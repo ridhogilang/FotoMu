@@ -49,7 +49,7 @@
                                                                 alt="contact-img" title="contact-img" class="rounded me-3"
                                                                 height="48" />
                                                             <p class="m-0 d-inline-block align-middle font-16">
-                                                                <a href="ecommerce-product-detail.php"
+                                                                <a href="#"
                                                                     class="text-reset font-family-secondary">{{ $cartItem->foto->event->event }}</a>
                                                                 <br>
                                                                 <small
@@ -122,6 +122,8 @@
                                         <!-- end table-responsive -->
                                     </div>
 
+                                    @if ($cart->isEmpty())
+                                    @else
                                     <div class="row mt-4">
                                         <div class="col-sm-12">
                                             <div class="text-sm-end mt-2 mt-sm-0">
@@ -130,6 +132,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                 </div> <!-- end col -->
 
                             </form> <!-- end row -->

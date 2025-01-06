@@ -115,7 +115,7 @@
                                                 <div class="row align-items-center">
                                                     <div class="col">
                                                         <h5 class="font-16 mt-0 sp-line-1">
-                                                            <a href="ecommerce-product-detail.html" class="text-dark">
+                                                            <a href="#" class="text-dark">
                                                                 <i class="fas fa-map-marker-alt"></i>
                                                                 {{ $similiar->event->event }}
                                                             </a>

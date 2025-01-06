@@ -122,7 +122,7 @@
                                                                 alt="contact-img" title="contact-img" class="rounded me-3"
                                                                 height="48" />
                                                             <p class="m-0 d-inline-block align-middle font-16">
-                                                                <a href="ecommerce-product-detail.php"
+                                                                <a href="#"
                                                                     class="text-reset font-family-secondary">{{ $fotoItem->foto->event->event }}</a>
                                                                 <br>
                                                                 <small

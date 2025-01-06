@@ -162,9 +162,7 @@
                                                                     </div>
                                                                     <div class="col-md-6">
 
-                                                                        <div class="mb-3"
-                                                                            id="password-section-{{ $eventItem->id }}"
-                                                                            style="{{ $eventItem->is_private == 0 ? 'display: none;' : '' }}">
+                                                                        <div class="mb-3" id="password-section">
                                                                             <label for="password"
                                                                                 class="form-label">Password</label>
                                                                             <div class="input-group input-group-merge">
@@ -180,38 +178,39 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="mb-3">
-                                                                            <label class="form-label">Deskripsi</label>
-                                                                            <textarea class="form-control" name="deskripsi" rows="9">{{ $eventItem->deskripsi }}</textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="mb-3">
-                                                                            <label class="form-label">Foto Cover</label>
-                                                                            <div class="">
-                                                                                <input type="file" name="foto_cover"
-                                                                                    accept=".jpeg,.jpg,.png" />
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="mb-3">
+                                                                                <label class="form-label">Deskripsi</label>
+                                                                                <textarea class="form-control" name="deskripsi" rows="9">{{ $eventItem->deskripsi }}</textarea>
                                                                             </div>
-                                                                            <img class="mt-2"
-                                                                                src="{{ Storage::url($eventItem->foto_cover) }}"
-                                                                                alt="" width="160">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="mb-3">
+                                                                                <label class="form-label">Foto
+                                                                                    Cover</label>
+                                                                                <div class="">
+                                                                                    <input type="file"
+                                                                                        name="foto_cover"
+                                                                                        accept=".jpeg,.jpg,.png" />
+                                                                                </div>
+                                                                                <img class="mt-2"
+                                                                                    src="{{ Storage::url($eventItem->foto_cover) }}"
+                                                                                    alt="" width="160">
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
 
-                                                                <!-- Map container with unique ID for each event -->
-                                                                <div id="map-{{ $eventItem->id }}"
-                                                                    style="height: 300px;"></div>
-                                                                <input type="hidden" name="lokasi"
-                                                                    id="lokasi-{{ $eventItem->id }}"
-                                                                    value="{{ $eventItem->lokasi }}">
-                                                                <div class="mb-2 text-center">
-                                                                    <button class="btn rounded-pill btn-primary"
-                                                                        type="submit">Update Event</button>
-                                                                </div>
+                                                                    <!-- Map container with unique ID for each event -->
+                                                                    <div id="map-{{ $eventItem->id }}"
+                                                                        style="height: 300px;"></div>
+                                                                    <input type="hidden" name="lokasi"
+                                                                        id="lokasi-{{ $eventItem->id }}"
+                                                                        value="{{ $eventItem->lokasi }}">
+                                                                    <div class="mb-2 text-center">
+                                                                        <button class="btn rounded-pill btn-primary"
+                                                                            type="submit">Update Event</button>
+                                                                    </div>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -348,14 +347,12 @@
             const passwordField = document.getElementById('password');
             const passwordEye = document.querySelector('.password-eye');
 
-            if (passwordField && passwordEye) {
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    passwordEye.parentElement.classList.add('show-password');
-                } else {
-                    passwordField.type = 'password';
-                    passwordEye.parentElement.classList.remove('show-password');
-                }
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordEye.parentElement.classList.add('show-password');
+            } else {
+                passwordField.type = 'password';
+                passwordEye.parentElement.classList.remove('show-password');
             }
         }
     </script>

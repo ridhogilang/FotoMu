@@ -111,14 +111,14 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Nama</label>
                                                     <input type="text" class="form-control" id="name" name="name"
-                                                        value="{{ $user->name }}" placeholder="Enter first name">
+                                                        value="{{ $user->name }}" placeholder="Masukkan nama anda">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <label for="nowa" class="form-label">No. Whatsapp</label>
                                                     <input type="number" class="form-control" id="nowa" name="nowa"
-                                                        value="{{ $user->nowa }}" placeholder="Enter last name">
+                                                        value="{{ $user->nowa }}" placeholder="Masukkan nomor whatsapp">
                                                 </div>
                                             </div> 
                                         </div> 

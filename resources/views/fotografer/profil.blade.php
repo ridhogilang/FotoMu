@@ -137,14 +137,14 @@
                                                         <div class="mb-3">
                                                             <label for="name" class="form-label">Nama</label>
                                                             <input type="text" class="form-control" id="name" name="name"
-                                                                value="{{ $getUser->name }}" placeholder="Enter first name">
+                                                                value="{{ $getUser->name }}" placeholder="Masukkan Nama Anda">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <label for="nowa" class="form-label">No. Whatsapp</label>
                                                             <input type="number" class="form-control" id="nowa" name="nowa"
-                                                                value="{{ $getUser->nowa }}" placeholder="Enter last name">
+                                                                value="{{ $getUser->nowa }}" placeholder="Masukkan Nomor Whatsapp">
                                                         </div>
                                                     </div> <!-- end col -->
                                                 </div> <!-- end row -->

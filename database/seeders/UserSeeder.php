@@ -95,7 +95,7 @@ class UserSeeder extends Seeder
 
         foreach ($users as $user_data) {
             $user = User::create(array_merge($user_data, $default_user_value));
-            $user->assignRole('user'); // Menetapkan peran "user"
+            $user->assignRole('user');
         }
     }
 }

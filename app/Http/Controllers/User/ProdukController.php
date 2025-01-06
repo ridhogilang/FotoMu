@@ -59,7 +59,8 @@ class ProdukController extends Controller
 
         if ($newPhotos->isNotEmpty()) {
             foreach ($newPhotos as $foto) {
-                $fotoPath = storage_path('app/public/' . $foto->foto);
+                // $fotoPath = storage_path('app/public/' . $foto->foto);
+                $fotoPath = storage_path('app/public/' . $foto->fotowatermark);
 
                 // Dispatch job untuk foto yang belum diproses
                 CompareFacesJob::dispatch($user->id, $foto->id, $userPhotoPath, $fotoPath);
@@ -157,7 +158,8 @@ class ProdukController extends Controller
 
         if ($newPhotos->isNotEmpty()) {
             foreach ($newPhotos as $foto) {
-                $fotoPath = storage_path('app/public/' . $foto->foto);
+                // $fotoPath = storage_path('app/public/' . $foto->foto);
+                $fotoPath = storage_path('app/public/' . $foto->fotowatermark);
                 $userPhotoPath = storage_path('app/public/' . $user->foto_depan);
 
                 // Dispatch job for each photo comparison
