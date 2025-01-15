@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
 
         $admin = User::create(array_merge([
             'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'ridhoendorse@gmail.com',
             'nowa' => '08123456789',
             'is_admin' => true,
         ], $default_user_value));
